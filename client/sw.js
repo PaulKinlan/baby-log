@@ -27,33 +27,8 @@ self.onfetch = (event) => {
         }
       };
       let body = output || "Not Found";
-      let other;
-      [body, other] = body.tee(); 
-
-      const reader = other.getReader();
-
-      reader.read().then(function processText({ done, value }) {
-        // This is just to check that there is output from the stream.
-        if (done) {
-          console.log("Stream complete");
-          return;
-        }
-    
-        console.log(value)
-        return reader.read().then(processText);
-      });
-
-      var stream = new ReadableStream({
-        start(controller) {
-          //if (/* there's more data */) {
-            controller.enqueue('test');
-          //} else {
-            controller.close();
-          //}
-        }
-      });
-
-      return new Response(stream, options);
+  
+      return new Response(body, options);
     })); 
   }
 
