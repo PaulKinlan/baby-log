@@ -7,4 +7,4 @@ const app = new App();
 app.registerRoute(IndexController.route, new IndexController);
 app.registerRoute(FeedController.route, new FeedController);
 
-navigator.serviceWorker.register('./sw.js');
+navigator.serviceWorker.register('/sw.js');

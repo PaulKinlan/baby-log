@@ -6,10 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Paul Kinlan",
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "mime": "^2.4.6"
+    "mime": "^2.4.6",
+    "node-fetch": "^2.6.0",
+    "rollup": "^2.13.1"
+  },
+  "engines": {
+    "node": "13.0.0"
   }
 }

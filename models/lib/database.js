@@ -17,15 +17,19 @@
 
 import ConfigManagerInstance from './configmanager.js';
 
-export default function DatabaseInstance () {
+export function DatabaseInstance () {
 
-  if (typeof window.DatabaseInstance_ !== 'undefined')
-    return Promise.resolve(window.DatabaseInstance_);
+  if (typeof globalThis.DatabaseInstance_ !== 'undefined')
+    return Promise.resolve(globalThis.DatabaseInstance_);
 
-  window.DatabaseInstance_ = new Database();
+  globalThis.DatabaseInstance_ = new Database();
 
-  return Promise.resolve(window.DatabaseInstance_);
+  return Promise.resolve(globalThis.DatabaseInstance_);
 }
+
+export function hasSupport() {
+  return ('indexedDB' in globalThis);
+ }
 
 class Database {
 
@@ -51,8 +55,7 @@ class Database {
     return this.stores_[storeName];
   }
 
-  open () {
-
+  async open () {
     if (this.db_)
       return Promise.resolve(this.db_);
 

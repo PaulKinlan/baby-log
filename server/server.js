@@ -1,5 +1,7 @@
 import http from 'http';
 import mime from 'mime';
+import fetch from 'node-fetch';
+const Request = fetch.Request;
 
 import FromWhatWGReadableStream from './private/streams/fromreadable.js';
 
@@ -15,27 +17,36 @@ const app = new App();
 
 app.registerRoute(IndexController.route, new IndexController);
 app.registerRoute(FeedController.route, new FeedController);
-app.registerRoute(StaticController.route, new StaticController(['./client']));
-
-// Static Serving
+app.registerRoute(StaticController.route, new StaticController(['./build/client', './client']));
 
 const server = http.createServer((req, res) => {
+  const { method, headers } = req;
   const url = new URL(req.url, `http://${req.headers.host}`);
+  const request = new Request(url, {
+    method: method,
+    headers: headers,
+    body: (method == 'GET' || method == 'HEAD') ? undefined : ''
+  } );
 
   const controller = app.resolve(url);
-  const renderedView = controller.render(url);
+  const view = controller.getView(url, request);
 
-  if (!!renderedView) {
+  if (!!view) {
     res.statusCode = 200;
     res.setHeader('Content-Type', mime.getType(url.pathname) || 'text/html');
-    renderedView.then(output => {
-      if (typeof output === "string")  {
+    view.then(output => {
+      if (typeof output === "string") {
         res.write(output);
         res.end();
-      } 
-      else {
+      }
+      else if (!!output === true) {
         const stream = new FromWhatWGReadableStream({}, output);
         stream.pipe(res, { end: true });
+      }
+      else {
+        // Sometimes the output doesn't exist.
+        res.statusCode = 404;
+        res.end();
       }
     });
   }

@@ -8,5 +8,8 @@ export default (data) => {
     <script src="/client/client.js" type="module"></script>
     </head>
     <body>
+    <header>
+      <a href="/feeds">Feeds</a>
+    </header>
     `;
 };

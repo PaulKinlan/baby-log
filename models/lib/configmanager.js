@@ -15,16 +15,16 @@
  * limitations under the License.
  */
 
-import Config from '../../config.js';
+import Config from '../config/config.js';
 
 export default function ConfigManagerInstance () {
 
-  if (typeof window.ConfigManagerInstance_ !== 'undefined')
-    return Promise.resolve(window.ConfigManagerInstance_);
+  if (typeof globalThis.ConfigManagerInstance_ !== 'undefined')
+    return Promise.resolve(globalThis.ConfigManagerInstance_);
 
-  window.ConfigManagerInstance_ = new ConfigManager();
+  globalThis.ConfigManagerInstance_ = new ConfigManager();
 
-  return Promise.resolve(window.ConfigManagerInstance_);
+  return Promise.resolve(globalThis.ConfigManagerInstance_);
 }
 
 class ConfigManager {

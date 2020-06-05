@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import DatabaseInstance from './database.js';
+import { DatabaseInstance, hasSupport} from './database.js';
 import ConfigManagerInstance from './configmanager.js';
 
 export default class Model {
@@ -47,6 +47,10 @@ export default class Model {
   }
 
   static get(key) {
+
+    if (hasSupport() === false) {
+      return Promise.resolve();
+    }
 
     if (this instanceof Model)
       Promise.reject("Can't call get on Model directly. Inherit first.");
@@ -85,6 +89,10 @@ export default class Model {
    * Gets all the objects from the database.
    */
   static getAll(index, order) {
+
+    if (hasSupport() === false) {
+      return Promise.resolve();
+    }
 
     if (this instanceof Model)
       Promise.reject("Can't call getAll on Model directly. Inherit first.");

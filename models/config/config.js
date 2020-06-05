@@ -19,13 +19,13 @@ const Config = {
   name: 'babylog',
   version: 1,
   stores: {
-    'Feed': {
+    'Log': {
       properties: {
         autoIncrement: true,
         keyPath: 'id'
       },
       indexes: {
-        time: { unique: true }
+        startTime: { unique: false }
       }
     }
   }
