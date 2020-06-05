@@ -935,14 +935,17 @@ self.onfetch = (event) => {
   const url = new URL(request.url);
 
   const controller = app.resolve(url);
+  if (controller instanceof NotFoundController) {
+    return;
+  }
   const view = controller.getView(url, request);
  
   if (!!view) {
-    const response = view.then(output => {
+    return event.respondWith(view.then(output => {
       const options = {
         status: (!!output)? 200: 404,
         headers: {
-          'content-type': 'text/html'
+          'Content-Type': 'text/html'
         }
       };
       let body = output || "Not Found";
@@ -962,10 +965,18 @@ self.onfetch = (event) => {
         return reader.read().then(processText);
       });
 
-      return new Response(body, options);
-    });
+      var stream = new ReadableStream({
+        start(controller) {
+          //if (/* there's more data */) {
+            controller.enqueue('test');
+          //} else {
+            controller.close();
+          //}
+        }
+      });
 
-    event.respondWith(response);
+      return new Response(stream, options);
+    })); 
   }
 
   // If not caught by a controller, go to the network.
