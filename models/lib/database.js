@@ -17,7 +17,7 @@
 
 import ConfigManagerInstance from './configmanager.js';
 
-export function DatabaseInstance () {
+export function DatabaseInstance() {
 
   if (typeof globalThis.DatabaseInstance_ !== 'undefined')
     return Promise.resolve(globalThis.DatabaseInstance_);
@@ -29,13 +29,29 @@ export function DatabaseInstance () {
 
 export function hasSupport() {
   return ('indexedDB' in globalThis);
- }
+}
+
+const parseFilter = ([operator, ...values]) => {
+  // >= 10
+  // BETWEEN 10,20
+  const [lower, upper] = values;
+
+  switch(operator) {
+    case 'BETWEEN': return IDBKeyRange.bound(lower, upper);
+    case '=':  return IDBKeyRange.only(lower);
+    case '<':  return IDBKeyRange.upperBound(lower);
+    case '<=': return IDBKeyRange.upperBound(lower, true);
+    case '>':  return IDBKeyRange.lowerBound(lower);
+    case '>=': return IDBKeyRange.lowerBound(lower, true);
+    default: return; // Just return if we don't recognise the combination
+  };
+}
 
 class Database {
 
-  constructor () {
+  constructor() {
 
-    ConfigManagerInstance().then( (configManager) => {
+    ConfigManagerInstance().then((configManager) => {
 
       var config = configManager.config;
 
@@ -47,7 +63,7 @@ class Database {
     });
   }
 
-  getStore (storeName) {
+  getStore(storeName) {
 
     if (!this.stores_[storeName])
       throw 'There is no store with name "' + storeName + '"';
@@ -55,7 +71,7 @@ class Database {
     return this.stores_[storeName];
   }
 
-  async open () {
+  async open() {
     if (this.db_)
       return Promise.resolve(this.db_);
 
@@ -97,7 +113,7 @@ class Database {
 
             for (var i = 0; i < indexNames.length; i++) {
               index = indexNames[i];
-              dbStore.createIndex(index, index, indexes[index]);
+              dbStore.createIndex(index, index.split(','), indexes[index]);
             }
           }
         }
@@ -115,7 +131,7 @@ class Database {
     });
   }
 
-  close () {
+  close() {
 
     return new Promise((resolve, reject) => {
 
@@ -128,7 +144,7 @@ class Database {
     });
   }
 
-  nuke () {
+  nuke() {
     return new Promise((resolve, reject) => {
 
       console.log("Nuking... " + this.name_);
@@ -147,7 +163,7 @@ class Database {
     });
   }
 
-  put (storeName, value, key) {
+  put(storeName, value, key) {
 
     return this.open().then((db) => {
 
@@ -162,9 +178,9 @@ class Database {
         }
 
         dbTransaction.onabort =
-        dbTransaction.onerror = (e) => {
-          reject(e);
-        }
+          dbTransaction.onerror = (e) => {
+            reject(e);
+          }
 
       });
 
@@ -172,7 +188,7 @@ class Database {
 
   }
 
-  get (storeName, value) {
+  get(storeName, value) {
 
     return this.open().then((db) => {
 
@@ -187,19 +203,18 @@ class Database {
         }
 
         dbTransaction.onabort =
-        dbTransaction.onerror = (e) => {
-          reject(e);
-        }
+          dbTransaction.onerror = (e) => {
+            reject(e);
+          }
 
         dbStoreRequest = dbStore.get(value);
 
       });
 
     });
-
   }
 
-  getAll (storeName, index, order) {
+  getAll(storeName, index, { filter, order }) {
 
     return this.open().then((db) => {
 
@@ -208,12 +223,13 @@ class Database {
         var dbTransaction = db.transaction(storeName, 'readonly');
         var dbStore = dbTransaction.objectStore(storeName);
         var dbCursor;
+        var dbFilter = parseFilter(filter);
 
         if (typeof order !== 'string')
           order = 'next';
 
         if (typeof index === 'string')
-          dbCursor = dbStore.index(index).openCursor(null, order);
+          dbCursor = dbStore.index(index).openCursor(dbFilter, order);
         else
           dbCursor = dbStore.openCursor();
 
@@ -242,7 +258,7 @@ class Database {
     });
   }
 
-  delete (storeName, key) {
+  delete(storeName, key) {
     return this.open().then((db) => {
 
       return new Promise((resolve, reject) => {
@@ -255,9 +271,9 @@ class Database {
         }
 
         dbTransaction.onabort =
-        dbTransaction.onerror = (e) => {
-          reject(e);
-        }
+          dbTransaction.onerror = (e) => {
+            reject(e);
+          }
 
         dbStore.delete(key);
 
@@ -265,7 +281,7 @@ class Database {
     });
   }
 
-  deleteAll (storeName) {
+  deleteAll(storeName) {
 
     return this.open().then((db) => {
 

@@ -13,7 +13,7 @@ export default class FromWhatWGReadableStream extends Readable {
           return;
         }
       
-        outStream.push(value.toString());
+        outStream.push(value);
         return pump();
       });
     }

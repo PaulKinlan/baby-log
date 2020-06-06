@@ -88,7 +88,7 @@ export default class Model {
   /**
    * Gets all the objects from the database.
    */
-  static getAll(index, order) {
+  static getAll(index, { filter, order }) {
 
     if (hasSupport() === false) {
       return Promise.resolve();
@@ -100,7 +100,7 @@ export default class Model {
     return DatabaseInstance()
 
       // Do the query.
-      .then(db => db.getAll(this.storeName, index, order))
+      .then(db => db.getAll(this.storeName, index, {filter, order}))
 
       // Wrap all the results in the correct class.
       .then(results => {

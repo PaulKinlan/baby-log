@@ -7,7 +7,7 @@ export default class FeedView {
     <h1>Feeds</h1>
     <a href="/feeds/new">Create</a>
     ${
-      data.map(item => template`<div>${item.startTime} - ${item.endTime} </div>`)
+      data.map(item => template`<div><span>Feed: </span> ${item.startTime} - ${item.endTime}</div>`)
     }
     </body>
     </html>`;
@@ -16,8 +16,8 @@ export default class FeedView {
   async get(data) {
     return template`${head(data)}
     <h1>Feed ${data.id}</h1>
-      <label for=startTime>Start time: <input type="datetime" name="startTime" value="${new Date}"></label>
-      <label for=endTime>End time:<input type="datetime" name="endTime"></label>
+      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
+      <label for=endTime>End time:<input type="datetime-local" name="endTime"></label>
     </body>
     </html>`;
   }
@@ -26,20 +26,24 @@ export default class FeedView {
     return template`${head(data)}
     <h1>Feeds</h1>
     <form method="POST" action="/feeds">
-      <label for=startTime>Start time: <input type="datetime" name="startTime" value="${new Date}"></label>
-      <label for=endTime>End time:<input type="datetime" name="endTime"></label>
+      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
+      <label for=endTime>End time:<input type="datetime-local" name="endTime"></label>
       <input type="submit">
     </form>
     </body>
     </html>`;
   }
 
+  async post(data) {
+    return this.get(data);
+  }
+
   async edit(data) {
     return template`${head(data)}
     <h1>Feeds</h1>
     <form method="PUT" action="/feeds/${data.id}/edit">
-      <label for=startTime>Start time: <input type="datetime" name="startTime" value="${this.startTime}"></label>
-      <label for=endTime>End time:<input type="datetime" name="endTime" value="${this.endTime}"></label>
+      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${this.startTime}"></label>
+      <label for=endTime>End time:<input type="datetime-local" name="endTime" value="${this.endTime}"></label>
       <input type="submit">
     </form>
     </body>

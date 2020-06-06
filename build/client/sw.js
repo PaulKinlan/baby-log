@@ -175,29 +175,15 @@ var head = (data) => {
 };
 
 class IndexView {
-  async render(data) {
+  async getAll(data) {
     return template`${head(data)}
-    <h1>Baby log</h1>
+    <h1>Feeds</h1>
+    <a href="/feeds/new">Create</a>
+    ${
+      data.map(item => template`<div><span>Feed: </span> ${item.startTime} - ${item.endTime}</div>`)
+    }
     </body>
     </html>`;
-  }
-}
-
-class IndexController extends Controller {
-  static get route() {
-    return '/$'
-  }
-
-  getAll(url) {
-    const view = new IndexView();
-    const output = view.render({title: "Ay....", newTitle: "Testing"});
-    return output;
-  }
-
-  get(url) {
-    const view = new IndexView();
-    const output = view.render({title: "Ay....", newTitle: "Testing"});
-    return output;
   }
 }
 
@@ -228,7 +214,7 @@ const Config = {
         keyPath: 'id'
       },
       indexes: {
-        startTime: { unique: false }
+        "_type,_startTime": { unique: false }
       }
     }
   }
@@ -298,7 +284,7 @@ class ConfigManager {
  *
  */
 
-function DatabaseInstance () {
+function DatabaseInstance() {
 
   if (typeof globalThis.DatabaseInstance_ !== 'undefined')
     return Promise.resolve(globalThis.DatabaseInstance_);
@@ -310,13 +296,28 @@ function DatabaseInstance () {
 
 function hasSupport() {
   return ('indexedDB' in globalThis);
- }
+}
+
+const parseFilter = ([operator, ...values]) => {
+  // >= 10
+  // BETWEEN 10,20
+  const [lower, upper] = values;
+
+  switch(operator) {
+    case 'BETWEEN': return IDBKeyRange.bound(lower, upper);
+    case '=':  return IDBKeyRange.only(lower);
+    case '<':  return IDBKeyRange.upperBound(lower);
+    case '<=': return IDBKeyRange.upperBound(lower, true);
+    case '>':  return IDBKeyRange.lowerBound(lower);
+    case '>=': return IDBKeyRange.lowerBound(lower, true);
+    default: return; // Just return if we don't recognise the combination
+  }};
 
 class Database {
 
-  constructor () {
+  constructor() {
 
-    ConfigManagerInstance().then( (configManager) => {
+    ConfigManagerInstance().then((configManager) => {
 
       var config = configManager.config;
 
@@ -328,7 +329,7 @@ class Database {
     });
   }
 
-  getStore (storeName) {
+  getStore(storeName) {
 
     if (!this.stores_[storeName])
       throw 'There is no store with name "' + storeName + '"';
@@ -336,7 +337,7 @@ class Database {
     return this.stores_[storeName];
   }
 
-  async open () {
+  async open() {
     if (this.db_)
       return Promise.resolve(this.db_);
 
@@ -378,7 +379,7 @@ class Database {
 
             for (var i = 0; i < indexNames.length; i++) {
               index = indexNames[i];
-              dbStore.createIndex(index, index, indexes[index]);
+              dbStore.createIndex(index, index.split(','), indexes[index]);
             }
           }
         }
@@ -396,7 +397,7 @@ class Database {
     });
   }
 
-  close () {
+  close() {
 
     return new Promise((resolve, reject) => {
 
@@ -409,7 +410,7 @@ class Database {
     });
   }
 
-  nuke () {
+  nuke() {
     return new Promise((resolve, reject) => {
 
       console.log("Nuking... " + this.name_);
@@ -428,7 +429,7 @@ class Database {
     });
   }
 
-  put (storeName, value, key) {
+  put(storeName, value, key) {
 
     return this.open().then((db) => {
 
@@ -443,9 +444,9 @@ class Database {
         };
 
         dbTransaction.onabort =
-        dbTransaction.onerror = (e) => {
-          reject(e);
-        };
+          dbTransaction.onerror = (e) => {
+            reject(e);
+          };
 
       });
 
@@ -453,7 +454,7 @@ class Database {
 
   }
 
-  get (storeName, value) {
+  get(storeName, value) {
 
     return this.open().then((db) => {
 
@@ -468,19 +469,18 @@ class Database {
         };
 
         dbTransaction.onabort =
-        dbTransaction.onerror = (e) => {
-          reject(e);
-        };
+          dbTransaction.onerror = (e) => {
+            reject(e);
+          };
 
         dbStoreRequest = dbStore.get(value);
 
       });
 
     });
-
   }
 
-  getAll (storeName, index, order) {
+  getAll(storeName, index, { filter, order }) {
 
     return this.open().then((db) => {
 
@@ -489,12 +489,13 @@ class Database {
         var dbTransaction = db.transaction(storeName, 'readonly');
         var dbStore = dbTransaction.objectStore(storeName);
         var dbCursor;
+        var dbFilter = parseFilter(filter);
 
         if (typeof order !== 'string')
           order = 'next';
 
         if (typeof index === 'string')
-          dbCursor = dbStore.index(index).openCursor(null, order);
+          dbCursor = dbStore.index(index).openCursor(dbFilter, order);
         else
           dbCursor = dbStore.openCursor();
 
@@ -523,7 +524,7 @@ class Database {
     });
   }
 
-  delete (storeName, key) {
+  delete(storeName, key) {
     return this.open().then((db) => {
 
       return new Promise((resolve, reject) => {
@@ -536,9 +537,9 @@ class Database {
         };
 
         dbTransaction.onabort =
-        dbTransaction.onerror = (e) => {
-          reject(e);
-        };
+          dbTransaction.onerror = (e) => {
+            reject(e);
+          };
 
         dbStore.delete(key);
 
@@ -546,7 +547,7 @@ class Database {
     });
   }
 
-  deleteAll (storeName) {
+  deleteAll(storeName) {
 
     return this.open().then((db) => {
 
@@ -658,7 +659,7 @@ class Model {
   /**
    * Gets all the objects from the database.
    */
-  static getAll(index, order) {
+  static getAll(index, { filter, order }) {
 
     if (hasSupport() === false) {
       return Promise.resolve();
@@ -670,7 +671,7 @@ class Model {
     return DatabaseInstance()
 
       // Do the query.
-      .then(db => db.getAll(this.storeName, index, order))
+      .then(db => db.getAll(this.storeName, index, {filter, order}))
 
       // Wrap all the results in the correct class.
       .then(results => {
@@ -813,12 +814,31 @@ class Log extends Model {
   constructor(data = {}, key) {
     super(key);
 
-    this._startTime = data.startTime || Date.now();
+    this._startTime = data._startTime;
     this._type = data.type;
   }
 
   static get storeName() {
     return 'Log';
+  }
+}
+
+class IndexController extends Controller {
+  static get route() {
+    return '/$'
+  }
+
+  async getAll(url) {
+    const view = new IndexView();
+    const logs = await Log.getAll('_type,_startTime', {filter: ['BETWEEN', ['a', '0'], ['z', '9']], order:Log.DESCENDING}) || [];
+  
+    return view.getAll(logs);
+  }
+
+  get(url) {
+    const view = new IndexView();
+    const output = view.render({title: "Ay....", newTitle: "Testing"});
+    return output;
   }
 }
 
@@ -840,7 +860,7 @@ class FeedView {
     <h1>Feeds</h1>
     <a href="/feeds/new">Create</a>
     ${
-      data.map(item => template`<div>${item.startTime} - ${item.endTime} </div>`)
+      data.map(item => template`<div><span>Feed: </span> ${item.startTime} - ${item.endTime}</div>`)
     }
     </body>
     </html>`;
@@ -849,8 +869,8 @@ class FeedView {
   async get(data) {
     return template`${head(data)}
     <h1>Feed ${data.id}</h1>
-      <label for=startTime>Start time: <input type="datetime" name="startTime" value="${new Date}"></label>
-      <label for=endTime>End time:<input type="datetime" name="endTime"></label>
+      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
+      <label for=endTime>End time:<input type="datetime-local" name="endTime"></label>
     </body>
     </html>`;
   }
@@ -859,20 +879,24 @@ class FeedView {
     return template`${head(data)}
     <h1>Feeds</h1>
     <form method="POST" action="/feeds">
-      <label for=startTime>Start time: <input type="datetime" name="startTime" value="${new Date}"></label>
-      <label for=endTime>End time:<input type="datetime" name="endTime"></label>
+      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
+      <label for=endTime>End time:<input type="datetime-local" name="endTime"></label>
       <input type="submit">
     </form>
     </body>
     </html>`;
   }
 
+  async post(data) {
+    return this.get(data);
+  }
+
   async edit(data) {
     return template`${head(data)}
     <h1>Feeds</h1>
     <form method="PUT" action="/feeds/${data.id}/edit">
-      <label for=startTime>Start time: <input type="datetime" name="startTime" value="${this.startTime}"></label>
-      <label for=endTime>End time:<input type="datetime" name="endTime" value="${this.endTime}"></label>
+      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${this.startTime}"></label>
+      <label for=endTime>End time:<input type="datetime-local" name="endTime" value="${this.endTime}"></label>
       <input type="submit">
     </form>
     </body>
@@ -886,17 +910,29 @@ class FeedController extends Controller {
   }
 
   async create(url, request) {
-    // Get the Data.
+    // Show the create an entry UI.
     const feedView = new FeedView();
-
-    // Save the data.
-
     return feedView.create(new Feed);
+  }
+
+  async post(url, request) {
+
+    const formData = await request.formData();
+    const startTime = formData.get('startTime');
+    const endTime = formData.get('endTime');
+    const feed = new Feed({startTime, endTime});
+    
+    feed.put();
+  
+    // Get the View.
+    const feedView = new FeedView(feed);
+
+    return feedView.post(feed);
   }
 
   async edit(url) {
     // Get the Data.
-    const feed = Feed.getAll('startTime', Feed.DESCENDING);
+    const feed = Feed.getAll('_startTime', Feed.DESCENDING);
   
     // Get the View.
     const feedView = new FeedView();
@@ -906,7 +942,7 @@ class FeedController extends Controller {
 
   async get(url) {
     // Get the Data.
-    const feed = Feed.getAll('startTime', Feed.DESCENDING);
+    const feed = Feed.get('_startTime', Feed.DESCENDING);
   
     // Get the View.
     const feedView = new FeedView();
@@ -916,7 +952,7 @@ class FeedController extends Controller {
 
   async getAll(url) {
     // Get the Data.
-    const feeds = await Feed.getAll('startTime', Feed.DESCENDING) || [];
+    const feeds = await Feed.getAll('_type,_startTime', {filter: ['BETWEEN', ['feed', '0'], ['feed', '9']], order:Feed.DESCENDING}) || [];
   
     // Get the View.
     const feedView = new FeedView();
@@ -931,7 +967,7 @@ app.registerRoute(IndexController.route, new IndexController);
 app.registerRoute(FeedController.route, new FeedController);
 
 self.onfetch = (event) => {
-  const {request} = event;
+  const { request } = event;
   const url = new URL(request.url);
 
   const controller = app.resolve(url);
@@ -939,19 +975,19 @@ self.onfetch = (event) => {
     return;
   }
   const view = controller.getView(url, request);
- 
+
   if (!!view) {
     return event.respondWith(view.then(output => {
       const options = {
-        status: (!!output)? 200: 404,
+        status: (!!output) ? 200 : 404,
         headers: {
           'Content-Type': 'text/html'
         }
       };
       let body = output || "Not Found";
-  
+
       return new Response(body, options);
-    })); 
+    }));
   }
 
   // If not caught by a controller, go to the network.

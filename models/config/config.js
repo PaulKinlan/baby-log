@@ -25,7 +25,7 @@ const Config = {
         keyPath: 'id'
       },
       indexes: {
-        startTime: { unique: false }
+        "_type,_startTime": { unique: false }
       }
     }
   }
