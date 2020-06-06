@@ -19,30 +19,29 @@ export default class FeedController extends Controller {
     const formData = await request.formData();
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
-    const feed = new Feed({startTime, endTime});
-    
+    const feed = new Feed({ startTime, endTime });
+
     feed.put();
-  
+
     // Get the View.
     const feedView = new FeedView(feed);
 
     return feedView.post(feed);
   }
 
-  async edit(url) {
+  async edit(url, id) {
     // Get the Data.
-    const feed = FeedModel.getAll('_startTime', FeedModel.DESCENDING);
-  
+    const feed = await FeedModel.get(id);
     // Get the View.
     const feedView = new FeedView();
 
     return feedView.edit(feed);
   }
 
-  async get(url) {
+  async get(url, id) {
     // Get the Data.
-    const feed = FeedModel.get('_startTime', FeedModel.DESCENDING);
-  
+    const feed = await FeedModel.get(id);
+
     // Get the View.
     const feedView = new FeedView();
 
@@ -51,8 +50,8 @@ export default class FeedController extends Controller {
 
   async getAll(url) {
     // Get the Data.
-    const feeds = await FeedModel.getAll('_type,_startTime', {filter: ['BETWEEN', ['feed', '0'], ['feed', '9']], order:FeedModel.DESCENDING}) || [];
-  
+    const feeds = await FeedModel.getAll('_type,_startTime', { filter: ['BETWEEN', ['feed', '0'], ['feed', '9']], order: FeedModel.DESCENDING }) || [];
+
     // Get the View.
     const feedView = new FeedView();
 

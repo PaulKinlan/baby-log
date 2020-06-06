@@ -1,15 +1,13 @@
 import template from '../lib/florawg.js'
 
-export default (data) => {
+export default (data, body) => {
   return template`<!DOCTYPE html>
-  <html>
-    <head>
-    <title>${data.newTitle}</title>
+<html>
+  <head>
+    <title></title>
     <script src="/client/client.js" type="module"></script>
-    </head>
-    <body>
-    <header>
-      <a href="/feeds">Feeds</a>
-    </header>
-    `;
+    <link rel="manifest" href="/manifest.json">
+  </head>
+  ${body}
+</html>`;
 };

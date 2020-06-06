@@ -20,6 +20,7 @@ export default class Log extends Model {
   constructor(data = {}, key) {
     super(key);
 
+    this.id = data.id;
     this._startTime = data._startTime;
     this._type = data.type;
   }

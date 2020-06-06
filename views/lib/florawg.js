@@ -50,7 +50,6 @@ export default async (strings, ...values) => {
         while (i < values.length) {
           let html = strings[i];
           controller.enqueue(new TextEncoder().encode(html));
-          
           await enqueueItem(values[i], controller);
 
           i++;

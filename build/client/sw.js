@@ -146,7 +146,6 @@ var template = async (strings, ...values) => {
         while (i < values.length) {
           let html = strings[i];
           controller.enqueue(new TextEncoder().encode(html));
-          
           await enqueueItem(values[i], controller);
 
           i++;
@@ -160,27 +159,25 @@ var template = async (strings, ...values) => {
   });
 };
 
-var head = (data) => {
+var head = (data, body) => {
   return template`<!DOCTYPE html>
-  <html>
-    <head>
-    <title>${data.newTitle}</title>
+<html>
+  <head>
+    <title></title>
     <script src="/client/client.js" type="module"></script>
-    </head>
-    <body>
-    <header>
-      <a href="/feeds">Feeds</a>
-    </header>
-    `;
+    <link rel="manifest" href="/manifest.json">
+  </head>
+  ${body}
+</html>`;
 };
 
 class IndexView {
   async getAll(data) {
-    return template`${head(data)}
-    <h1>Feeds</h1>
-    <a href="/feeds/new">Create</a>
+    return template`${head()}
+    <h1>Baby Log 1</h1>
+    <a href="/feeds/new">Add Feed</a>
     ${
-      data.map(item => template`<div><span>Feed: </span> ${item.startTime} - ${item.endTime}</div>`)
+      data.map(item => template`<div><span>${item.type}: </span> ${item.startTime} - ${item.endTime} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)
     }
     </body>
     </html>`;
@@ -814,6 +811,7 @@ class Log extends Model {
   constructor(data = {}, key) {
     super(key);
 
+    this.id = data.id;
     this._startTime = data._startTime;
     this._type = data.type;
   }
@@ -825,7 +823,7 @@ class Log extends Model {
 
 class IndexController extends Controller {
   static get route() {
-    return '/$'
+    return '^/$'
   }
 
   async getAll(url) {
@@ -854,21 +852,27 @@ class Feed extends Log {
   }
 }
 
+var body = (data, items) => {
+  return template`
+  <header>
+    <a href="/feeds">Feeds</a>
+    <h1>${data.type}</h1>
+  </header>
+  ${items}
+  `;
+};
+
 class FeedView {
   async getAll(data) {
-    return template`${head(data)}
-    <h1>Feeds</h1>
-    <a href="/feeds/new">Create</a>
-    ${
-      data.map(item => template`<div><span>Feed: </span> ${item.startTime} - ${item.endTime}</div>`)
-    }
-    </body>
-    </html>`;
+    return template`${head(data, 
+      body(data, 
+        template`${data.map(item => template`<div><span>Feed: </span> ${item.startTime} - ${item.endTime}</div>`)}`)
+    )}`;
   }
 
   async get(data) {
-    return template`${head(data)}
-    <h1>Feed ${data.id}</h1>
+    return template`${head()}
+    <h1>Feed</h1>
       <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
       <label for=endTime>End time:<input type="datetime-local" name="endTime"></label>
     </body>
@@ -876,7 +880,7 @@ class FeedView {
   }
 
   async create(data) {
-    return template`${head(data)}
+    return template`${head()}
     <h1>Feeds</h1>
     <form method="POST" action="/feeds">
       <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
@@ -892,11 +896,11 @@ class FeedView {
   }
 
   async edit(data) {
-    return template`${head(data)}
+    return template`${head()}
     <h1>Feeds</h1>
     <form method="PUT" action="/feeds/${data.id}/edit">
-      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${this.startTime}"></label>
-      <label for=endTime>End time:<input type="datetime-local" name="endTime" value="${this.endTime}"></label>
+      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.replace(/Z$/, '')}"></label>
+      <label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.endTime.replace(/Z$/, '')}"></label>
       <input type="submit">
     </form>
     </body>
@@ -920,30 +924,29 @@ class FeedController extends Controller {
     const formData = await request.formData();
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
-    const feed = new Feed({startTime, endTime});
-    
+    const feed = new Feed({ startTime, endTime });
+
     feed.put();
-  
+
     // Get the View.
     const feedView = new FeedView(feed);
 
     return feedView.post(feed);
   }
 
-  async edit(url) {
+  async edit(url, id) {
     // Get the Data.
-    const feed = Feed.getAll('_startTime', Feed.DESCENDING);
-  
+    const feed = await Feed.get(id);
     // Get the View.
     const feedView = new FeedView();
 
     return feedView.edit(feed);
   }
 
-  async get(url) {
+  async get(url, id) {
     // Get the Data.
-    const feed = Feed.get('_startTime', Feed.DESCENDING);
-  
+    const feed = await Feed.get(id);
+
     // Get the View.
     const feedView = new FeedView();
 
@@ -952,8 +955,8 @@ class FeedController extends Controller {
 
   async getAll(url) {
     // Get the Data.
-    const feeds = await Feed.getAll('_type,_startTime', {filter: ['BETWEEN', ['feed', '0'], ['feed', '9']], order:Feed.DESCENDING}) || [];
-  
+    const feeds = await Feed.getAll('_type,_startTime', { filter: ['BETWEEN', ['feed', '0'], ['feed', '9']], order: Feed.DESCENDING }) || [];
+
     // Get the View.
     const feedView = new FeedView();
 

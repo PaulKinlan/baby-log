@@ -4,7 +4,7 @@ import LogModel from '../models/log.js';
 
 export default class IndexController extends Controller {
   static get route() {
-    return '/$'
+    return '^/$'
   }
 
   async getAll(url) {
