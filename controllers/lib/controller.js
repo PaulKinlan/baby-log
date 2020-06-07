@@ -29,7 +29,7 @@ export default class Controller {
       return this.post(url, request);
     }
     else if (method === 'PUT') {
-      return this.put(url, request);
+      return this.put(url, idMatch[1], request);
     }
     else if (method === 'DELETE') {
       const idMatch = pathname.match(`${route}/(.+)/`);

@@ -1,7 +1,8 @@
-import Controller from "./lib/controller.js";
+import Controller from './lib/controller.js';
 import FeedModel from '../models/feed.js';
 import FeedView from '../views/feed.js';
 import Feed from "../models/feed.js";
+import NotFoundException from './notfoundexception.js';
 
 export default class FeedController extends Controller {
   static get route() {
@@ -31,16 +32,41 @@ export default class FeedController extends Controller {
 
   async edit(url, id) {
     // Get the Data.
-    const feed = await FeedModel.get(id);
+    const feed = await FeedModel.get(parseInt(id, 10));
+
+    if (!!feed == false) throw new NotFoundException(`Feed ${id} not found`);;
     // Get the View.
     const feedView = new FeedView();
 
     return feedView.edit(feed);
   }
 
+  async put(url, id, request) {
+    // Get the Data.
+    const feed = await FeedModel.get(parseInt(id, 10));
+
+    if (!!feed == false) throw new NotFoundException(`Feed ${id} not found`);
+    
+    const formData = await request.formData();
+    const startTime = formData.get('startTime');
+    const endTime = formData.get('endTime');
+    
+    feed.startTime = startTime;
+    feed.endTime = endTime;
+
+    feed.put();
+
+    // Get the View.
+    const feedView = new FeedView(feed);
+
+    return feedView.put(feed);
+  }
+
   async get(url, id) {
     // Get the Data.
-    const feed = await FeedModel.get(id);
+    const feed = await FeedModel.get(parseInt(id, 10));
+
+    if (!!feed == false) throw new NotFoundException(`Feed ${id} not found`);
 
     // Get the View.
     const feedView = new FeedView();

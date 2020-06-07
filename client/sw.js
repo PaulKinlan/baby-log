@@ -29,6 +29,14 @@ self.onfetch = (event) => {
       let body = output || "Not Found";
 
       return new Response(body, options);
+    }).catch(ex => {
+      const options = {
+        status: 404,
+        headers: {
+          'Content-Type': 'text/html'
+        }
+      };
+      return new Response(ex.toString(), options);
     }));
   }
 

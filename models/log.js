@@ -9,8 +9,24 @@ export default class Log extends Model {
     return this._endTime;
   }
 
+  set endTime(val) {
+    this._endTime = val;
+  }
+
+  set startTime(val) {
+    this._startTime = val;
+  }
+
+  get hasFinished() {
+    return !!this._endTime;
+  }
+
   get duration() {
-    return this._startTime - this._endTime;
+    let end = this._endTime;
+    if (!!this._endTime === false) {
+      end = Date.now();
+    }
+    return this._endTime - this._startTime;
   }
 
   get type() {
@@ -21,7 +37,10 @@ export default class Log extends Model {
     super(key);
 
     this.id = data.id;
-    this._startTime = data._startTime;
+    this._startTime = new Date(data._startTime);
+    if (!!data._endTime) {
+      this._endTime = new Date(data._endTime);
+    }
     this._type = data.type;
   }
 

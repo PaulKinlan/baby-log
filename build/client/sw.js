@@ -31,7 +31,7 @@ class Controller {
       return this.post(url, request);
     }
     else if (method === 'PUT') {
-      return this.put(url, request);
+      return this.put(url, idMatch[1], request);
     }
     else if (method === 'DELETE') {
       const idMatch = pathname.match(`${route}/(.+)/`);
@@ -163,7 +163,7 @@ var head = (data, body) => {
   return template`<!DOCTYPE html>
 <html>
   <head>
-    <title></title>
+    <title>Baby Logger</title>
     <script src="/client/client.js" type="module"></script>
     <link rel="manifest" href="/manifest.json">
   </head>
@@ -173,14 +173,10 @@ var head = (data, body) => {
 
 class IndexView {
   async getAll(data) {
-    return template`${head()}
-    <h1>Baby Log 1</h1>
-    <a href="/feeds/new">Add Feed</a>
-    ${
-      data.map(item => template`<div><span>${item.type}: </span> ${item.startTime} - ${item.endTime} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)
-    }
-    </body>
-    </html>`;
+    return template`${head(data, 
+      body(data, 
+        template`${data.map(item => template`<div><span>Feed: </span> ${item.startTime} - ${item.endTime} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
+    )}`;
   }
 }
 
@@ -800,8 +796,24 @@ class Log extends Model {
     return this._endTime;
   }
 
+  set endTime(val) {
+    this._endTime = val;
+  }
+
+  set startTime(val) {
+    this._startTime = val;
+  }
+
+  get hasFinished() {
+    return !!this._endTime;
+  }
+
   get duration() {
-    return this._startTime - this._endTime;
+    let end = this._endTime;
+    if (!!this._endTime === false) {
+      end = Date.now();
+    }
+    return this._endTime - this._startTime;
   }
 
   get type() {
@@ -812,7 +824,10 @@ class Log extends Model {
     super(key);
 
     this.id = data.id;
-    this._startTime = data._startTime;
+    this._startTime = new Date(data._startTime);
+    if (!!data._endTime) {
+      this._endTime = new Date(data._endTime);
+    }
     this._type = data.type;
   }
 
@@ -852,11 +867,12 @@ class Feed extends Log {
   }
 }
 
-var body = (data, items) => {
+var body$1 = (data, items) => {
   return template`
   <header>
+    <h1>Baby Log</h1>
+    <h2>${data.type}</h2>
     <a href="/feeds">Feeds</a>
-    <h1>${data.type}</h1>
   </header>
   ${items}
   `;
@@ -865,8 +881,8 @@ var body = (data, items) => {
 class FeedView {
   async getAll(data) {
     return template`${head(data, 
-      body(data, 
-        template`${data.map(item => template`<div><span>Feed: </span> ${item.startTime} - ${item.endTime}</div>`)}`)
+      body$1(data, 
+        template`${data.map(item => template`<div><span>Feed: </span> ${item.startTime.toISOString()} - ${item.endTime.toISOString()} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
     )}`;
   }
 
@@ -899,12 +915,18 @@ class FeedView {
     return template`${head()}
     <h1>Feeds</h1>
     <form method="PUT" action="/feeds/${data.id}/edit">
-      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.replace(/Z$/, '')}"></label>
-      <label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.endTime.replace(/Z$/, '')}"></label>
+      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label>
+      <label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label>
       <input type="submit">
     </form>
     </body>
     </html>`;
+  }
+}
+
+class NotFoundException extends Error {
+  constructor(message) {
+    super(message);
   }
 }
 
@@ -936,16 +958,40 @@ class FeedController extends Controller {
 
   async edit(url, id) {
     // Get the Data.
-    const feed = await Feed.get(id);
-    // Get the View.
+    const feed = await Feed.get(parseInt(id, 10));
+
+    if (!!feed == false) throw new NotFoundException(`Feed ${id} not found`);    // Get the View.
     const feedView = new FeedView();
 
     return feedView.edit(feed);
   }
 
+  async put(url, id, request) {
+    // Get the Data.
+    const feed = await Feed.get(parseInt(id, 10));
+
+    if (!!feed == false) throw new NotFoundException(`Feed ${id} not found`);
+    
+    const formData = await request.formData();
+    const startTime = formData.get('startTime');
+    const endTime = formData.get('endTime');
+    
+    feed.startTime = startTime;
+    feed.endTime = endTime;
+
+    feed.put();
+
+    // Get the View.
+    const feedView = new FeedView(feed);
+
+    return feedView.put(feed);
+  }
+
   async get(url, id) {
     // Get the Data.
-    const feed = await Feed.get(id);
+    const feed = await Feed.get(parseInt(id, 10));
+
+    if (!!feed == false) throw new NotFoundException(`Feed ${id} not found`);
 
     // Get the View.
     const feedView = new FeedView();
@@ -990,6 +1036,14 @@ self.onfetch = (event) => {
       let body = output || "Not Found";
 
       return new Response(body, options);
+    }).catch(ex => {
+      const options = {
+        status: 404,
+        headers: {
+          'Content-Type': 'text/html'
+        }
+      };
+      return new Response(ex.toString(), options);
     }));
   }
 

@@ -9,6 +9,7 @@ import App from '../app.js';
 import IndexController from '../controllers/index.js';
 import FeedController from '../controllers/feed.js';
 import StaticController from '../controllers/server/static.js';
+import NotFoundException from '../controllers/notfoundexception.js';
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -26,7 +27,8 @@ const server = http.createServer((req, res) => {
     method: method,
     headers: headers,
     body: (method == 'GET' || method == 'HEAD') ? undefined : ''
-  } );
+  });
+
 
   const controller = app.resolve(url);
   const view = controller.getView(url, request);
@@ -48,8 +50,15 @@ const server = http.createServer((req, res) => {
         res.statusCode = 404;
         res.end();
       }
+    }).catch(ex => {
+      if (ex instanceof NotFoundException) {
+        res.statusCode = 404;
+        res.write(ex.toString());
+        res.end();
+      }
     });
   }
+
 });
 
 server.listen(port, hostname, () => {
