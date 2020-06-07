@@ -171,11 +171,23 @@ var head = (data, body) => {
 </html>`;
 };
 
+var body = (data, items) => {
+  return template`
+  <header>
+    <h1>Baby Log</h1>
+    <h2>${data.type}</h2>
+    <div>View: <a href="/feeds">Feeds</a></div>
+    <div>Add: <a href="/feeds/new">Feed</a></div>
+  </header>
+  ${items}
+  `;
+};
+
 class IndexView {
   async getAll(data) {
     return template`${head(data, 
       body(data, 
-        template`${data.map(item => template`<div><span>Feed: </span> ${item.startTime} - ${item.endTime} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
+        template`${data.map(item => template`<div><span>${item.type}: </span> ${item.startTime} - ${item.endTime} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
     )}`;
   }
 }
@@ -828,7 +840,7 @@ class Log extends Model {
     if (!!data._endTime) {
       this._endTime = new Date(data._endTime);
     }
-    this._type = data.type;
+    this._type = data._type;
   }
 
   static get storeName() {
@@ -856,55 +868,37 @@ class IndexController extends Controller {
 }
 
 class Feed extends Log {
-
-  get type() {
-    return this._type;
-  }
-
   constructor(data, key) {
     super(data, key);
     this._type = 'feed';
   }
 }
 
-var body$1 = (data, items) => {
-  return template`
-  <header>
-    <h1>Baby Log</h1>
-    <h2>${data.type}</h2>
-    <a href="/feeds">Feeds</a>
-  </header>
-  ${items}
-  `;
-};
-
 class FeedView {
   async getAll(data) {
-    return template`${head(data, 
-      body$1(data, 
-        template`${data.map(item => template`<div><span>Feed: </span> ${item.startTime.toISOString()} - ${item.endTime.toISOString()} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
+    return template`${head(data,
+      body(data,
+        template`${data.map(item => template`<div><span>Feed: </span> ${item.startTime.toISOString()} - ${data.hasFinished ? item.endTime.toISOString() : ''} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
     )}`;
   }
 
   async get(data) {
-    return template`${head()}
-    <h1>Feed</h1>
-      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
-      <label for=endTime>End time:<input type="datetime-local" name="endTime"></label>
-    </body>
-    </html>`;
+    return template`${head(data,
+      body(data,
+        template`<label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
+        <label for=endTime>End time:<input type="datetime-local" name="endTime"></label>`)
+    )}`;
   }
 
   async create(data) {
-    return template`${head()}
-    <h1>Feeds</h1>
+    return template`${head(data,
+      body(data, `
     <form method="POST" action="/feeds">
       <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
       <label for=endTime>End time:<input type="datetime-local" name="endTime"></label>
       <input type="submit">
     </form>
-    </body>
-    </html>`;
+    `))}`;
   }
 
   async post(data) {
@@ -912,15 +906,14 @@ class FeedView {
   }
 
   async edit(data) {
-    return template`${head()}
-    <h1>Feeds</h1>
+    return template`${head(data,
+      body(data, `
     <form method="PUT" action="/feeds/${data.id}/edit">
       <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label>
       <label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label>
       <input type="submit">
     </form>
-    </body>
-    </html>`;
+    `))}`;
   }
 }
 

@@ -41,7 +41,7 @@ export default class Log extends Model {
     if (!!data._endTime) {
       this._endTime = new Date(data._endTime);
     }
-    this._type = data.type;
+    this._type = data._type;
   }
 
   static get storeName() {

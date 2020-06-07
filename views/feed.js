@@ -4,31 +4,29 @@ import template from './lib/florawg.js'
 
 export default class FeedView {
   async getAll(data) {
-    return template`${head(data, 
-      body(data, 
-        template`${data.map(item => template`<div><span>Feed: </span> ${item.startTime.toISOString()} - ${item.endTime.toISOString()} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
+    return template`${head(data,
+      body(data,
+        template`${data.map(item => template`<div><span>Feed: </span> ${item.startTime.toISOString()} - ${data.hasFinished ? item.endTime.toISOString() : ''} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
     )}`;
   }
 
   async get(data) {
-    return template`${head(data)}
-    <h1>Feed</h1>
-      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
-      <label for=endTime>End time:<input type="datetime-local" name="endTime"></label>
-    </body>
-    </html>`;
+    return template`${head(data,
+      body(data,
+        template`<label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
+        <label for=endTime>End time:<input type="datetime-local" name="endTime"></label>`)
+    )}`;
   }
 
   async create(data) {
-    return template`${head(data)}
-    <h1>Feeds</h1>
+    return template`${head(data,
+      body(data, `
     <form method="POST" action="/feeds">
       <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
       <label for=endTime>End time:<input type="datetime-local" name="endTime"></label>
       <input type="submit">
     </form>
-    </body>
-    </html>`;
+    `))}`;
   }
 
   async post(data) {
@@ -36,14 +34,13 @@ export default class FeedView {
   }
 
   async edit(data) {
-    return template`${head(data)}
-    <h1>Feeds</h1>
+    return template`${head(data,
+      body(data, `
     <form method="PUT" action="/feeds/${data.id}/edit">
       <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label>
       <label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label>
       <input type="submit">
     </form>
-    </body>
-    </html>`;
+    `))}`;
   }
 }
