@@ -9,7 +9,7 @@ export default class IndexController extends Controller {
 
   async getAll(url) {
     const view = new IndexView();
-    const logs = await LogModel.getAll('_type,_startTime', {filter: ['BETWEEN', ['a', '0'], ['z', '9']], order:LogModel.DESCENDING}) || [];
+    const logs = await LogModel.getAll('type,startTime', {filter: ['BETWEEN', ['a', new Date(0)], ['z', new Date(9999999999999)]], order:LogModel.DESCENDING}) || [];
   
     return view.getAll(logs);
   }

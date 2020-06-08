@@ -221,7 +221,7 @@ const Config = {
         keyPath: 'id'
       },
       indexes: {
-        "_type,_startTime": { unique: false }
+        "type,startTime": { unique: true }
       }
     }
   }
@@ -802,47 +802,31 @@ class Model {
 }
 
 class Log extends Model {
-  get startTime() {
-    return this._startTime;
-  }
-
-  get endTime() {
-    return this._endTime;
-  }
-
-  set endTime(val) {
-    this._endTime = val;
-  }
-
-  set startTime(val) {
-    this._startTime = val;
-  }
 
   get hasFinished() {
-    return !!this._endTime;
+    return !!this.endTime;
   }
 
   get duration() {
-    let end = this._endTime;
-    if (!!this._endTime === false) {
+    let end = this.endTime;
+    if (!!this.endTime === false) {
       end = Date.now();
     }
-    return this._endTime - this._startTime;
-  }
-
-  get type() {
-    return this._type;
+    return this.endTime - this.startTime;
   }
 
   constructor(data = {}, key) {
     super(key);
 
-    this.id = data.id;
-    this._startTime = new Date(data._startTime);
-    if (!!data._endTime) {
-      this._endTime = new Date(data._endTime);
+    if(!!data.id) { 
+      this.id = data.id;
     }
-    this._type = data._type;
+    
+    this.startTime = new Date(data.startTime);
+    if (!!data.endTime) {
+      this.endTime = new Date(data.endTime);
+    }
+    this.type = data.type;
   }
 
   static get storeName() {
@@ -857,7 +841,7 @@ class IndexController extends Controller {
 
   async getAll(url) {
     const view = new IndexView();
-    const logs = await Log.getAll('_type,_startTime', {filter: ['BETWEEN', ['a', '0'], ['z', '9']], order:Log.DESCENDING}) || [];
+    const logs = await Log.getAll('type,startTime', {filter: ['BETWEEN', ['a', new Date(0)], ['z', new Date(9999999999999)]], order:Log.DESCENDING}) || [];
   
     return view.getAll(logs);
   }
@@ -872,7 +856,7 @@ class IndexController extends Controller {
 class Feed extends Log {
   constructor(data, key) {
     super(data, key);
-    this._type = 'feed';
+    this.type = 'feed';
   }
 }
 
@@ -934,7 +918,7 @@ class FeedController extends Controller {
     // Show the create an entry UI.
     const feedView = new FeedView();
     return feedView.create(new Feed);
-  }
+  } 
 
   async post(url, request) {
 
@@ -995,8 +979,8 @@ class FeedController extends Controller {
   }
 
   async getAll(url) {
-    // Get the Data.
-    const feeds = await Feed.getAll('_type,_startTime', { filter: ['BETWEEN', ['feed', '0'], ['feed', '9']], order: Feed.DESCENDING }) || [];
+    // Get the Data.....
+    const feeds = await Feed.getAll('type,startTime', { filter: ['BETWEEN', ['feed', new Date(0)], ['feed', new Date(9999999999999)]], order: Feed.DESCENDING }) || [];
 
     // Get the View.
     const feedView = new FeedView();

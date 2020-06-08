@@ -13,7 +13,7 @@ export default class FeedController extends Controller {
     // Show the create an entry UI.
     const feedView = new FeedView();
     return feedView.create(new FeedModel);
-  }
+  } 
 
   async post(url, request) {
 
@@ -75,8 +75,8 @@ export default class FeedController extends Controller {
   }
 
   async getAll(url) {
-    // Get the Data.
-    const feeds = await FeedModel.getAll('_type,_startTime', { filter: ['BETWEEN', ['feed', '0'], ['feed', '9']], order: FeedModel.DESCENDING }) || [];
+    // Get the Data.....
+    const feeds = await FeedModel.getAll('type,startTime', { filter: ['BETWEEN', ['feed', new Date(0)], ['feed', new Date(9999999999999)]], order: FeedModel.DESCENDING }) || [];
 
     // Get the View.
     const feedView = new FeedView();

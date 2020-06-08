@@ -1,47 +1,31 @@
 import Model from './lib/model.js'
 
 export default class Log extends Model {
-  get startTime() {
-    return this._startTime;
-  }
-
-  get endTime() {
-    return this._endTime;
-  }
-
-  set endTime(val) {
-    this._endTime = val;
-  }
-
-  set startTime(val) {
-    this._startTime = val;
-  }
 
   get hasFinished() {
-    return !!this._endTime;
+    return !!this.endTime;
   }
 
   get duration() {
-    let end = this._endTime;
-    if (!!this._endTime === false) {
+    let end = this.endTime;
+    if (!!this.endTime === false) {
       end = Date.now();
     }
-    return this._endTime - this._startTime;
-  }
-
-  get type() {
-    return this._type;
+    return this.endTime - this.startTime;
   }
 
   constructor(data = {}, key) {
     super(key);
 
-    this.id = data.id;
-    this._startTime = new Date(data._startTime);
-    if (!!data._endTime) {
-      this._endTime = new Date(data._endTime);
+    if(!!data.id) { 
+      this.id = data.id;
     }
-    this._type = data._type;
+    
+    this.startTime = new Date(data.startTime);
+    if (!!data.endTime) {
+      this.endTime = new Date(data.endTime);
+    }
+    this.type = data.type;
   }
 
   static get storeName() {
