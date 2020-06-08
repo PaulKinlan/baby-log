@@ -4,6 +4,8 @@
   "description": "Baby Logger Web App",
   "main": "app.js",
   "scripts": {
+    "build:service-worker": "rollup -c service-worker.rollup.config.js",
+    "build": "npm run build:service-worker",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Paul Kinlan",

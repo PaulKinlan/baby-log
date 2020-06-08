@@ -179,7 +179,9 @@ var body = (data, items) => {
     <div>View: <a href="/feeds">Feeds</a></div>
     <div>Add: <a href="/feeds/new">Feed</a></div>
   </header>
-  ${items}
+  <main>
+    ${items}
+  </main>
   `;
 };
 
