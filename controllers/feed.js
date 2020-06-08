@@ -2,7 +2,7 @@ import Controller from './lib/controller.js';
 import FeedModel from '../models/feed.js';
 import FeedView from '../views/feed.js';
 import Feed from "../models/feed.js";
-import NotFoundException from './notfoundexception.js';
+import NotFoundException from './exception/notfound.js';
 
 export default class FeedController extends Controller {
   static get route() {

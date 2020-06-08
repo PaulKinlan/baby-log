@@ -9,7 +9,7 @@ import App from '../app.js';
 import IndexController from '../controllers/index.js';
 import FeedController from '../controllers/feed.js';
 import StaticController from '../controllers/server/static.js';
-import NotFoundException from '../controllers/notfoundexception.js';
+import NotFoundException from '../controllers/exception/notfound.js';
 
 const hostname = '127.0.0.1';
 const port = 3000;

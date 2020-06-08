@@ -2,10 +2,11 @@
   "name": "baby-log",
   "version": "1.0.0",
   "description": "Baby Logger Web App",
-  "main": "app.js",
+  "main": "sever/server.js",
   "scripts": {
     "build:service-worker": "rollup -c service-worker.rollup.config.js",
     "build": "npm run build:service-worker",
+    "start": "node server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Paul Kinlan",
