@@ -16,9 +16,10 @@ async function get(url) {
     const hostedFile = path.join(currentPath, pathname);
 
     try {
-      return await readFile(hostedFile, "utf8");
+      return await readFile(hostedFile);
     } catch (err) {
       // Fall through
+      continue;
     }
   }
 }

@@ -27,7 +27,7 @@ app.registerRoute(FeedController.route, new FeedController);
 app.registerRoute(SleepController.route, new SleepController);
 app.registerRoute(PoopController.route, new PoopController);
 app.registerRoute(WeeController.route, new WeeController);
-app.registerRoute(StaticController.route, new StaticController(['./build/client', './client']));
+app.registerRoute(StaticController.route, new StaticController(['./build/client/', './client/']));
 
 class FormData {
 
@@ -53,6 +53,10 @@ const render = (url, request, res) => {
     res.setHeader('Content-Type', mime.getType(url.pathname) || 'text/html');
     view.then(output => {
       if (typeof output === "string") {
+        res.write(output);
+        res.end();
+      }
+      else if (output instanceof Buffer) {
         res.write(output);
         res.end();
       }
