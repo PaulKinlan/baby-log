@@ -6,7 +6,7 @@ export default class IndexView {
   async getAll(data) {
     return template`${head(data, 
       body(data, 
-        template`${data.map(item => template`<div><span>${item.type}: </span> ${item.startTime} - ${item.endTime} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
+        template`${data.map(item => template`<div><img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png" alt="${item.type}"> ${item.startTime} - ${item.endTime} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
     )}`;
   }
 }

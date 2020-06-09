@@ -164,7 +164,8 @@ var head = (data, body) => {
 <html>
   <head>
     <title>Baby Logger</title>
-    <script src="/client/client.js" type="module"></script>
+    <script src="/client/client.js" type="module" defer></script>
+    <link rel="stylesheet" href="/styles/main.css">
     <link rel="manifest" href="/manifest.json">
   </head>
   ${body}
@@ -176,10 +177,10 @@ var body = (data, items) => {
   <header>
     <h1>Baby Log</h1>
     <h2>${data.type}</h2>
-    <div>View: <a href="/">All</a>, <a href="/feeds">Feeds</a>, <a href="/sleeps">Sleeps</a>, <a href="/poops">Poops</a>,  <a href="/wees">Wees</a></div>
-    <div>Add: <a href="/feeds/new">Feed</a>, <a href="/sleeps/new">Sleep</a>, <a href="/poops/new">Poop</a>, <a href="/wees/new">Wee</a></div>
-  </header>
+    <div><a href="/">All</a>, <a href="/feeds">Feeds</a>, <a href="/sleeps">Sleeps</a>, <a href="/poops">Poops</a>,  <a href="/wees">Wees</a></div>
+      </header>
   <main>
+    <div class="add">Add: <a href="/feeds/new">Feed</a>, <a href="/sleeps/new">Sleep</a>, <a href="/poops/new">Poop</a>, <a href="/wees/new">Wee</a></div>
     ${items}
   </main>
   `;
@@ -189,7 +190,7 @@ class IndexView {
   async getAll(data) {
     return template`${head(data, 
       body(data, 
-        template`${data.map(item => template`<div><span>${item.type}: </span> ${item.startTime} - ${item.endTime} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
+        template`${data.map(item => template`<div><img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png" alt="${item.type}"> ${item.startTime} - ${item.endTime} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
     )}`;
   }
 }
