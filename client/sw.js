@@ -1,12 +1,18 @@
 import App from '../app.js';
 import IndexController from '../controllers/index.js'
 import FeedController from '../controllers/feed.js'
+import SleepController from '../controllers/sleep.js'
+import PoopController from '../controllers/poop.js'
+import WeeController from '../controllers/wee.js'
 import NotFoundController from '../controllers/notfound.js';
 
 const app = new App();
 
 app.registerRoute(IndexController.route, new IndexController);
 app.registerRoute(FeedController.route, new FeedController);
+app.registerRoute(SleepController.route, new SleepController);
+app.registerRoute(PoopController.route, new PoopController);
+app.registerRoute(WeeController.route, new WeeController);
 
 self.onfetch = (event) => {
   const { request } = event
