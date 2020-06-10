@@ -1,7 +1,7 @@
 class MethodNotFound {
   constructor(message) {
     //super(message);
-    this.name = "MehodNotFound";
+    this.name = "MethodNotFound";
   }
 }
 
