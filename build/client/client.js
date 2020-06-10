@@ -183,7 +183,7 @@ var body = (data, items) => {
     </header>
   <main>
     <header>
-      <h2>${data.type}s</h2>
+      <h2>${data.header}</h2>
     </header>
     <section>
     ${items}
@@ -238,6 +238,7 @@ class IndexView {
   async getAll(data) {
 
     data.type = "All";
+    data.header = "All";
 
     return template`${head(data, 
       body(data, 
@@ -918,6 +919,7 @@ class FeedView {
   async getAll(data) {
 
     data.type = "Feed";
+    data.header = "Feeds";
 
     return template`${head(data,
       body(data,
@@ -926,6 +928,9 @@ class FeedView {
   }
 
   async get(data) {
+
+    data.header = "Feed";
+
     return template`${head(data,
       body(data,
         template`<div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
@@ -934,13 +939,16 @@ class FeedView {
   }
 
   async create(data) {
+
+    data.header = "Add a Feed";
+
     return template`${head(data,
-      body(data, `
+      body(data, `<div>
     <form method="POST" action="/feeds">
       <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
       <div><label for=endTime>End time:<input type="datetime-local" name="endTime"></label></div>
       <input type="submit">
-    </form>
+    </form></div>
     `))}`;
   }
 
@@ -949,13 +957,15 @@ class FeedView {
   }
 
   async edit(data) {
+    data.header = "Update a Feed";
+
     return template`${head(data,
-      body(data, `
+      body(data, `<div>
     <form method="POST" action="/feeds/${data.id}/edit">
       <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label></div>
       <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label></div>
       <input type="submit">
-    </form>
+    </form></div>
     `))}`;
   }
 

@@ -185,7 +185,7 @@ var body = (data, items) => {
     </header>
   <main>
     <header>
-      <h2>${data.type}s</h2>
+      <h2>${data.header}</h2>
     </header>
     <section>
     ${items}
@@ -240,6 +240,7 @@ class IndexView {
   async getAll(data) {
 
     data.type = "All";
+    data.header = "All";
 
     return template`${head(data, 
       body(data, 
@@ -920,6 +921,7 @@ class FeedView {
   async getAll(data) {
 
     data.type = "Feed";
+    data.header = "Feeds";
 
     return template`${head(data,
       body(data,
@@ -928,6 +930,9 @@ class FeedView {
   }
 
   async get(data) {
+
+    data.header = "Feed";
+
     return template`${head(data,
       body(data,
         template`<div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
@@ -936,13 +941,16 @@ class FeedView {
   }
 
   async create(data) {
+
+    data.header = "Add a Feed";
+
     return template`${head(data,
-      body(data, `
+      body(data, `<div>
     <form method="POST" action="/feeds">
       <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
       <div><label for=endTime>End time:<input type="datetime-local" name="endTime"></label></div>
       <input type="submit">
-    </form>
+    </form></div>
     `))}`;
   }
 
@@ -951,13 +959,15 @@ class FeedView {
   }
 
   async edit(data) {
+    data.header = "Update a Feed";
+
     return template`${head(data,
-      body(data, `
+      body(data, `<div>
     <form method="POST" action="/feeds/${data.id}/edit">
       <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label></div>
       <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label></div>
       <input type="submit">
-    </form>
+    </form></div>
     `))}`;
   }
 
@@ -1062,7 +1072,7 @@ class Sleep extends Log {
 class SleepView {
   async getAll(data) {
 
-    data.type = "All";
+    data.type = "Sleeps";
 
     return template`${head(data,
       body(data,
@@ -1071,6 +1081,9 @@ class SleepView {
   }
 
   async get(data) {
+
+    data.header = "Sleep";
+
     return template`${head(data,
       body(data,
         template`<div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
@@ -1079,13 +1092,16 @@ class SleepView {
   }
 
   async create(data) {
+
+    data.header = "Add a Sleep";
+
     return template`${head(data,
-      body(data, `
+      body(data, `<div>
     <form method="POST" action="/sleeps">
     <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
     <div><label for=endTime>End time:<input type="datetime-local" name="endTime"></label></div>
     <input type="submit">
-    </form>
+    </form></div>
     `))}`;
   }
 
@@ -1094,13 +1110,16 @@ class SleepView {
   }
 
   async edit(data) {
+
+    data.header = "Update a Sleep";
+
     return template`${head(data,
-      body(data, `
+      body(data, `<div>
     <form method="PUT" action="/sleeps/${data.id}/edit">
     <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label></div>
     <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label></div>
     <input type="submit">
-    </form>
+    </form></div>
     `))}`;
   }
 }
@@ -1196,6 +1215,7 @@ class PoopView {
   async getAll(data) {
 
     data.type = "Poop";
+    data.header = "Poops";
 
     return template`${head(data,
       body(data,
@@ -1204,19 +1224,25 @@ class PoopView {
   }
 
   async get(data) {
+
+    data.header = "Poop";
+
     return template`${head(data,
       body(data,
-        template`<label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>`)
+        template`<div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>`)
     )}`;
   }
 
   async create(data) {
+
+    data.header = "Add a Poop";
+
     return template`${head(data,
-      body(data, `
+      body(data, `<div>
     <form method="POST" action="/poops">
       <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
       <input type="submit">
-    </form>
+    </form></div>
     `))}`;
   }
 
@@ -1225,12 +1251,15 @@ class PoopView {
   }
 
   async edit(data) {
+
+    data.header = "Update a Poop";
+
     return template`${head(data,
-      body(data, `
+      body(data, `<div>
     <form method="PUT" action="/poops/${data.id}/edit">
       <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label>
       <input type="submit">
-    </form>
+    </form></div>
     `))}`;
   }
 }
@@ -1326,6 +1355,7 @@ class WeeView {
   async getAll(data) {
 
     data.type = "Wee";
+    data.header = "Wees";
 
     return template`${head(data, 
       body(data, 
@@ -1334,19 +1364,25 @@ class WeeView {
   }
 
   async get(data) {
+
+    data.header = "Wee";
+
     return template`${head(data,
       body(data,
-        template`<label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>`)
+        template`<div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>`)
     )}`;
   }
 
   async create(data) {
+
+    data.header = "Add a Wee";
+
     return template`${head(data,
-      body(data, `
+      body(data, `<div>
     <form method="POST" action="/wees">
       <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
       <input type="submit">
-    </form>
+    </form></div>
     `))}`;
   }
 
@@ -1355,12 +1391,15 @@ class WeeView {
   }
 
   async edit(data) {
+
+    data.header = "Update a Wee";
+
     return template`${head(data,
-      body(data, `
+      body(data, `<div>
     <form method="PUT" action="/wees/${data.id}/edit">
       <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label>
       <input type="submit">
-    </form>
+    </form></div>
     `))}`;
   }
 }
@@ -1486,4 +1525,13 @@ self.onfetch = (event) => {
   }
 
   // If not caught by a controller, go to the network.
+};
+
+self.oninstall = (event) => {
+  // We will do something a lot more clever here soon.
+  self.skipWaiting();
+};
+
+self.onactivate = (event) => {
+  event.waitUntil(clients.claim());
 };
