@@ -30,12 +30,12 @@ export default class FeedView {
     data.header = "Add a Feed";
 
     return template`${head(data,
-      body(data, `
+      body(data, `<div>
     <form method="POST" action="/feeds">
       <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
       <div><label for=endTime>End time:<input type="datetime-local" name="endTime"></label></div>
       <input type="submit">
-    </form>
+    </form></div>
     `))}`;
   }
 
@@ -47,12 +47,12 @@ export default class FeedView {
     data.header = "Update a Feed";
 
     return template`${head(data,
-      body(data, `
+      body(data, `<div>
     <form method="POST" action="/feeds/${data.id}/edit">
       <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label></div>
       <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label></div>
       <input type="submit">
-    </form>
+    </form></div>
     `))}`;
   }
 
