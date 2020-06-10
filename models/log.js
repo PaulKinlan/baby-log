@@ -5,27 +5,29 @@ export default class Log extends Model {
   get hasFinished() {
     return !!this.endTime;
   }
-
+  
   get duration() {
     let end = this.endTime;
-    if (!!this.endTime === false) {
-      end = Date.now();
+    if (!!end === false) {
+      end = new Date;
     }
-    return this.endTime - this.startTime;
+    return end - this.startTime;
   }
 
-  constructor(data = {}, key) {
+  constructor({id, endTime, startTime, type, isDuration = false}, key) {
     super(key);
 
-    if(!!data.id) { 
-      this.id = data.id;
+    if(!!id) { 
+      this.id = id;
+    }
+
+    if (endTime) {
+      this.endTime = new Date(endTime);
     }
     
-    this.startTime = new Date(data.startTime);
-    if (!!data.endTime) {
-      this.endTime = new Date(data.endTime);
-    }
-    this.type = data.type;
+    this.startTime = new Date(startTime);
+    this.isDuration = isDuration;
+    this.type = type;
   }
 
   static get storeName() {

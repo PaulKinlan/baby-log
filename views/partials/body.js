@@ -8,8 +8,10 @@ export default (data, items) => {
     <div><a href="/">All</a>, <a href="/feeds">Feeds</a>, <a href="/sleeps">Sleeps</a>, <a href="/poops">Poops</a>,  <a href="/wees">Wees</a></div>
       </header>
   <main>
-    <div class="add">Add: <a href="/feeds/new">Feed</a>, <a href="/sleeps/new">Sleep</a>, <a href="/poops/new">Poop</a>, <a href="/wees/new">Wee</a></div>
+    <header>Add: <a href="/feeds/new">Feed</a>, <a href="/sleeps/new">Sleep</a>, <a href="/poops/new">Poop</a>, <a href="/wees/new">Wee</a></header>
+    <section>
     ${items}
+    </section>
   </main>
   `;
 };

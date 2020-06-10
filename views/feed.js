@@ -1,13 +1,13 @@
 import head from './partials/head.js';
 import body from './partials/body.js';
-import template from './lib/florawg.js'
-
+import template from './lib/florawg.js';
+import aggregate from './helpers/aggregate.js';
 export default class FeedView {
   async getAll(data) {
     return template`${head(data,
       body(data,
-        template`${data.map(item => template`<div><span>Feed: </span> ${item.startTime.toISOString()} - ${data.hasFinished ? item.endTime.toISOString() : ''} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
-    )}`;
+        template`${aggregate(data)}`
+    ))}`;
   }
 
   async get(data) {

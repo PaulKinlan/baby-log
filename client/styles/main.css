@@ -11,34 +11,44 @@ body {
   height: 100%;
 }
 
-header {
+body > header {
   text-align: center;
 }
 
 main {
   flex: 1;
   background-color: white;
-  margin: 2em auto;
+  margin: 2em auto 0.5em;
   color: black;
-  padding: 1em;
+  padding: 0 1em 1em;
   border-radius: 5px 5px;
   box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.20);
   width: 100%;
   box-sizing: border-box;
   max-width: 720px;
   overflow-y: auto;
+  position: relative;
 }
 
-main div {
+main section div {
   display: flex;
   margin-top: 0.5em;
+  align-items: center;
 }
 
-main div.add {
+main section div a {
+  margin-left: auto;
+}
+
+main > header {
   position: sticky;
   display: inline-block;
   border-bottom: 1px #c1c5cc solid;
   padding-bottom: 0.5em;
+  top: 0;
+  background: white;
+  width: 100%;
+  padding-top: 1em;
 }
 
 main div img {

@@ -180,17 +180,54 @@ var body = (data, items) => {
     <div><a href="/">All</a>, <a href="/feeds">Feeds</a>, <a href="/sleeps">Sleeps</a>, <a href="/poops">Poops</a>,  <a href="/wees">Wees</a></div>
       </header>
   <main>
-    <div class="add">Add: <a href="/feeds/new">Feed</a>, <a href="/sleeps/new">Sleep</a>, <a href="/poops/new">Poop</a>, <a href="/wees/new">Wee</a></div>
+    <header>Add: <a href="/feeds/new">Feed</a>, <a href="/sleeps/new">Sleep</a>, <a href="/poops/new">Poop</a>, <a href="/wees/new">Wee</a></header>
+    <section>
     ${items}
+    </section>
   </main>
   `;
+};
+
+const calculateDuration = (ms) => {
+  const hours = Math.floor(ms / (1000 * 60 * 60));
+  ms -= hours * 1000 * 60 * 60;
+  const minutes =  Math.floor(ms / (1000 * 60));
+
+  const hourStr = (hours == 1) ? 'Hour' : 'Hours';
+  const minuteStr = (minutes == 1) ? 'Minute' : 'Minutes';
+  return `${hours} ${hourStr} ${minutes} ${minuteStr}`;
+};
+
+var aggregate = (items) => {
+  const templates = [];
+  const lang = navigator.language;
+  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  let currentDay;
+
+  for (let item of items) { 
+    if (item.startTime.toLocaleDateString(lang, options) != currentDay) {
+      currentDay = item.startTime.toLocaleDateString(lang, options);
+      templates.push(template`<h1>${currentDay}</h1>`);
+    }
+
+    templates.push(template`<div>
+      <img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png" alt="${item.type}">
+        ${item.startTime.toLocaleTimeString()} 
+        ${('hasFinished' in item) ? 
+            (`${calculateDuration(item.duration)} ${(item.hasFinished) ? `(Still ${item.type}ing)` : ``} `)
+          : `` }
+        <a href="/${item.type}s/${item.id}/edit">Update</a>
+    </div>`);
+  }
+
+  return templates;
 };
 
 class IndexView {
   async getAll(data) {
     return template`${head(data, 
       body(data, 
-        template`${data.map(item => template`<div><img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png" alt="${item.type}"> ${item.startTime} - ${item.endTime} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
+        template`${aggregate(data)}`)
     )}`;
   }
 }
@@ -807,27 +844,29 @@ class Log extends Model {
   get hasFinished() {
     return !!this.endTime;
   }
-
+  
   get duration() {
     let end = this.endTime;
-    if (!!this.endTime === false) {
-      end = Date.now();
+    if (!!end === false) {
+      end = new Date;
     }
-    return this.endTime - this.startTime;
+    return end - this.startTime;
   }
 
-  constructor(data = {}, key) {
+  constructor({id, endTime, startTime, type, isDuration = false}, key) {
     super(key);
 
-    if(!!data.id) { 
-      this.id = data.id;
+    if(!!id) { 
+      this.id = id;
+    }
+
+    if (endTime) {
+      this.endTime = new Date(endTime);
     }
     
-    this.startTime = new Date(data.startTime);
-    if (!!data.endTime) {
-      this.endTime = new Date(data.endTime);
-    }
-    this.type = data.type;
+    this.startTime = new Date(startTime);
+    this.isDuration = isDuration;
+    this.type = type;
   }
 
   static get storeName() {
@@ -855,8 +894,8 @@ class IndexController extends Controller {
 }
 
 class Feed extends Log {
-  constructor(data, key) {
-    super(data, key);
+  constructor(data = {}, key) {
+    super({...data, ...{isDuration: true}}, key);
     this.type = 'feed';
   }
 }
@@ -865,8 +904,8 @@ class FeedView {
   async getAll(data) {
     return template`${head(data,
       body(data,
-        template`${data.map(item => template`<div><span>Feed: </span> ${item.startTime.toISOString()} - ${data.hasFinished ? item.endTime.toISOString() : ''} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
-    )}`;
+        template`${aggregate(data)}`
+    ))}`;
   }
 
   async get(data) {
@@ -991,8 +1030,8 @@ class FeedController extends Controller {
 }
 
 class Sleep extends Log {
-  constructor(data, key) {
-    super(data, key);
+  constructor(data = {}, key) {
+    super({...data, ...{isDuration: true}}, key);
     this.type = 'sleep';
   }
 }
@@ -1001,7 +1040,7 @@ class SleepView {
   async getAll(data) {
     return template`${head(data,
       body(data,
-        template`${data.map(item => template`<div><span>Sleep: </span> ${item.startTime.toISOString()} - ${data.hasFinished ? item.endTime.toISOString() : ''} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
+        template`${aggregate(data)}`)
     )}`;
   }
 
@@ -1121,7 +1160,7 @@ class SleepController extends Controller {
 }
 
 class Poop extends Log {
-  constructor(data, key) {
+  constructor(data = {}, key) {
     super(data, key);
     this.type = 'poop';
   }
@@ -1131,7 +1170,7 @@ class PoopView {
   async getAll(data) {
     return template`${head(data,
       body(data,
-        template`${data.map(item => template`<div><span>Poop: </span> ${item.startTime.toISOString()} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
+        template`${aggregate(data)}`)
     )}`;
   }
 
@@ -1248,7 +1287,7 @@ class PoopController extends Controller {
 }
 
 class Wee extends Log {
-  constructor(data, key) {
+  constructor(data = {}, key) {
     super(data, key);
     this.type = 'wee';
   }
@@ -1256,9 +1295,9 @@ class Wee extends Log {
 
 class WeeView {
   async getAll(data) {
-    return template`${head(data,
-      body(data,
-        template`${data.map(item => template`<div><span>Wee: </span> ${item.startTime.toISOString()} - ${data.hasFinished ? item.endTime.toISOString() : ''} <a href="/${item.type}s/${item.id}/edit">Edit</a></div>`)}`)
+    return template`${head(data, 
+      body(data, 
+        template`${aggregate(data)}`)
     )}`;
   }
 
