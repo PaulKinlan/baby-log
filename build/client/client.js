@@ -1,5 +1,3 @@
-'use strict';
-
 class MethodNotFound {
   constructor(message) {
     //super(message);
@@ -141,7 +139,7 @@ const enqueueItem = async (val, controller) => {
 var template = async (strings, ...values) => {
   if ("ReadableStream" in globalThis === false) {
     // For node not supporting streams properly..... This should tree-shake away
-    globalThis = {...globalThis, ...await Promise.resolve().then(function () { return require('./streams-6a7ac95a.js'); })};
+    globalThis = {...globalThis, ...await import('./streams-abe0310a.js')};
   }
   return new globalThis.ReadableStream({
     start(controller) {
