@@ -28,9 +28,9 @@ class Controller {
       return this.getAll(url);
     }
     else if (method === 'POST') {
-      if (pathname.match(`${route}/new`)) {
+      if (pathname.match(`${route}/*$`)) {
         return this.post(url, request);
-      } else if (pathname.match(`${route}/(.+)/edit`)) {
+      } else if (pathname.match(`${route}/(.+)/edit$`)) {
         return this.put(url, idMatch[1], request);
       }
     }
@@ -1116,7 +1116,7 @@ class SleepView {
 
     return template`${head(data,
       body(data, `<div>
-    <form method="PUT" action="/sleeps/${data.id}/edit">
+    <form method="POST" action="/sleeps/${data.id}/edit">
     <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label></div>
     <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label></div>
     <input type="submit">
@@ -1257,7 +1257,7 @@ class PoopView {
 
     return template`${head(data,
       body(data, `<div>
-    <form method="PUT" action="/poops/${data.id}/edit">
+    <form method="POST" action="/poops/${data.id}/edit">
       <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label>
       <input type="submit">
     </form></div>
@@ -1397,7 +1397,7 @@ class WeeView {
 
     return template`${head(data,
       body(data, `<div>
-    <form method="PUT" action="/wees/${data.id}/edit">
+    <form method="POST" action="/wees/${data.id}/edit">
       <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label>
       <input type="submit">
     </form></div>

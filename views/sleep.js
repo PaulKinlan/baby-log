@@ -50,7 +50,7 @@ export default class SleepView {
 
     return template`${head(data,
       body(data, `<div>
-    <form method="PUT" action="/sleeps/${data.id}/edit">
+    <form method="POST" action="/sleeps/${data.id}/edit">
     <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label></div>
     <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label></div>
     <input type="submit">

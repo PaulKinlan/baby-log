@@ -26,9 +26,9 @@ export default class Controller {
       return this.getAll(url);
     }
     else if (method === 'POST') {
-      if (pathname.match(`${route}/new`)) {
+      if (pathname.match(`${route}/*$`)) {
         return this.post(url, request);
-      } else if (pathname.match(`${route}/(.+)/edit`)) {
+      } else if (pathname.match(`${route}/(.+)/edit$`)) {
         return this.put(url, idMatch[1], request);
       }
     }

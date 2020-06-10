@@ -48,7 +48,7 @@ export default class PoopView {
 
     return template`${head(data,
       body(data, `<div>
-    <form method="PUT" action="/poops/${data.id}/edit">
+    <form method="POST" action="/poops/${data.id}/edit">
       <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label>
       <input type="submit">
     </form></div>
