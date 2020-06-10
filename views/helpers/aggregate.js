@@ -29,7 +29,7 @@ export default (items) => {
     templates.push(template`<div>
       <img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png" alt="${item.type}">
         ${item.startTime.toLocaleTimeString()} 
-        ${('hasFinished' in item) ? 
+        ${(item.isDuration) ? 
             (`${calculateDuration(item.duration)} ${(item.hasFinished) ? `(Still ${item.type}ing)` : ``} `)
           : `` }
         <a href="/${item.type}s/${item.id}/edit">Update</a>

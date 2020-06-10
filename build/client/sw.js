@@ -188,6 +188,10 @@ var body = (data, items) => {
   `;
 };
 
+if ('navigator' in globalThis === false) globalThis.navigator = {
+  language: 'en-GB'
+};
+
 const calculateDuration = (ms) => {
   const hours = Math.floor(ms / (1000 * 60 * 60));
   ms -= hours * 1000 * 60 * 60;
@@ -213,7 +217,7 @@ var aggregate = (items) => {
     templates.push(template`<div>
       <img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png" alt="${item.type}">
         ${item.startTime.toLocaleTimeString()} 
-        ${('hasFinished' in item) ? 
+        ${(item.isDuration) ? 
             (`${calculateDuration(item.duration)} ${(item.hasFinished) ? `(Still ${item.type}ing)` : ``} `)
           : `` }
         <a href="/${item.type}s/${item.id}/edit">Update</a>
