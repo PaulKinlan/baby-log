@@ -7,6 +7,7 @@ export default class SleepView {
   async getAll(data) {
 
     data.type = "Sleeps";
+    data.header = "Sleeps";
 
     return template`${head(data,
       body(data,
