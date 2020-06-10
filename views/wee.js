@@ -2,6 +2,7 @@ import head from './partials/head.js';
 import body from './partials/body.js';
 import template from './lib/florawg.js'
 import aggregate from './helpers/aggregate.js';
+import correctISOTime from './helpers/timezone.js';
 
 export default class WeeView {
   async getAll(data) {
@@ -19,9 +20,13 @@ export default class WeeView {
 
     data.header = "Wee";
 
+    const lang = navigator.language;
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+  
     return template`${head(data,
       body(data,
-        template`<div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>`)
+        template`<div>Start time: ${data.startTime.toLocaleString(lang, options)}</div>
+        <div>End time: ${(!!data.endTime) ? data.endTime.toLocaleString(lang, options) : ''}</div>`)
     )}`;
   }
 
@@ -32,7 +37,7 @@ export default class WeeView {
     return template`${head(data,
       body(data, `<div>
     <form method="POST" action="/wees">
-      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
+      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${correctISOTime(new Date())}"></label>
       <input type="submit">
     </form></div>
     `))}`;
@@ -49,7 +54,7 @@ export default class WeeView {
     return template`${head(data,
       body(data, `<div>
     <form method="POST" action="/wees/${data.id}/edit">
-      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label>
+      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${correctISOTime(data.startTime)}"></label>
       <input type="submit">
     </form></div>
     `))}`;

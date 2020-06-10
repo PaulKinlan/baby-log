@@ -51,9 +51,8 @@ export default class SleepController extends Controller {
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     
-    sleep.startTime = startTime;
-    sleep.endTime = endTime;
-
+    sleep.startTime = new Date(startTime);
+    sleep.endTime = new Date(endTime);
     sleep.put();
 
     // Get the View.

@@ -915,6 +915,14 @@ class Feed extends Log {
   }
 }
 
+function correctISOTime(date) {
+  const tzoffset = (new Date()).getTimezoneOffset() * 60000;
+  return (new Date(date - tzoffset)).toISOString().slice(0, -1).replace(/Z$/, '');
+}
+
+if ('navigator' in globalThis === false) globalThis.navigator = {
+  language: 'en-GB'
+};
 class FeedView {
   async getAll(data) {
 
@@ -931,10 +939,13 @@ class FeedView {
 
     data.header = "Feed";
 
+    const lang = navigator.language;
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+  
     return template`${head(data,
       body(data,
-        template`<div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
-        <div><label for=endTime>End time:<input type="datetime-local" name="endTime"></label></div>`)
+        template`<div>Start time: ${data.startTime.toLocaleString(lang, options)}</div>
+        <div>End time: ${(!!data.endTime) ? data.endTime.toLocaleString(lang, options) : ''}</div>`)
     )}`;
   }
 
@@ -945,7 +956,7 @@ class FeedView {
     return template`${head(data,
       body(data, `<div>
     <form method="POST" action="/feeds">
-      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
+      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${correctISOTime(new Date())}"></label></div>
       <div><label for=endTime>End time:<input type="datetime-local" name="endTime"></label></div>
       <input type="submit">
     </form></div>
@@ -962,8 +973,8 @@ class FeedView {
     return template`${head(data,
       body(data, `<div>
     <form method="POST" action="/feeds/${data.id}/edit">
-      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label></div>
-      <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label></div>
+      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${correctISOTime(data.startTime)}}"></label></div>
+      <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? correctISOTime(new Date()) : ''}"></label></div>
       <input type="submit">
     </form></div>
     `))}`;

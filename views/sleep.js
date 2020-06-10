@@ -2,6 +2,7 @@ import head from './partials/head.js';
 import body from './partials/body.js';
 import template from './lib/florawg.js'
 import aggregate from './helpers/aggregate.js';
+import correctISOTime from './helpers/timezone.js';
 
 export default class SleepView {
   async getAll(data) {
@@ -19,10 +20,13 @@ export default class SleepView {
 
     data.header = "Sleep";
 
+    const lang = navigator.language;
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+  
     return template`${head(data,
       body(data,
-        template`<div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
-        <div><label for=endTime>End time:<input type="datetime-local" name="endTime"></label></div>`)
+        template`<div>Start time: ${data.startTime.toLocaleString(lang, options)}</div>
+        <div>End time: ${(!!data.endTime) ? data.endTime.toLocaleString(lang, options) : ''}</div>`)
     )}`;
   }
 
@@ -33,7 +37,7 @@ export default class SleepView {
     return template`${head(data,
       body(data, `<div>
     <form method="POST" action="/sleeps">
-    <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
+    <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${correctISOTime(new Date())}"></label></div>
     <div><label for=endTime>End time:<input type="datetime-local" name="endTime"></label></div>
     <input type="submit">
     </form></div>
@@ -51,10 +55,14 @@ export default class SleepView {
     return template`${head(data,
       body(data, `<div>
     <form method="POST" action="/sleeps/${data.id}/edit">
-    <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label></div>
+    <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${correctISOTime(data.startTime)}"></label></div>
     <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label></div>
     <input type="submit">
     </form></div>
     `))}`;
+  }
+
+  async put(data) {
+    return this.get(data);
   }
 }
