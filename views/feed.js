@@ -13,8 +13,8 @@ export default class FeedView {
   async get(data) {
     return template`${head(data,
       body(data,
-        template`<label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
-        <label for=endTime>End time:<input type="datetime-local" name="endTime"></label>`)
+        template`<div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
+        <div><label for=endTime>End time:<input type="datetime-local" name="endTime"></label></div>`)
     )}`;
   }
 
@@ -22,8 +22,8 @@ export default class FeedView {
     return template`${head(data,
       body(data, `
     <form method="POST" action="/feeds">
-      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
-      <label for=endTime>End time:<input type="datetime-local" name="endTime"></label>
+      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
+      <div><label for=endTime>End time:<input type="datetime-local" name="endTime"></label></div>
       <input type="submit">
     </form>
     `))}`;
@@ -37,8 +37,8 @@ export default class FeedView {
     return template`${head(data,
       body(data, `
     <form method="PUT" action="/feeds/${data.id}/edit">
-      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label>
-      <label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label>
+      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label></div>
+      <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label></div>
       <input type="submit">
     </form>
     `))}`;
