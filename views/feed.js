@@ -57,7 +57,7 @@ export default class FeedView {
     return template`${head(data,
       body(data, `<div>
     <form method="POST" action="/feeds/${data.id}/edit">
-      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${correctISOTime(data.startTime)}}"></label></div>
+      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${correctISOTime(data.startTime)}"></label></div>
       <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? correctISOTime(new Date()) : ''}"></label></div>
       <input type="submit">
     </form></div>
