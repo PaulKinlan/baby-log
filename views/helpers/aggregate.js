@@ -23,14 +23,14 @@ export default (items) => {
   for (let item of items) { 
     if (item.startTime.toLocaleDateString(lang, options) != currentDay) {
       currentDay = item.startTime.toLocaleDateString(lang, options);
-      templates.push(template`<h1>${currentDay}</h1>`);
+      templates.push(template`<h3>${currentDay}</h3>`);
     }
 
     templates.push(template`<div>
       <img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png" alt="${item.type}">
         ${item.startTime.toLocaleTimeString()} 
         ${(item.isDuration) ? 
-            (`${calculateDuration(item.duration)} ${(item.hasFinished) ? `(Still ${item.type}ing)` : ``} `)
+            (`${calculateDuration(item.duration)} ${(item.hasFinished === false) ? `(Still ${item.type}ing)` : ``} `)
           : `` }
         <a href="/${item.type}s/${item.id}/edit">Update</a>
     </div>`)

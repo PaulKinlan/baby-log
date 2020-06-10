@@ -4,6 +4,9 @@ import template from './lib/florawg.js';
 import aggregate from './helpers/aggregate.js';
 export default class FeedView {
   async getAll(data) {
+
+    data.type = "Feed";
+
     return template`${head(data,
       body(data,
         template`${aggregate(data)}`
@@ -36,11 +39,15 @@ export default class FeedView {
   async edit(data) {
     return template`${head(data,
       body(data, `
-    <form method="PUT" action="/feeds/${data.id}/edit">
+    <form method="POST" action="/feeds/${data.id}/edit">
       <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label></div>
       <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label></div>
       <input type="submit">
     </form>
     `))}`;
+  }
+
+  async put(data) {
+    return this.get(data);
   }
 }

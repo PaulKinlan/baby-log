@@ -11,7 +11,7 @@ export default class Controller {
     const { pathname } = new URL(url);
     const { method } = request;
     const route = this.constructor.route;
-    const data = request.formData;
+    const idMatch = pathname.match(`${route}/(.+)/`);
 
     // The instance of the controller must implement these functions;
     if (method === 'GET') {
@@ -19,21 +19,25 @@ export default class Controller {
       if (pathname.match(`${route}/new`)) {
         return this.create(url);
       } else if (pathname.match(`${route}/(.+)/edit`)) {
-        return this.edit(url, idMatch[1]);
+        return this.edit(url, idMatch[1], request);
       } else if (pathname.match(`${route}/(.+)/`)) {
-        return this.get(url, idMatch[1]);
+        return this.get(url, idMatch[1], request);
       }
       return this.getAll(url);
     }
     else if (method === 'POST') {
-      return this.post(url, request);
+      if (pathname.match(`${route}/new`)) {
+        return this.post(url, request);
+      } else if (pathname.match(`${route}/(.+)/edit`)) {
+        return this.put(url, idMatch[1], request);
+      }
     }
     else if (method === 'PUT') {
       return this.put(url, idMatch[1], request);
     }
     else if (method === 'DELETE') {
       const idMatch = pathname.match(`${route}/(.+)/`);
-      return this.del(url, idMatch[1]);
+      return this.del(url, idMatch[1], request);
     }
   }
 

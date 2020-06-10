@@ -5,6 +5,9 @@ import aggregate from './helpers/aggregate.js';
 
 export default class WeeView {
   async getAll(data) {
+
+    data.type = "Wee";
+
     return template`${head(data, 
       body(data, 
         template`${aggregate(data)}`)

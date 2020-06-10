@@ -5,6 +5,9 @@ import aggregate from './helpers/aggregate.js';
 
 export default class PoopView {
   async getAll(data) {
+
+    data.type = "Poop";
+
     return template`${head(data,
       body(data,
         template`${aggregate(data)}`)

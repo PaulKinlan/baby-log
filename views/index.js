@@ -5,6 +5,9 @@ import aggregate from './helpers/aggregate.js';
 
 export default class IndexView {
   async getAll(data) {
+
+    data.type = "All";
+
     return template`${head(data, 
       body(data, 
         template`${aggregate(data)}`)

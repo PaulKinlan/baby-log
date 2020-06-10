@@ -5,6 +5,9 @@ import aggregate from './helpers/aggregate.js';
 
 export default class SleepView {
   async getAll(data) {
+
+    data.type = "All";
+
     return template`${head(data,
       body(data,
         template`${aggregate(data)}`)
@@ -14,8 +17,8 @@ export default class SleepView {
   async get(data) {
     return template`${head(data,
       body(data,
-        template`<label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
-        <label for=endTime>End time:<input type="datetime-local" name="endTime"></label>`)
+        template`<div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
+        <div><label for=endTime>End time:<input type="datetime-local" name="endTime"></label></div>`)
     )}`;
   }
 
@@ -23,9 +26,9 @@ export default class SleepView {
     return template`${head(data,
       body(data, `
     <form method="POST" action="/sleeps">
-      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
-      <label for=endTime>End time:<input type="datetime-local" name="endTime"></label>
-      <input type="submit">
+    <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
+    <div><label for=endTime>End time:<input type="datetime-local" name="endTime"></label></div>
+    <input type="submit">
     </form>
     `))}`;
   }
@@ -38,9 +41,9 @@ export default class SleepView {
     return template`${head(data,
       body(data, `
     <form method="PUT" action="/sleeps/${data.id}/edit">
-      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label>
-      <label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label>
-      <input type="submit">
+    <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label></div>
+    <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label></div>
+    <input type="submit">
     </form>
     `))}`;
   }

@@ -51,8 +51,8 @@ export default class FeedController extends Controller {
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     
-    feed.startTime = startTime;
-    feed.endTime = endTime;
+    feed.startTime = new Date(startTime);
+    feed.endTime = new Date(endTime);
 
     feed.put();
 

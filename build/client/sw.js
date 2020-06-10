@@ -13,7 +13,7 @@ class Controller {
     const { pathname } = new URL(url);
     const { method } = request;
     const route = this.constructor.route;
-    const data = request.formData;
+    const idMatch = pathname.match(`${route}/(.+)/`);
 
     // The instance of the controller must implement these functions;
     if (method === 'GET') {
@@ -21,21 +21,25 @@ class Controller {
       if (pathname.match(`${route}/new`)) {
         return this.create(url);
       } else if (pathname.match(`${route}/(.+)/edit`)) {
-        return this.edit(url, idMatch[1]);
+        return this.edit(url, idMatch[1], request);
       } else if (pathname.match(`${route}/(.+)/`)) {
-        return this.get(url, idMatch[1]);
+        return this.get(url, idMatch[1], request);
       }
       return this.getAll(url);
     }
     else if (method === 'POST') {
-      return this.post(url, request);
+      if (pathname.match(`${route}/new`)) {
+        return this.post(url, request);
+      } else if (pathname.match(`${route}/(.+)/edit`)) {
+        return this.put(url, idMatch[1], request);
+      }
     }
     else if (method === 'PUT') {
       return this.put(url, idMatch[1], request);
     }
     else if (method === 'DELETE') {
       const idMatch = pathname.match(`${route}/(.+)/`);
-      return this.del(url, idMatch[1]);
+      return this.del(url, idMatch[1], request);
     }
   }
 
@@ -167,6 +171,7 @@ var head = (data, body) => {
     <script src="/client/client.js" type="module" defer></script>
     <link rel="stylesheet" href="/styles/main.css">
     <link rel="manifest" href="/manifest.json">
+    <meta name="viewport" content="width=device-width">
   </head>
   ${body}
 </html>`;
@@ -176,15 +181,19 @@ var body = (data, items) => {
   return template`
   <header>
     <h1>Baby Log</h1>
-    <h2>${data.type}</h2>
     <div><a href="/">All</a>, <a href="/feeds">Feeds</a>, <a href="/sleeps">Sleeps</a>, <a href="/poops">Poops</a>,  <a href="/wees">Wees</a></div>
-      </header>
+    </header>
   <main>
-    <header>Add: <a href="/feeds/new">Feed</a>, <a href="/sleeps/new">Sleep</a>, <a href="/poops/new">Poop</a>, <a href="/wees/new">Wee</a></header>
+    <header>
+      <h2>${data.type}s</h2>
+    </header>
     <section>
     ${items}
     </section>
   </main>
+  <footer>
+    <span>Add</span><a href="/feeds/new">Feed</a><a href="/sleeps/new">Sleep</a><a href="/poops/new">Poop</a><a href="/wees/new">Wee</a>
+  </footer>
   `;
 };
 
@@ -211,14 +220,14 @@ var aggregate = (items) => {
   for (let item of items) { 
     if (item.startTime.toLocaleDateString(lang, options) != currentDay) {
       currentDay = item.startTime.toLocaleDateString(lang, options);
-      templates.push(template`<h1>${currentDay}</h1>`);
+      templates.push(template`<h3>${currentDay}</h3>`);
     }
 
     templates.push(template`<div>
       <img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png" alt="${item.type}">
         ${item.startTime.toLocaleTimeString()} 
         ${(item.isDuration) ? 
-            (`${calculateDuration(item.duration)} ${(item.hasFinished) ? `(Still ${item.type}ing)` : ``} `)
+            (`${calculateDuration(item.duration)} ${(item.hasFinished === false) ? `(Still ${item.type}ing)` : ``} `)
           : `` }
         <a href="/${item.type}s/${item.id}/edit">Update</a>
     </div>`);
@@ -229,6 +238,9 @@ var aggregate = (items) => {
 
 class IndexView {
   async getAll(data) {
+
+    data.type = "All";
+
     return template`${head(data, 
       body(data, 
         template`${aggregate(data)}`)
@@ -906,6 +918,9 @@ class Feed extends Log {
 
 class FeedView {
   async getAll(data) {
+
+    data.type = "Feed";
+
     return template`${head(data,
       body(data,
         template`${aggregate(data)}`
@@ -938,12 +953,16 @@ class FeedView {
   async edit(data) {
     return template`${head(data,
       body(data, `
-    <form method="PUT" action="/feeds/${data.id}/edit">
+    <form method="POST" action="/feeds/${data.id}/edit">
       <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label></div>
       <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label></div>
       <input type="submit">
     </form>
     `))}`;
+  }
+
+  async put(data) {
+    return this.get(data);
   }
 }
 
@@ -999,8 +1018,8 @@ class FeedController extends Controller {
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     
-    feed.startTime = startTime;
-    feed.endTime = endTime;
+    feed.startTime = new Date(startTime);
+    feed.endTime = new Date(endTime);
 
     feed.put();
 
@@ -1042,6 +1061,9 @@ class Sleep extends Log {
 
 class SleepView {
   async getAll(data) {
+
+    data.type = "All";
+
     return template`${head(data,
       body(data,
         template`${aggregate(data)}`)
@@ -1051,8 +1073,8 @@ class SleepView {
   async get(data) {
     return template`${head(data,
       body(data,
-        template`<label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
-        <label for=endTime>End time:<input type="datetime-local" name="endTime"></label>`)
+        template`<div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
+        <div><label for=endTime>End time:<input type="datetime-local" name="endTime"></label></div>`)
     )}`;
   }
 
@@ -1060,9 +1082,9 @@ class SleepView {
     return template`${head(data,
       body(data, `
     <form method="POST" action="/sleeps">
-      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
-      <label for=endTime>End time:<input type="datetime-local" name="endTime"></label>
-      <input type="submit">
+    <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
+    <div><label for=endTime>End time:<input type="datetime-local" name="endTime"></label></div>
+    <input type="submit">
     </form>
     `))}`;
   }
@@ -1075,9 +1097,9 @@ class SleepView {
     return template`${head(data,
       body(data, `
     <form method="PUT" action="/sleeps/${data.id}/edit">
-      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label>
-      <label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label>
-      <input type="submit">
+    <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label></div>
+    <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label></div>
+    <input type="submit">
     </form>
     `))}`;
   }
@@ -1172,6 +1194,9 @@ class Poop extends Log {
 
 class PoopView {
   async getAll(data) {
+
+    data.type = "Poop";
+
     return template`${head(data,
       body(data,
         template`${aggregate(data)}`)
@@ -1299,6 +1324,9 @@ class Wee extends Log {
 
 class WeeView {
   async getAll(data) {
+
+    data.type = "Wee";
+
     return template`${head(data, 
       body(data, 
         template`${aggregate(data)}`)
