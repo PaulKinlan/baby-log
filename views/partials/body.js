@@ -8,7 +8,7 @@ export default (data, items) => {
     </header>
   <main>
     <header>
-      <h2>${data.type}s</h2>
+      <h2>${data.header}</h2>
     </header>
     <section>
     ${items}

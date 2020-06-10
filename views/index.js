@@ -7,6 +7,7 @@ export default class IndexView {
   async getAll(data) {
 
     data.type = "All";
+    data.header = "All";
 
     return template`${head(data, 
       body(data, 

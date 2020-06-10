@@ -6,6 +6,7 @@ export default class FeedView {
   async getAll(data) {
 
     data.type = "Feed";
+    data.header = "Feeds";
 
     return template`${head(data,
       body(data,
@@ -14,6 +15,9 @@ export default class FeedView {
   }
 
   async get(data) {
+
+    data.header = "Feed";
+
     return template`${head(data,
       body(data,
         template`<div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
@@ -22,6 +26,9 @@ export default class FeedView {
   }
 
   async create(data) {
+
+    data.header = "Add a Feed";
+
     return template`${head(data,
       body(data, `
     <form method="POST" action="/feeds">
@@ -37,6 +44,8 @@ export default class FeedView {
   }
 
   async edit(data) {
+    data.header = "Update a Feed";
+
     return template`${head(data,
       body(data, `
     <form method="POST" action="/feeds/${data.id}/edit">

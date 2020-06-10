@@ -7,6 +7,7 @@ export default class PoopView {
   async getAll(data) {
 
     data.type = "Poop";
+    data.header = "Poops";
 
     return template`${head(data,
       body(data,
@@ -15,13 +16,19 @@ export default class PoopView {
   }
 
   async get(data) {
+
+    data.header = "Poop";
+
     return template`${head(data,
       body(data,
-        template`<label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>`)
+        template`<div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>`)
     )}`;
   }
 
   async create(data) {
+
+    data.header = "Add a Poop";
+
     return template`${head(data,
       body(data, `
     <form method="POST" action="/poops">
@@ -36,6 +43,9 @@ export default class PoopView {
   }
 
   async edit(data) {
+
+    data.header = "Update a Poop";
+
     return template`${head(data,
       body(data, `
     <form method="PUT" action="/poops/${data.id}/edit">

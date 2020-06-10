@@ -7,6 +7,7 @@ export default class WeeView {
   async getAll(data) {
 
     data.type = "Wee";
+    data.header = "Wees";
 
     return template`${head(data, 
       body(data, 
@@ -15,13 +16,19 @@ export default class WeeView {
   }
 
   async get(data) {
+
+    data.header = "Wee";
+
     return template`${head(data,
       body(data,
-        template`<label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>`)
+        template`<div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>`)
     )}`;
   }
 
   async create(data) {
+
+    data.header = "Add a Wee";
+
     return template`${head(data,
       body(data, `
     <form method="POST" action="/wees">
@@ -36,6 +43,9 @@ export default class WeeView {
   }
 
   async edit(data) {
+
+    data.header = "Update a Wee";
+
     return template`${head(data,
       body(data, `
     <form method="PUT" action="/wees/${data.id}/edit">

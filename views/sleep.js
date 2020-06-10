@@ -6,7 +6,7 @@ import aggregate from './helpers/aggregate.js';
 export default class SleepView {
   async getAll(data) {
 
-    data.type = "All";
+    data.type = "Sleeps";
 
     return template`${head(data,
       body(data,
@@ -15,6 +15,9 @@ export default class SleepView {
   }
 
   async get(data) {
+
+    data.header = "Sleep";
+
     return template`${head(data,
       body(data,
         template`<div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label></div>
@@ -23,6 +26,9 @@ export default class SleepView {
   }
 
   async create(data) {
+
+    data.header = "Add a Poop";
+
     return template`${head(data,
       body(data, `
     <form method="POST" action="/sleeps">
@@ -38,6 +44,9 @@ export default class SleepView {
   }
 
   async edit(data) {
+
+    data.header = "Update a Poop";
+
     return template`${head(data,
       body(data, `
     <form method="PUT" action="/sleeps/${data.id}/edit">
