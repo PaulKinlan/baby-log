@@ -48,3 +48,12 @@ self.onfetch = (event) => {
 
   // If not caught by a controller, go to the network.
 };
+
+self.oninstall = (event) => {
+  // We will do something a lot more clever here soon.
+  self.skipWaiting();
+}
+
+self.onactivate = (event) => {
+  event.waitUntil(clients.claim());
+}
