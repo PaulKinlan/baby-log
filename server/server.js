@@ -110,10 +110,8 @@ const server = http.createServer((req, res) => {
   }
 });
 
-
-const hostname = '127.0.0.1';
 const port = process.env.PORT || 8080;
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+server.listen(port, () => {
+  console.log(`Server running at on ${port}`);
 });
