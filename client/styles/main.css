@@ -105,3 +105,11 @@ footer a, footer a:visited {
   height: 100%;
   color: black;
 }
+
+@media(min-width: 720px) {
+  footer {
+    border-radius: 5px 0 0 5px;
+    width: 720px;
+    margin: 1em;
+  }
+}
