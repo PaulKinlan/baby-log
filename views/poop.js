@@ -30,11 +30,11 @@ export default class PoopView {
     data.header = "Add a Poop";
 
     return template`${head(data,
-      body(data, `
+      body(data, `<div>
     <form method="POST" action="/poops">
       <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
       <input type="submit">
-    </form>
+    </form></div>
     `))}`;
   }
 
@@ -47,11 +47,11 @@ export default class PoopView {
     data.header = "Update a Poop";
 
     return template`${head(data,
-      body(data, `
+      body(data, `<div>
     <form method="PUT" action="/poops/${data.id}/edit">
       <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label>
       <input type="submit">
-    </form>
+    </form></div>
     `))}`;
   }
 }

@@ -30,11 +30,11 @@ export default class WeeView {
     data.header = "Add a Wee";
 
     return template`${head(data,
-      body(data, `
+      body(data, `<div>
     <form method="POST" action="/wees">
       <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${(new Date()).toISOString().replace(/Z$/, '')}"></label>
       <input type="submit">
-    </form>
+    </form></div>
     `))}`;
   }
 
@@ -47,11 +47,11 @@ export default class WeeView {
     data.header = "Update a Wee";
 
     return template`${head(data,
-      body(data, `
+      body(data, `<div>
     <form method="PUT" action="/wees/${data.id}/edit">
       <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${data.startTime.toISOString().replace(/Z$/, '')}"></label>
       <input type="submit">
-    </form>
+    </form></div>
     `))}`;
   }
 }
