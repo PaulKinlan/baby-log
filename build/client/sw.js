@@ -1008,6 +1008,16 @@ class NotFoundException extends Error {
   }
 }
 
+// Safari's messed up formData on the request object.
+
+var getFormData = async (request) => {
+  const data = await request.arrayBuffer();
+  const decoder = new TextDecoder("utf-8");
+  const url = new URL(`?${decoder.decode(data)}`, 'http://localhost/');
+
+  return url.searchParams;
+};
+
 class FeedController extends Controller {
   static get route() {
     return '/feeds';
@@ -1021,7 +1031,7 @@ class FeedController extends Controller {
 
   async post(url, request) {
 
-    const formData = await request.formData();
+    const formData = await getFormData(request);
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     const feed = new Feed({ startTime, endTime });
@@ -1187,7 +1197,8 @@ class SleepController extends Controller {
 
   async post(url, request) {
 
-    const formData = await request.formData();
+    const formData = await getFormData(request);
+
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     const sleep = new Sleep({ startTime, endTime });
@@ -1216,7 +1227,8 @@ class SleepController extends Controller {
 
     if (!!sleep == false) throw new NotFoundException(`Sleep ${id} not found`);
     
-    const formData = await request.formData();
+    const formData = await getFormData(request);
+
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     
@@ -1346,7 +1358,8 @@ class PoopController extends Controller {
 
   async post(url, request) {
 
-    const formData = await request.formData();
+    const formData = await getFormData(request);
+
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     const poop = new Poop({ startTime, endTime });
@@ -1375,7 +1388,8 @@ class PoopController extends Controller {
 
     if (!!poop == false) throw new NotFoundException(`Poop ${id} not found`);
     
-    const formData = await request.formData();
+    const formData = await getFormData(request);
+
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     
@@ -1506,7 +1520,8 @@ class WeeController extends Controller {
 
   async post(url, request) {
 
-    const formData = await request.formData();
+    const formData = await getFormData(request);
+
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     const wee = new Wee({ startTime, endTime });
@@ -1535,7 +1550,8 @@ class WeeController extends Controller {
 
     if (!!wee == false) throw new NotFoundException(`Wee ${id} not found`);
     
-    const formData = await request.formData();
+    const formData = await getFormData(request);
+
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     
@@ -1607,49 +1623,48 @@ class StaticController extends Controller {
 }
 
 var paths = [
-	"http://127.0.0.1:8080/client.js",
-	"http://127.0.0.1:8080/manifest.json",
-	"http://127.0.0.1:8080/sw-manifest.json",
-	"http://127.0.0.1:8080/sw.js",
-	"http://127.0.0.1:8080/images/icons/feed/web_hi_res_512.png",
-	"http://127.0.0.1:8080/images/icons/feed/res/mipmap-hdpi/feed.png",
-	"http://127.0.0.1:8080/images/icons/feed/res/mipmap-mdpi/feed.png",
-	"http://127.0.0.1:8080/images/icons/feed/res/mipmap-xhdpi/feed.png",
-	"http://127.0.0.1:8080/images/icons/feed/res/mipmap-xxhdpi/feed.png",
-	"http://127.0.0.1:8080/images/icons/feed/res/mipmap-xxxhdpi/feed.png",
-	"http://127.0.0.1:8080/images/icons/log/web_hi_res_512.png",
-	"http://127.0.0.1:8080/images/icons/log/res/mipmap-hdpi/log.png",
-	"http://127.0.0.1:8080/images/icons/log/res/mipmap-mdpi/log.png",
-	"http://127.0.0.1:8080/images/icons/log/res/mipmap-xhdpi/log.png",
-	"http://127.0.0.1:8080/images/icons/log/res/mipmap-xxhdpi/log.png",
-	"http://127.0.0.1:8080/images/icons/log/res/mipmap-xxxhdpi/log.png",
-	"http://127.0.0.1:8080/images/icons/poop/web_hi_res_512.png",
-	"http://127.0.0.1:8080/images/icons/poop/res/mipmap-hdpi/poop.png",
-	"http://127.0.0.1:8080/images/icons/poop/res/mipmap-mdpi/poop.png",
-	"http://127.0.0.1:8080/images/icons/poop/res/mipmap-xhdpi/poop.png",
-	"http://127.0.0.1:8080/images/icons/poop/res/mipmap-xxhdpi/poop.png",
-	"http://127.0.0.1:8080/images/icons/poop/res/mipmap-xxxhdpi/poop.png",
-	"http://127.0.0.1:8080/images/icons/sleep/web_hi_res_512.png",
-	"http://127.0.0.1:8080/images/icons/sleep/res/mipmap-hdpi/sleep.png",
-	"http://127.0.0.1:8080/images/icons/sleep/res/mipmap-mdpi/sleep.png",
-	"http://127.0.0.1:8080/images/icons/sleep/res/mipmap-xhdpi/sleep.png",
-	"http://127.0.0.1:8080/images/icons/sleep/res/mipmap-xxhdpi/sleep.png",
-	"http://127.0.0.1:8080/images/icons/sleep/res/mipmap-xxxhdpi/sleep.png",
-	"http://127.0.0.1:8080/images/icons/ui/add_18dp.png",
-	"http://127.0.0.1:8080/images/icons/ui/delete_18dp.png",
-	"http://127.0.0.1:8080/images/icons/ui/edit_18dp.png",
-	"http://127.0.0.1:8080/images/icons/wee/web_hi_res_512.png",
-	"http://127.0.0.1:8080/images/icons/wee/res/mipmap-hdpi/wee.png",
-	"http://127.0.0.1:8080/images/icons/wee/res/mipmap-mdpi/wee.png",
-	"http://127.0.0.1:8080/images/icons/wee/res/mipmap-xhdpi/wee.png",
-	"http://127.0.0.1:8080/images/icons/wee/res/mipmap-xxhdpi/wee.png",
-	"http://127.0.0.1:8080/images/icons/wee/res/mipmap-xxxhdpi/wee.png",
-	"http://127.0.0.1:8080/styles/main.css",
-	"http://127.0.0.1:8080/streams-6a7ac95a.js",
-	"http://127.0.0.1:8080/streams-abe0310a.js",
-	"http://127.0.0.1:8080/sw-manifest-0ddd74ba.js",
-	"http://127.0.0.1:8080/sw-manifest-e3016594.js",
-	"http://127.0.0.1:8080/sw-manifest.js"
+	"/client.js",
+	"/manifest.json",
+	"/sw-manifest.json",
+	"/sw.js",
+	"/images/icons/feed/web_hi_res_512.png",
+	"/images/icons/feed/res/mipmap-hdpi/feed.png",
+	"/images/icons/feed/res/mipmap-mdpi/feed.png",
+	"/images/icons/feed/res/mipmap-xhdpi/feed.png",
+	"/images/icons/feed/res/mipmap-xxhdpi/feed.png",
+	"/images/icons/feed/res/mipmap-xxxhdpi/feed.png",
+	"/images/icons/log/web_hi_res_512.png",
+	"/images/icons/log/res/mipmap-hdpi/log.png",
+	"/images/icons/log/res/mipmap-mdpi/log.png",
+	"/images/icons/log/res/mipmap-xhdpi/log.png",
+	"/images/icons/log/res/mipmap-xxhdpi/log.png",
+	"/images/icons/log/res/mipmap-xxxhdpi/log.png",
+	"/images/icons/poop/web_hi_res_512.png",
+	"/images/icons/poop/res/mipmap-hdpi/poop.png",
+	"/images/icons/poop/res/mipmap-mdpi/poop.png",
+	"/images/icons/poop/res/mipmap-xhdpi/poop.png",
+	"/images/icons/poop/res/mipmap-xxhdpi/poop.png",
+	"/images/icons/poop/res/mipmap-xxxhdpi/poop.png",
+	"/images/icons/sleep/web_hi_res_512.png",
+	"/images/icons/sleep/res/mipmap-hdpi/sleep.png",
+	"/images/icons/sleep/res/mipmap-mdpi/sleep.png",
+	"/images/icons/sleep/res/mipmap-xhdpi/sleep.png",
+	"/images/icons/sleep/res/mipmap-xxhdpi/sleep.png",
+	"/images/icons/sleep/res/mipmap-xxxhdpi/sleep.png",
+	"/images/icons/ui/add_18dp.png",
+	"/images/icons/ui/delete_18dp.png",
+	"/images/icons/ui/edit_18dp.png",
+	"/images/icons/wee/web_hi_res_512.png",
+	"/images/icons/wee/res/mipmap-hdpi/wee.png",
+	"/images/icons/wee/res/mipmap-mdpi/wee.png",
+	"/images/icons/wee/res/mipmap-xhdpi/wee.png",
+	"/images/icons/wee/res/mipmap-xxhdpi/wee.png",
+	"/images/icons/wee/res/mipmap-xxxhdpi/wee.png",
+	"/styles/main.css",
+	"/streams-6a7ac95a.js",
+	"/streams-abe0310a.js",
+	"/sw-manifest-0ddd74ba.js",
+	"/sw-manifest-e3016594.js"
 ];
 
 const app = new App();

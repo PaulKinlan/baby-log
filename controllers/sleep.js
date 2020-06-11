@@ -2,6 +2,8 @@ import Controller from './lib/controller.js';
 import Model from '../models/sleep.js';
 import View from '../views/sleep.js';
 import NotFoundException from './exception/notfound.js';
+import getFormData from './helpers/formData.js';
+
 
 export default class SleepController extends Controller {
   static get route() {
@@ -16,7 +18,8 @@ export default class SleepController extends Controller {
 
   async post(url, request) {
 
-    const formData = await request.formData();
+    const formData = await getFormData(request);
+
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     const sleep = new Model({ startTime, endTime });
@@ -46,7 +49,8 @@ export default class SleepController extends Controller {
 
     if (!!sleep == false) throw new NotFoundException(`Sleep ${id} not found`);
     
-    const formData = await request.formData();
+    const formData = await getFormData(request);
+
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     

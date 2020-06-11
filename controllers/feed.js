@@ -2,6 +2,8 @@ import Controller from './lib/controller.js';
 import Model from '../models/feed.js';
 import View from '../views/feed.js';
 import NotFoundException from './exception/notfound.js';
+import getFormData from './helpers/formData.js';
+
 
 export default class FeedController extends Controller {
   static get route() {
@@ -16,7 +18,7 @@ export default class FeedController extends Controller {
 
   async post(url, request) {
 
-    const formData = await request.formData();
+    const formData = await getFormData(request);
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     const feed = new Model({ startTime, endTime });
@@ -46,7 +48,8 @@ export default class FeedController extends Controller {
 
     if (!!feed == false) throw new NotFoundException(`Feed ${id} not found`);
     
-    const formData = await request.formData();
+    const formData = await getFormData(request);
+
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     

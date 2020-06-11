@@ -2,6 +2,8 @@ import Controller from './lib/controller.js';
 import Model from '../models/poop.js';
 import View from '../views/poop.js';
 import NotFoundException from './exception/notfound.js';
+import getFormData from './helpers/formData.js';
+
 
 export default class PoopController extends Controller {
   static get route() {
@@ -16,7 +18,8 @@ export default class PoopController extends Controller {
 
   async post(url, request) {
 
-    const formData = await request.formData();
+    const formData = await getFormData(request);
+
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     const poop = new Model({ startTime, endTime });
@@ -46,7 +49,8 @@ export default class PoopController extends Controller {
 
     if (!!poop == false) throw new NotFoundException(`Poop ${id} not found`);
     
-    const formData = await request.formData();
+    const formData = await getFormData(request);
+
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     

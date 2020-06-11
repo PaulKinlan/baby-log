@@ -2,6 +2,7 @@ import Controller from './lib/controller.js';
 import Model from '../models/wee.js';
 import View from '../views/wee.js';
 import NotFoundException from './exception/notfound.js';
+import getFormData from './helpers/formData.js';
 
 export default class WeeController extends Controller {
   static get route() {
@@ -16,7 +17,8 @@ export default class WeeController extends Controller {
 
   async post(url, request) {
 
-    const formData = await request.formData();
+    const formData = await getFormData(request);
+
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     const wee = new Model({ startTime, endTime });
@@ -46,7 +48,8 @@ export default class WeeController extends Controller {
 
     if (!!wee == false) throw new NotFoundException(`Wee ${id} not found`);
     
-    const formData = await request.formData();
+    const formData = await getFormData(request);
+
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     

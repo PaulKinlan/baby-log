@@ -1006,6 +1006,16 @@ class NotFoundException extends Error {
   }
 }
 
+// Safari's messed up formData on the request object.
+
+var getFormData = async (request) => {
+  const data = await request.arrayBuffer();
+  const decoder = new TextDecoder("utf-8");
+  const url = new URL(`?${decoder.decode(data)}`, 'http://localhost/');
+
+  return url.searchParams;
+};
+
 class FeedController extends Controller {
   static get route() {
     return '/feeds';
@@ -1019,7 +1029,7 @@ class FeedController extends Controller {
 
   async post(url, request) {
 
-    const formData = await request.formData();
+    const formData = await getFormData(request);
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     const feed = new Feed({ startTime, endTime });
