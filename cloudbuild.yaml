@@ -22,8 +22,6 @@ steps:
   - 'deploy'
   - '--project'
   - 'baby-logger-279914'
-  - '--region'
-  - 'us-central1'
   - '--only'
   - 'hosting'
 images:
