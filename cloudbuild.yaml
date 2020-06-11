@@ -17,7 +17,7 @@ steps:
   - 'us-central1'
   - '--platform'
   - 'managed'
-- name: gcr.io/project-id/firebase
+- name: gcr.io/baby-logger-279914/firebase
   args: 
   - 'deploy'
   - '--project'
