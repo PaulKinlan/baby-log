@@ -25,7 +25,7 @@ class Controller {
       } else if (pathname.match(`${route}/(.+)/`)) {
         return this.get(url, idMatch[1], request);
       }
-      return this.getAll(url);
+      return this.getAll(url, request);
     }
     else if (method === 'POST') {
       if (pathname.match(`${route}/*$`)) {
@@ -1583,6 +1583,75 @@ class WeeController extends Controller {
   }
 }
 
+// This will be a server only route;
+class StaticController extends Controller {
+
+  static get route() {
+    return ''; // Match everything.
+  }
+
+  constructor(paths) {
+    super();
+  }
+
+  async get(url, id, request) {
+    return caches.match(request);
+  }
+
+  /*
+    url: URL
+  */
+  async getAll(url, request) {
+    return this.get(url, undefined, request);
+  }
+}
+
+var paths = [
+	"http://127.0.0.1:8080/client.js",
+	"http://127.0.0.1:8080/manifest.json",
+	"http://127.0.0.1:8080/sw-manifest.json",
+	"http://127.0.0.1:8080/sw.js",
+	"http://127.0.0.1:8080/images/icons/feed/web_hi_res_512.png",
+	"http://127.0.0.1:8080/images/icons/feed/res/mipmap-hdpi/feed.png",
+	"http://127.0.0.1:8080/images/icons/feed/res/mipmap-mdpi/feed.png",
+	"http://127.0.0.1:8080/images/icons/feed/res/mipmap-xhdpi/feed.png",
+	"http://127.0.0.1:8080/images/icons/feed/res/mipmap-xxhdpi/feed.png",
+	"http://127.0.0.1:8080/images/icons/feed/res/mipmap-xxxhdpi/feed.png",
+	"http://127.0.0.1:8080/images/icons/log/web_hi_res_512.png",
+	"http://127.0.0.1:8080/images/icons/log/res/mipmap-hdpi/log.png",
+	"http://127.0.0.1:8080/images/icons/log/res/mipmap-mdpi/log.png",
+	"http://127.0.0.1:8080/images/icons/log/res/mipmap-xhdpi/log.png",
+	"http://127.0.0.1:8080/images/icons/log/res/mipmap-xxhdpi/log.png",
+	"http://127.0.0.1:8080/images/icons/log/res/mipmap-xxxhdpi/log.png",
+	"http://127.0.0.1:8080/images/icons/poop/web_hi_res_512.png",
+	"http://127.0.0.1:8080/images/icons/poop/res/mipmap-hdpi/poop.png",
+	"http://127.0.0.1:8080/images/icons/poop/res/mipmap-mdpi/poop.png",
+	"http://127.0.0.1:8080/images/icons/poop/res/mipmap-xhdpi/poop.png",
+	"http://127.0.0.1:8080/images/icons/poop/res/mipmap-xxhdpi/poop.png",
+	"http://127.0.0.1:8080/images/icons/poop/res/mipmap-xxxhdpi/poop.png",
+	"http://127.0.0.1:8080/images/icons/sleep/web_hi_res_512.png",
+	"http://127.0.0.1:8080/images/icons/sleep/res/mipmap-hdpi/sleep.png",
+	"http://127.0.0.1:8080/images/icons/sleep/res/mipmap-mdpi/sleep.png",
+	"http://127.0.0.1:8080/images/icons/sleep/res/mipmap-xhdpi/sleep.png",
+	"http://127.0.0.1:8080/images/icons/sleep/res/mipmap-xxhdpi/sleep.png",
+	"http://127.0.0.1:8080/images/icons/sleep/res/mipmap-xxxhdpi/sleep.png",
+	"http://127.0.0.1:8080/images/icons/ui/add_18dp.png",
+	"http://127.0.0.1:8080/images/icons/ui/delete_18dp.png",
+	"http://127.0.0.1:8080/images/icons/ui/edit_18dp.png",
+	"http://127.0.0.1:8080/images/icons/wee/web_hi_res_512.png",
+	"http://127.0.0.1:8080/images/icons/wee/res/mipmap-hdpi/wee.png",
+	"http://127.0.0.1:8080/images/icons/wee/res/mipmap-mdpi/wee.png",
+	"http://127.0.0.1:8080/images/icons/wee/res/mipmap-xhdpi/wee.png",
+	"http://127.0.0.1:8080/images/icons/wee/res/mipmap-xxhdpi/wee.png",
+	"http://127.0.0.1:8080/images/icons/wee/res/mipmap-xxxhdpi/wee.png",
+	"http://127.0.0.1:8080/styles/main.css",
+	"http://127.0.0.1:8080/streams-6a7ac95a.js",
+	"http://127.0.0.1:8080/streams-abe0310a.js",
+	"http://127.0.0.1:8080/sw-manifest-0ddd74ba.js",
+	"http://127.0.0.1:8080/sw-manifest-e3016594.js",
+	"http://127.0.0.1:8080/sw-manifest.js"
+];
+
 const app = new App();
 
 app.registerRoute(IndexController.route, new IndexController);
@@ -1590,6 +1659,7 @@ app.registerRoute(FeedController.route, new FeedController);
 app.registerRoute(SleepController.route, new SleepController);
 app.registerRoute(PoopController.route, new PoopController);
 app.registerRoute(WeeController.route, new WeeController);
+app.registerRoute(StaticController.route, new StaticController);
 
 self.onfetch = (event) => {
   const { request } = event;
@@ -1597,6 +1667,7 @@ self.onfetch = (event) => {
 
   const controller = app.resolve(url);
   if (controller instanceof NotFoundController) {
+    // Fall through to the network
     return;
   }
   const view = controller.getView(url, request);
@@ -1604,7 +1675,7 @@ self.onfetch = (event) => {
   if (!!view) {
     return event.respondWith(view.then(output => {
       if (output instanceof Response) return output;
-      
+
       const options = {
         status: (!!output) ? 200 : 404,
         headers: {
@@ -1628,8 +1699,12 @@ self.onfetch = (event) => {
   // If not caught by a controller, go to the network.
 };
 
-self.oninstall = (event) => {
+self.oninstall = async (event) => {
   // We will do something a lot more clever here soon.
+  event.waitUntil(caches.open("v1").then(async (cache) => {
+   
+    return cache.addAll(paths);
+  }));
   self.skipWaiting();
 };
 

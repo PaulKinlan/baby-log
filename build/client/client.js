@@ -23,7 +23,7 @@ class Controller {
       } else if (pathname.match(`${route}/(.+)/`)) {
         return this.get(url, idMatch[1], request);
       }
-      return this.getAll(url);
+      return this.getAll(url, request);
     }
     else if (method === 'POST') {
       if (pathname.match(`${route}/*$`)) {

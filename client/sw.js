@@ -5,6 +5,9 @@ import SleepController from '../controllers/sleep.js'
 import PoopController from '../controllers/poop.js'
 import WeeController from '../controllers/wee.js'
 import NotFoundController from '../controllers/notfound.js';
+import StaticController from '../controllers/client/static.js';
+
+import paths from './sw-manifest.json';
 
 const app = new App();
 
@@ -13,6 +16,7 @@ app.registerRoute(FeedController.route, new FeedController);
 app.registerRoute(SleepController.route, new SleepController);
 app.registerRoute(PoopController.route, new PoopController);
 app.registerRoute(WeeController.route, new WeeController);
+app.registerRoute(StaticController.route, new StaticController);
 
 self.onfetch = (event) => {
   const { request } = event
@@ -20,6 +24,7 @@ self.onfetch = (event) => {
 
   const controller = app.resolve(url);
   if (controller instanceof NotFoundController) {
+    // Fall through to the network
     return;
   }
   const view = controller.getView(url, request);
@@ -27,7 +32,7 @@ self.onfetch = (event) => {
   if (!!view) {
     return event.respondWith(view.then(output => {
       if (output instanceof Response) return output;
-      
+
       const options = {
         status: (!!output) ? 200 : 404,
         headers: {
@@ -51,8 +56,14 @@ self.onfetch = (event) => {
   // If not caught by a controller, go to the network.
 };
 
-self.oninstall = (event) => {
+let urls = [];
+
+self.oninstall = async (event) => {
   // We will do something a lot more clever here soon.
+  event.waitUntil(caches.open("v1").then(async (cache) => {
+   
+    return cache.addAll(paths);
+  }));
   self.skipWaiting();
 }
 
