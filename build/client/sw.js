@@ -1661,11 +1661,7 @@ var paths = [
 	"/images/icons/wee/res/mipmap-xhdpi/wee.png",
 	"/images/icons/wee/res/mipmap-xxhdpi/wee.png",
 	"/images/icons/wee/res/mipmap-xxxhdpi/wee.png",
-	"/styles/main.css",
-	"/streams-6a7ac95a.js",
-	"/streams-abe0310a.js",
-	"/sw-manifest-0ddd74ba.js",
-	"/sw-manifest-e3016594.js"
+	"/styles/main.css"
 ];
 
 const app = new App();
