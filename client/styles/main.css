@@ -65,10 +65,12 @@ main form label, main section div.form label {
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 }
 
 main form label input, main section div.form label input {
   margin-left: 1em;
+  max-width: 80%;
   flex: 1;
 }
 
@@ -101,6 +103,7 @@ button.delete {
 
 button.delete img {
   margin-right: 0;
+  filter: invert();
 }
 
 main section div.form div.controls {
@@ -108,7 +111,7 @@ main section div.form div.controls {
 }
 
 main section div.form button {
-  background-color: #8b3d3d;
+  background-color: #f11616;
   flex: 1;
 }
 
