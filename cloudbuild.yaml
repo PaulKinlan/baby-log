@@ -21,7 +21,7 @@ steps:
   args: 
   - 'deploy'
   - '--project'
-  - '$PROJECT_ID',
+  - 'baby-logger-279914',
   - '--region'
   - 'us-central1'
   - '--only'
