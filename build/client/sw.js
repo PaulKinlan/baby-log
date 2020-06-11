@@ -20,7 +20,7 @@ class Controller {
       const idMatch = pathname.match(`${route}/(.+)/`);
       if (pathname.match(`${route}/new`)) {
         return this.create(url);
-      } else if (pathname.match(`${route}/(.+)/edit`)) {
+      } else if (pathname.match(`${route}/(.+)/edit$`)) {
         return this.edit(url, idMatch[1], request);
       } else if (pathname.match(`${route}/(.+)/`)) {
         return this.get(url, idMatch[1], request);
@@ -32,6 +32,9 @@ class Controller {
         return this.post(url, request);
       } else if (pathname.match(`${route}/(.+)/edit$`)) {
         return this.put(url, idMatch[1], request);
+      } else if (pathname.match(`${route}/(.+)/delete$`)) {
+        const idMatch = pathname.match(`${route}/(.+)/`);
+        return this.del(url, idMatch[1], request);
       }
     }
     else if (method === 'PUT') {
@@ -41,6 +44,10 @@ class Controller {
       const idMatch = pathname.match(`${route}/(.+)/`);
       return this.del(url, idMatch[1], request);
     }
+  }
+
+  redirect(url) {
+    return Response.redirect(url, "302");
   }
 
   create(url) {
@@ -223,13 +230,15 @@ var aggregate = (items) => {
       templates.push(template`<h3>${currentDay}</h3>`);
     }
 
-    templates.push(template`<div>
-      <img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png" alt="${item.type}">
+    templates.push(template`<div class="row">
+      <img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png" alt="${item.type}"><span>
         ${item.startTime.toLocaleTimeString()} 
         ${(item.isDuration) ? 
             (`${calculateDuration(item.duration)} ${(item.hasFinished === false) ? `(Still ${item.type}ing)` : ``} `)
           : `` }
-        <a href="/${item.type}s/${item.id}/edit">Update</a>
+        </span>
+        <a href="/${item.type}s/${item.id}/edit"><img src="/images/icons/ui/edit_18dp.png"></a><button class="delete" form="deleteForm${item.id}"><img src="/images/icons/ui/delete_18dp.png"></button>
+        <form id="deleteForm${item.id}" class="deleteForm" method="POST" action="/${item.type}s/${item.id}/delete"></form>
     </div>`);
   }
 
@@ -973,12 +982,18 @@ class FeedView {
     data.header = "Update a Feed";
 
     return template`${head(data,
-      body(data, `<div>
-    <form method="POST" action="/feeds/${data.id}/edit">
-      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${correctISOTime(data.startTime)}}"></label></div>
-      <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? correctISOTime(new Date()) : ''}"></label></div>
-      <input type="submit">
-    </form></div>
+      body(data, `<div class="form">
+    <form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"></form>
+    <form method="POST" id="editForm" action="/${data.type}s/${data.id}/edit"></form>
+    <div>
+      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" form="editForm" value="${correctISOTime(data.startTime)}"></label></div>
+      <div><label for=endTime>End time:<input type="datetime-local" name="endTime" form="editForm" value="${data.hasFinished ? correctISOTime(new Date()) : ''}"></label></div>
+      <div class="controls">
+        <button form="deleteForm"><img src="/images/icons/ui/delete_18dp.png"></button>
+        <input type="submit" form="editForm" value="Save">
+      </div>
+    </div>
+    </div>
     `))}`;
   }
 
@@ -1071,6 +1086,16 @@ class FeedController extends Controller {
 
     return feedView.getAll(feeds);
   }
+
+  async del(url, id) {
+    // Get the Data.
+    const model = await Feed.get(parseInt(id, 10));
+
+    if (!!model == false) throw new NotFoundException(`Feed ${id} not found`);
+
+    await model.delete();
+    return this.redirect(FeedController.route);
+  }
 }
 
 class Sleep extends Log {
@@ -1129,12 +1154,18 @@ class SleepView {
     data.header = "Update a Sleep";
 
     return template`${head(data,
-      body(data, `<div>
-    <form method="POST" action="/sleeps/${data.id}/edit">
-    <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${correctISOTime(data.startTime)}"></label></div>
-    <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label></div>
-    <input type="submit">
-    </form></div>
+      body(data, `<div class="form">
+    <form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"></form>
+    <form method="POST" id="editForm" action="/${data.type}s/${data.id}/edit"></form>
+    <div>
+      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" form="editForm" value="${correctISOTime(data.startTime)}"></label></div>
+      <div><label for=endTime>End time:<input type="datetime-local" name="endTime" form="editForm" value="${data.hasFinished ? correctISOTime(new Date()) : ''}"></label></div>
+      <div class="controls">
+        <button form="deleteForm"><img src="/images/icons/ui/delete_18dp.png"></button>
+        <input type="submit" form="editForm" value="Save">
+      </div>
+    </div>
+    </div>
     `))}`;
   }
 
@@ -1220,6 +1251,16 @@ class SleepController extends Controller {
 
     return sleepView.getAll(sleeps);
   }
+
+  async del(url, id) {
+    // Get the Data.
+    const model = await Sleep.get(parseInt(id, 10));
+
+    if (!!model == false) throw new NotFoundException(`Sleep ${id} not found`);
+
+    await model.delete();
+    return this.redirect(SleepController.route);
+  }
 }
 
 class Poop extends Log {
@@ -1277,11 +1318,17 @@ class PoopView {
     data.header = "Update a Poop";
 
     return template`${head(data,
-      body(data, `<div>
-    <form method="POST" action="/poops/${data.id}/edit">
-      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${correctISOTime(data.startTime)}"></label>
-      <input type="submit">
-    </form></div>
+      body(data, `<div class="form">
+    <form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"></form>
+    <form method="POST" id="editForm" action="/${data.type}s/${data.id}/edit"></form>
+    <div>
+      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" form="editForm" value="${correctISOTime(data.startTime)}"></label></div>
+      <div class="controls">
+        <button form="deleteForm"><img src="/images/icons/ui/delete_18dp.png"></button>
+        <input type="submit" form="editForm" value="Save">
+      </div>
+    </div>
+    </div>
     `))}`;
   }
 }
@@ -1293,8 +1340,8 @@ class PoopController extends Controller {
 
   async create(url, request) {
     // Show the create an entry UI.
-    const poopView = new PoopView();
-    return poopView.create(new Poop);
+    const view = new PoopView();
+    return view.create(new Poop);
   } 
 
   async post(url, request) {
@@ -1307,9 +1354,9 @@ class PoopController extends Controller {
     poop.put();
 
     // Get the View.
-    const poopView = new PoopView(poop);
+    const view = new PoopView(poop);
 
-    return poopView.post(poop);
+    return view.post(poop);
   }
 
   async edit(url, id) {
@@ -1317,9 +1364,9 @@ class PoopController extends Controller {
     const poop = await Poop.get(parseInt(id, 10));
 
     if (!!poop == false) throw new NotFoundException(`Poop ${id} not found`);    // Get the View.
-    const poopView = new PoopView();
+    const view = new PoopView();
 
-    return poopView.edit(poop);
+    return view.edit(poop);
   }
 
   async put(url, id, request) {
@@ -1338,9 +1385,9 @@ class PoopController extends Controller {
     poop.put();
 
     // Get the View.
-    const poopView = new PoopView(poop);
+    const view = new PoopView(poop);
 
-    return poopView.put(poop);
+    return view.put(poop);
   }
 
   async get(url, id) {
@@ -1350,9 +1397,9 @@ class PoopController extends Controller {
     if (!!poop == false) throw new NotFoundException(`Poop ${id} not found`);
 
     // Get the View.
-    const poopView = new PoopView();
+    const view = new PoopView();
 
-    return poopView.get(poop);
+    return view.get(poop);
   }
 
   async getAll(url) {
@@ -1360,9 +1407,19 @@ class PoopController extends Controller {
     const poops = await Poop.getAll('type,startTime', { filter: ['BETWEEN', ['poop', new Date(0)], ['poop', new Date(9999999999999)]], order: Poop.DESCENDING }) || [];
 
     // Get the View.
-    const poopView = new PoopView();
+    const view = new PoopView();
 
-    return poopView.getAll(poops);
+    return view.getAll(poops);
+  }
+
+  async del(url, id) {
+    // Get the Data.
+    const model = await Poop.get(parseInt(id, 10));
+
+    if (!!model == false) throw new NotFoundException(`Poop ${id} not found`);
+
+    await model.delete();
+    return this.redirect(PoopController.route);
   }
 }
 
@@ -1421,11 +1478,17 @@ class WeeView {
     data.header = "Update a Wee";
 
     return template`${head(data,
-      body(data, `<div>
-    <form method="POST" action="/wees/${data.id}/edit">
-      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${correctISOTime(data.startTime)}"></label>
-      <input type="submit">
-    </form></div>
+      body(data, `<div class="form">
+    <form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"></form>
+    <form method="POST" id="editForm" action="/${data.type}s/${data.id}/edit"></form>
+    <div>
+      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" form="editForm" value="${correctISOTime(data.startTime)}"></label></div>
+      <div class="controls">
+        <button form="deleteForm"><img src="/images/icons/ui/delete_18dp.png"></button>
+        <input type="submit" form="editForm" value="Save">
+      </div>
+    </div>
+    </div>
     `))}`;
   }
 }
@@ -1437,8 +1500,8 @@ class WeeController extends Controller {
 
   async create(url, request) {
     // Show the create an entry UI.
-    const weeView = new WeeView();
-    return weeView.create(new Wee);
+    const view = new WeeView();
+    return view.create(new Wee);
   } 
 
   async post(url, request) {
@@ -1451,9 +1514,9 @@ class WeeController extends Controller {
     wee.put();
 
     // Get the View.
-    const weeView = new WeeView(wee);
+    const view = new WeeView(wee);
 
-    return weeView.post(wee);
+    return view.post(wee);
   }
 
   async edit(url, id) {
@@ -1461,9 +1524,9 @@ class WeeController extends Controller {
     const wee = await Wee.get(parseInt(id, 10));
 
     if (!!wee == false) throw new NotFoundException(`Wee ${id} not found`);    // Get the View.
-    const weeView = new WeeView();
+    const view = new WeeView();
 
-    return weeView.edit(wee);
+    return view.edit(wee);
   }
 
   async put(url, id, request) {
@@ -1482,9 +1545,9 @@ class WeeController extends Controller {
     wee.put();
 
     // Get the View.
-    const weeView = new WeeView(wee);
+    const view = new WeeView(wee);
 
-    return weeView.put(wee);
+    return view.put(wee);
   }
 
   async get(url, id) {
@@ -1494,9 +1557,9 @@ class WeeController extends Controller {
     if (!!wee == false) throw new NotFoundException(`Wee ${id} not found`);
 
     // Get the View.
-    const weeView = new WeeView();
+    const view = new WeeView();
 
-    return weeView.get(wee);
+    return view.get(wee);
   }
 
   async getAll(url) {
@@ -1504,9 +1567,19 @@ class WeeController extends Controller {
     const wees = await Wee.getAll('type,startTime', { filter: ['BETWEEN', ['wee', new Date(0)], ['wee', new Date(9999999999999)]], order: Wee.DESCENDING }) || [];
 
     // Get the View.
-    const weeView = new WeeView();
+    const view = new WeeView();
 
-    return weeView.getAll(wees);
+    return view.getAll(wees);
+  }
+
+  async del(url, id) {
+    // Get the Data.
+    const model = await Wee.get(parseInt(id, 10));
+
+    if (!!model == false) throw new NotFoundException(`Wee ${id} not found`);
+
+    await model.delete();
+    return this.redirect(WeeController.route);
   }
 }
 
@@ -1530,6 +1603,8 @@ self.onfetch = (event) => {
 
   if (!!view) {
     return event.respondWith(view.then(output => {
+      if (output instanceof Response) return output;
+      
       const options = {
         status: (!!output) ? 200 : 404,
         headers: {

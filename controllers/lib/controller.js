@@ -18,7 +18,7 @@ export default class Controller {
       const idMatch = pathname.match(`${route}/(.+)/`);
       if (pathname.match(`${route}/new`)) {
         return this.create(url);
-      } else if (pathname.match(`${route}/(.+)/edit`)) {
+      } else if (pathname.match(`${route}/(.+)/edit$`)) {
         return this.edit(url, idMatch[1], request);
       } else if (pathname.match(`${route}/(.+)/`)) {
         return this.get(url, idMatch[1], request);
@@ -30,6 +30,9 @@ export default class Controller {
         return this.post(url, request);
       } else if (pathname.match(`${route}/(.+)/edit$`)) {
         return this.put(url, idMatch[1], request);
+      } else if (pathname.match(`${route}/(.+)/delete$`)) {
+        const idMatch = pathname.match(`${route}/(.+)/`);
+        return this.del(url, idMatch[1], request);
       }
     }
     else if (method === 'PUT') {
@@ -39,6 +42,10 @@ export default class Controller {
       const idMatch = pathname.match(`${route}/(.+)/`);
       return this.del(url, idMatch[1], request);
     }
+  }
+
+  redirect(url) {
+    return Response.redirect(url, "302");
   }
 
   create(url) {

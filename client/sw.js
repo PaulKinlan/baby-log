@@ -26,6 +26,8 @@ self.onfetch = (event) => {
 
   if (!!view) {
     return event.respondWith(view.then(output => {
+      if (output instanceof Response) return output;
+      
       const options = {
         status: (!!output) ? 200 : 404,
         headers: {

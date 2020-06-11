@@ -52,11 +52,17 @@ export default class PoopView {
     data.header = "Update a Poop";
 
     return template`${head(data,
-      body(data, `<div>
-    <form method="POST" action="/poops/${data.id}/edit">
-      <label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${correctISOTime(data.startTime)}"></label>
-      <input type="submit">
-    </form></div>
+      body(data, `<div class="form">
+    <form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"></form>
+    <form method="POST" id="editForm" action="/${data.type}s/${data.id}/edit"></form>
+    <div>
+      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" form="editForm" value="${correctISOTime(data.startTime)}"></label></div>
+      <div class="controls">
+        <button form="deleteForm"><img src="/images/icons/ui/delete_18dp.png"></button>
+        <input type="submit" form="editForm" value="Save">
+      </div>
+    </div>
+    </div>
     `))}`;
   }
 }

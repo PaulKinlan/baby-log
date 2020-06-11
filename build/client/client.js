@@ -18,7 +18,7 @@ class Controller {
       const idMatch = pathname.match(`${route}/(.+)/`);
       if (pathname.match(`${route}/new`)) {
         return this.create(url);
-      } else if (pathname.match(`${route}/(.+)/edit`)) {
+      } else if (pathname.match(`${route}/(.+)/edit$`)) {
         return this.edit(url, idMatch[1], request);
       } else if (pathname.match(`${route}/(.+)/`)) {
         return this.get(url, idMatch[1], request);
@@ -30,6 +30,9 @@ class Controller {
         return this.post(url, request);
       } else if (pathname.match(`${route}/(.+)/edit$`)) {
         return this.put(url, idMatch[1], request);
+      } else if (pathname.match(`${route}/(.+)/delete$`)) {
+        const idMatch = pathname.match(`${route}/(.+)/`);
+        return this.del(url, idMatch[1], request);
       }
     }
     else if (method === 'PUT') {
@@ -39,6 +42,10 @@ class Controller {
       const idMatch = pathname.match(`${route}/(.+)/`);
       return this.del(url, idMatch[1], request);
     }
+  }
+
+  redirect(url) {
+    return Response.redirect(url, "302");
   }
 
   create(url) {
@@ -221,13 +228,15 @@ var aggregate = (items) => {
       templates.push(template`<h3>${currentDay}</h3>`);
     }
 
-    templates.push(template`<div>
-      <img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png" alt="${item.type}">
+    templates.push(template`<div class="row">
+      <img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png" alt="${item.type}"><span>
         ${item.startTime.toLocaleTimeString()} 
         ${(item.isDuration) ? 
             (`${calculateDuration(item.duration)} ${(item.hasFinished === false) ? `(Still ${item.type}ing)` : ``} `)
           : `` }
-        <a href="/${item.type}s/${item.id}/edit">Update</a>
+        </span>
+        <a href="/${item.type}s/${item.id}/edit"><img src="/images/icons/ui/edit_18dp.png"></a><button class="delete" form="deleteForm${item.id}"><img src="/images/icons/ui/delete_18dp.png"></button>
+        <form id="deleteForm${item.id}" class="deleteForm" method="POST" action="/${item.type}s/${item.id}/delete"></form>
     </div>`);
   }
 
@@ -971,12 +980,18 @@ class FeedView {
     data.header = "Update a Feed";
 
     return template`${head(data,
-      body(data, `<div>
-    <form method="POST" action="/feeds/${data.id}/edit">
-      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${correctISOTime(data.startTime)}}"></label></div>
-      <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? correctISOTime(new Date()) : ''}"></label></div>
-      <input type="submit">
-    </form></div>
+      body(data, `<div class="form">
+    <form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"></form>
+    <form method="POST" id="editForm" action="/${data.type}s/${data.id}/edit"></form>
+    <div>
+      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" form="editForm" value="${correctISOTime(data.startTime)}"></label></div>
+      <div><label for=endTime>End time:<input type="datetime-local" name="endTime" form="editForm" value="${data.hasFinished ? correctISOTime(new Date()) : ''}"></label></div>
+      <div class="controls">
+        <button form="deleteForm"><img src="/images/icons/ui/delete_18dp.png"></button>
+        <input type="submit" form="editForm" value="Save">
+      </div>
+    </div>
+    </div>
     `))}`;
   }
 
@@ -1068,6 +1083,16 @@ class FeedController extends Controller {
     const feedView = new FeedView();
 
     return feedView.getAll(feeds);
+  }
+
+  async del(url, id) {
+    // Get the Data.
+    const model = await Feed.get(parseInt(id, 10));
+
+    if (!!model == false) throw new NotFoundException(`Feed ${id} not found`);
+
+    await model.delete();
+    return this.redirect(FeedController.route);
   }
 }
 

@@ -1,7 +1,6 @@
 import Controller from './lib/controller.js';
-import PoopModel from '../models/poop.js';
-import PoopView from '../views/poop.js';
-import Poop from "../models/poop.js";
+import Model from '../models/poop.js';
+import View from '../views/poop.js';
 import NotFoundException from './exception/notfound.js';
 
 export default class PoopController extends Controller {
@@ -11,8 +10,8 @@ export default class PoopController extends Controller {
 
   async create(url, request) {
     // Show the create an entry UI.
-    const poopView = new PoopView();
-    return poopView.create(new PoopModel);
+    const view = new View();
+    return view.create(new Model);
   } 
 
   async post(url, request) {
@@ -20,30 +19,30 @@ export default class PoopController extends Controller {
     const formData = await request.formData();
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
-    const poop = new Poop({ startTime, endTime });
+    const poop = new Model({ startTime, endTime });
 
     poop.put();
 
     // Get the View.
-    const poopView = new PoopView(poop);
+    const view = new View(poop);
 
-    return poopView.post(poop);
+    return view.post(poop);
   }
 
   async edit(url, id) {
     // Get the Data.
-    const poop = await PoopModel.get(parseInt(id, 10));
+    const poop = await Model.get(parseInt(id, 10));
 
     if (!!poop == false) throw new NotFoundException(`Poop ${id} not found`);;
     // Get the View.
-    const poopView = new PoopView();
+    const view = new View();
 
-    return poopView.edit(poop);
+    return view.edit(poop);
   }
 
   async put(url, id, request) {
     // Get the Data.
-    const poop = await PoopModel.get(parseInt(id, 10));
+    const poop = await Model.get(parseInt(id, 10));
 
     if (!!poop == false) throw new NotFoundException(`Poop ${id} not found`);
     
@@ -57,30 +56,40 @@ export default class PoopController extends Controller {
     poop.put();
 
     // Get the View.
-    const poopView = new PoopView(poop);
+    const view = new View(poop);
 
-    return poopView.put(poop);
+    return view.put(poop);
   }
 
   async get(url, id) {
     // Get the Data.
-    const poop = await PoopModel.get(parseInt(id, 10));
+    const poop = await Model.get(parseInt(id, 10));
 
     if (!!poop == false) throw new NotFoundException(`Poop ${id} not found`);
 
     // Get the View.
-    const poopView = new PoopView();
+    const view = new View();
 
-    return poopView.get(poop);
+    return view.get(poop);
   }
 
   async getAll(url) {
     // Get the Data.....
-    const poops = await PoopModel.getAll('type,startTime', { filter: ['BETWEEN', ['poop', new Date(0)], ['poop', new Date(9999999999999)]], order: PoopModel.DESCENDING }) || [];
+    const poops = await Model.getAll('type,startTime', { filter: ['BETWEEN', ['poop', new Date(0)], ['poop', new Date(9999999999999)]], order: Model.DESCENDING }) || [];
 
     // Get the View.
-    const poopView = new PoopView();
+    const view = new View();
 
-    return poopView.getAll(poops);
+    return view.getAll(poops);
+  }
+
+  async del(url, id) {
+    // Get the Data.
+    const model = await Model.get(parseInt(id, 10));
+
+    if (!!model == false) throw new NotFoundException(`Poop ${id} not found`);
+
+    await model.delete();
+    return this.redirect(PoopController.route);
   }
 }

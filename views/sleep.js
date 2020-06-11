@@ -53,12 +53,18 @@ export default class SleepView {
     data.header = "Update a Sleep";
 
     return template`${head(data,
-      body(data, `<div>
-    <form method="POST" action="/sleeps/${data.id}/edit">
-    <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${correctISOTime(data.startTime)}"></label></div>
-    <div><label for=endTime>End time:<input type="datetime-local" name="endTime" value="${data.hasFinished ? data.endTime.toISOString().replace(/Z$/, '') : ''}"></label></div>
-    <input type="submit">
-    </form></div>
+      body(data, `<div class="form">
+    <form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"></form>
+    <form method="POST" id="editForm" action="/${data.type}s/${data.id}/edit"></form>
+    <div>
+      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" form="editForm" value="${correctISOTime(data.startTime)}"></label></div>
+      <div><label for=endTime>End time:<input type="datetime-local" name="endTime" form="editForm" value="${data.hasFinished ? correctISOTime(new Date()) : ''}"></label></div>
+      <div class="controls">
+        <button form="deleteForm"><img src="/images/icons/ui/delete_18dp.png"></button>
+        <input type="submit" form="editForm" value="Save">
+      </div>
+    </div>
+    </div>
     `))}`;
   }
 
