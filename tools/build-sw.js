@@ -19,7 +19,7 @@ let process = async (directory, origin, root) => {
   let files = allFiles.filter(file => file.isFile() && file.name.startsWith('.') === false);
 
   // Process the results
-  files.forEach(file => urls.add(new URL(path.join(directory.replace(root, './'), file.name), origin).toString()));
+  files.forEach(file => urls.add(path.join(directory.replace(root, '/'), file.name)));
   
   for (let directory of directories) {
     const newUrls = await process(directory, origin, root);
@@ -38,4 +38,4 @@ const go = async (directories, origin) => {
   console.log(JSON.stringify(Array.from(urls.values())));
 }
 
-go(args['--dir'] || ['.'], args['--origin'] || "http://127.0.0.1:8080");
+go(args['--dir'] || ['.'], args['--origin']);
