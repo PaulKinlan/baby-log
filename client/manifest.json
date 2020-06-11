@@ -16,7 +16,7 @@
     {
       "name": "Start Feed",
       "description": "The baby started a feed.",
-      "url": "/feeds/add",
+      "url": "/feeds/new",
       "icons": [{ "src": "/images/icons/feed/res/mipmap-xxxhdpi/feed.png", "sizes": "192x192" }]
     },
     {
