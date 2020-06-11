@@ -3,7 +3,7 @@
 export default async (request) => {
   const data = await request.arrayBuffer();
   const decoder = new TextDecoder("utf-8")
-  const url = new URL(`?${decoder.decode(data)}`, 'http://localhost/');
+  const params = new URLSearchParams(`?${decoder.decode(data)}`);
 
-  return url.searchParams;
+  return params;
 };

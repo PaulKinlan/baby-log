@@ -1011,9 +1011,9 @@ class NotFoundException extends Error {
 var getFormData = async (request) => {
   const data = await request.arrayBuffer();
   const decoder = new TextDecoder("utf-8");
-  const url = new URL(`?${decoder.decode(data)}`, 'http://localhost/');
+  const params = new URLSearchParams(`?${decoder.decode(data)}`);
 
-  return url.searchParams;
+  return params;
 };
 
 class FeedController extends Controller {
@@ -1058,7 +1058,8 @@ class FeedController extends Controller {
 
     if (!!feed == false) throw new NotFoundException(`Feed ${id} not found`);
     
-    const formData = await request.formData();
+    const formData = await getFormData(request);
+
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
     
