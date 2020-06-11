@@ -76,7 +76,6 @@ main form label input, main section div.form label input {
 
 main section form input[type=submit], main section form button,
 main section div.form input[type=submit], main section div.form button {
-  width: 100%;
   margin: 2em 0.5em;
   height: 3em;
   background-color: #448aff;
