@@ -24,7 +24,7 @@ app.registerRoute(FeedController.route, new FeedController);
 app.registerRoute(SleepController.route, new SleepController);
 app.registerRoute(PoopController.route, new PoopController);
 app.registerRoute(WeeController.route, new WeeController);
-app.registerRoute(StaticController.route, new StaticController(['./build/client/', './client/']));
+app.registerRoute(StaticController.route, new StaticController(['./build/client/']));
 
 class FormData {
 

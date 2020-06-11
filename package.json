@@ -4,10 +4,11 @@
   "description": "Baby Logger Web App",
   "main": "sever/server.js",
   "scripts": {
+    "build:copy": "cp -R client build/client",
     "build:client": "rollup -c client.rollup.config.js",
     "build:service-worker": "rollup -c service-worker.rollup.config.js",
     "build:file-manifest": "node tools/build-sw.js --dir client/ --dir build/client/ > client/sw-manifest.json",
-    "build": "npm run build:file-manifest && npm run build:service-worker && npm run build:client",
+    "build": "npm run build:copy && npm run build:file-manifest && npm run build:service-worker && npm run build:client",
     "start": "node server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,6 +18,7 @@
   "dependencies": {
     "@rollup/plugin-json": "^4.1.0",
     "arg": "^4.1.3",
+    "firebase": "^7.15.1",
     "mime": "^2.4.6",
     "node-fetch": "^2.6.0",
     "rollup": "^2.13.1"

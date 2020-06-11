@@ -14,8 +14,17 @@ steps:
   - '--image'
   - 'gcr.io/$PROJECT_ID/web-server:$COMMIT_SHA'
   - '--region'
-  - 'us-west1'
+  - 'us-central1'
   - '--platform'
   - 'managed'
+- name: gcr.io/project-id/firebase
+  args: 
+  - 'deploy'
+  - '--project'
+  - '$PROJECT_ID',
+  - '--region'
+  - 'us-central1'
+  - '--only'
+  - 'hosting'
 images:
 - 'gcr.io/$PROJECT_ID/web-server:$COMMIT_SHA'
