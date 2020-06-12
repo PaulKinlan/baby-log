@@ -29,7 +29,10 @@ export default class FeedView {
     return template`${head(data,
       body(data,
         template`<div>Start time: ${data.startTime.toLocaleString(lang, options)}</div>
-        <div>End time: ${(!!data.endTime) ? data.endTime.toLocaleString(lang, options) : ''}</div>`)
+        <div>End time: ${(!!data.endTime) ? data.endTime.toLocaleString(lang, options) : ''}</div>
+        <a href="/${data.type}s/${data.id}/edit"><img src="/images/icons/ui/edit_18dp.png"></a>
+        <form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"></form>
+        <button form="deleteForm" class="delete"><img src="/images/icons/ui/delete_18dp.png"></button>`)
     )}`;
   }
 

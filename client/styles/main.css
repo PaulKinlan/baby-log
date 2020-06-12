@@ -105,6 +105,13 @@ button.delete img {
   filter: invert();
 }
 
+button.delete.row img {
+  margin-right: 0;
+  filter: initial;
+}
+
+
+
 main section div.form div.controls {
   display: flex;
 }

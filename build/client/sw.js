@@ -241,12 +241,12 @@ var aggregate = (items) => {
 
     templates.push(template`<div class="row">
       <img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png" alt="${item.type}"><span>
-        ${item.startTime.toLocaleTimeString()} 
+        ${item.startTime.toLocaleTimeString(navigator.language, {hour: 'numeric', minute: 'numeric'})} 
         ${(item.isDuration) ?
         (`${calculateDuration(item.duration)} ${(item.hasFinished === false) ? `(Still ${item.type}ing)` : ``} `)
         : ``}
         </span>
-        <a href="/${item.type}s/${item.id}/edit"><img src="/images/icons/ui/edit_18dp.png"></a><button class="delete" form="deleteForm${item.id}"><img src="/images/icons/ui/delete_18dp.png"></button>
+        <a href="/${item.type}s/${item.id}/edit"><img src="/images/icons/ui/edit_18dp.png"></a><button class="delete row" form="deleteForm${item.id}"><img src="/images/icons/ui/delete_18dp.png"></button>
         <form id="deleteForm${item.id}" class="deleteForm" method="POST" action="/${item.type}s/${item.id}/delete"></form>
     </div>`);
   }
@@ -966,7 +966,10 @@ class FeedView {
     return template`${head(data,
       body(data,
         template`<div>Start time: ${data.startTime.toLocaleString(lang, options)}</div>
-        <div>End time: ${(!!data.endTime) ? data.endTime.toLocaleString(lang, options) : ''}</div>`)
+        <div>End time: ${(!!data.endTime) ? data.endTime.toLocaleString(lang, options) : ''}</div>
+        <a href="/${data.type}s/${data.id}/edit"><img src="/images/icons/ui/edit_18dp.png"></a>
+        <form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"></form>
+        <button form="deleteForm" class="delete"><img src="/images/icons/ui/delete_18dp.png"></button>`)
     )}`;
   }
 
