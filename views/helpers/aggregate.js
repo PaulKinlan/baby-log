@@ -24,7 +24,7 @@ export default (items) => {
   for (let item of items) {
     if (item.startTime.toLocaleDateString(lang, options) != currentDay) {
       if (firstDay == false) {
-        templates.push(template`<div>${Object.entries(dayAggregate).map(([key, value]) => `${value} ${key}${value > 1 ? 's' : ''} `)}</div>`);
+        templates.push(template`<div>${Object.entries(dayAggregate).map(([key, value]) => `${value} ${key}${value > 1 ? 's' : ''}`).join(', ')}</div>`);
         dayAggregate = {};
       }
       firstDay = false;
@@ -47,6 +47,6 @@ export default (items) => {
     </div>`)
   }
   // Add a final aggregate. 
-  templates.push(template`<div>${Object.entries(dayAggregate).map(([key, value]) => `${value} ${key}${value > 1 ? 's' : ''} `)}</div>`);
+  templates.push(template`<div>${Object.entries(dayAggregate).map(([key, value]) => `${value} ${key}${value > 1 ? 's' : ''}`).join(', ')}</div>`);
   return templates;
 }
