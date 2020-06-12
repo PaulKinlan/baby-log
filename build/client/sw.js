@@ -1344,6 +1344,10 @@ class PoopView {
     </div>
     `))}`;
   }
+
+  async put(data) {
+    return this.get(data);
+  }
 }
 
 class PoopController extends Controller {
@@ -1505,6 +1509,10 @@ class WeeView {
     </div>
     </div>
     `))}`;
+  }
+
+  async put(data) {
+    return this.get(data);
   }
 }
 

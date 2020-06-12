@@ -65,4 +65,8 @@ export default class PoopView {
     </div>
     `))}`;
   }
+
+  async put(data) {
+    return this.get(data);
+  }
 }

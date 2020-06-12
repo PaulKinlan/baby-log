@@ -65,4 +65,8 @@ export default class WeeView {
     </div>
     `))}`;
   }
+
+  async put(data) {
+    return this.get(data);
+  }
 }
