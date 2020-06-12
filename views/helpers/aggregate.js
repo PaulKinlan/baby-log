@@ -20,19 +20,20 @@ export default (items) => {
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   let dayAggregate = {};
   let currentDay;
-  let firstDay = true;
-
+  let firstDay= true;
   for (let item of items) {
     if (item.startTime.toLocaleDateString(lang, options) != currentDay) {
-      //test
       if (firstDay == false) {
-        templates.push(template`<div>${Object.entries(dayAggregate).map(([key, value]) => `${value} ${key}s`)}</div>`);
-        dayAggregate = {}
-        firstDay = false;
+        templates.push(template`<div>${Object.entries(dayAggregate).map(([key, value]) => `${value} ${key}${value > 1 ? 's' : ''} `)}</div>`);
+        dayAggregate = {};
       }
+      firstDay = false;
       currentDay = item.startTime.toLocaleDateString(lang, options);
       templates.push(template`<h3>${currentDay}</h3>`);
     }
+
+    if (item.type in dayAggregate == false) dayAggregate[item.type] = 0;
+    dayAggregate[item.type]++
 
     templates.push(template`<div class="row">
       <img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png" alt="${item.type}"><span>
@@ -46,7 +47,6 @@ export default (items) => {
     </div>`)
   }
   // Add a final aggregate. 
-  templates.push(template`<div>${Object.entries(dayAggregate).map(([key, value]) => `${value} ${key}s`)}</div>`);
-
+  templates.push(template`<div>${Object.entries(dayAggregate).map(([key, value]) => `${value} ${key}${value > 1 ? 's' : ''} `)}</div>`);
   return templates;
 }
