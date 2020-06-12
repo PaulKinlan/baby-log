@@ -44,10 +44,6 @@ export default class SleepView {
     `))}`;
   }
 
-  async post(data) {
-    return this.get(data);
-  }
-
   async edit(data) {
 
     data.header = "Update a Sleep";
@@ -66,9 +62,5 @@ export default class SleepView {
     </div>
     </div>
     `))}`;
-  }
-
-  async put(data) {
-    return this.get(data);
   }
 }

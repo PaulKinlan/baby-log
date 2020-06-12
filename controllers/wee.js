@@ -25,10 +25,7 @@ export default class WeeController extends Controller {
 
     wee.put();
 
-    // Get the View.
-    const view = new View(wee);
-
-    return view.post(wee);
+    return this.redirect(WeeController.route);
   }
 
   async edit(url, id) {
@@ -58,10 +55,7 @@ export default class WeeController extends Controller {
 
     wee.put();
 
-    // Get the View.
-    const view = new View(wee);
-
-    return view.put(wee);
+    return this.redirect(WeeController.route);
   }
 
   async get(url, id) {

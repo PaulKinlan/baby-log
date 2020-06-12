@@ -29,7 +29,7 @@ export default class PoopController extends Controller {
     // Get the View.
     const view = new View(poop);
 
-    return view.post(poop);
+    return this.redirect(PoopController.route);
   }
 
   async edit(url, id) {
@@ -59,10 +59,7 @@ export default class PoopController extends Controller {
 
     poop.put();
 
-    // Get the View.
-    const view = new View(poop);
-
-    return view.put(poop);
+    return this.redirect(PoopController.route);
   }
 
   async get(url, id) {

@@ -25,10 +25,7 @@ export default class FeedController extends Controller {
 
     feed.put();
 
-    // Get the View.
-    const feedView = new View(feed);
-
-    return feedView.post(feed);
+    return this.redirect(FeedController.route);
   }
 
   async edit(url, id) {
@@ -58,10 +55,7 @@ export default class FeedController extends Controller {
 
     feed.put();
 
-    // Get the View.
-    const feedView = new View(feed);
-
-    return feedView.put(feed);
+    return this.redirect(FeedController.route);
   }
 
   async get(url, id) {

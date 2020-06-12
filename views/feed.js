@@ -31,8 +31,11 @@ export default class FeedView {
         template`<div>Start time: ${data.startTime.toLocaleString(lang, options)}</div>
         <div>End time: ${(!!data.endTime) ? data.endTime.toLocaleString(lang, options) : ''}</div>
         <a href="/${data.type}s/${data.id}/edit"><img src="/images/icons/ui/edit_18dp.png"></a>
+        <div class="row">
         <form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"></form>
-        <button form="deleteForm" class="delete"><img src="/images/icons/ui/delete_18dp.png"></button>`)
+        <button form="deleteForm" class="delete"><img src="/images/icons/ui/delete_18dp.png"></button>
+        </div>`
+        )
     )}`;
   }
 
@@ -48,10 +51,6 @@ export default class FeedView {
       <input type="submit">
     </form></div>
     `))}`;
-  }
-
-  async post(data) {
-    return this.get(data);
   }
 
   async edit(data) {
@@ -71,9 +70,5 @@ export default class FeedView {
     </div>
     </div>
     `))}`;
-  }
-
-  async put(data) {
-    return this.get(data);
   }
 }

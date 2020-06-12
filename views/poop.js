@@ -43,10 +43,6 @@ export default class PoopView {
     `))}`;
   }
 
-  async post(data) {
-    return this.get(data);
-  }
-
   async edit(data) {
 
     data.header = "Update a Poop";
@@ -64,9 +60,5 @@ export default class PoopView {
     </div>
     </div>
     `))}`;
-  }
-
-  async put(data) {
-    return this.get(data);
   }
 }

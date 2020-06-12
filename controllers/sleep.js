@@ -26,10 +26,7 @@ export default class SleepController extends Controller {
 
     sleep.put();
 
-    // Get the View.
-    const sleepView = new View(sleep);
-
-    return sleepView.post(sleep);
+    return this.redirect(SleepController.route);
   }
 
   async edit(url, id) {
@@ -58,10 +55,7 @@ export default class SleepController extends Controller {
     sleep.endTime = new Date(endTime);
     sleep.put();
 
-    // Get the View.
-    const sleepView = new View(sleep);
-
-    return sleepView.put(sleep);
+    return this.redirect(SleepController.route);
   }
 
   async get(url, id) {

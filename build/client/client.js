@@ -241,7 +241,7 @@ var aggregate = (items) => {
       <img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png" alt="${item.type}"><span>
         ${item.startTime.toLocaleTimeString(navigator.language, {hour: 'numeric', minute: 'numeric'})} 
         ${(item.isDuration) ?
-        (`${calculateDuration(item.duration)} ${(item.hasFinished === false) ? `(Still ${item.type}ing)` : ``} `)
+        (`- ${calculateDuration(item.duration)} ${(item.hasFinished === false) ? `(Still ${item.type}ing)` : ``} `)
         : ``}
         </span>
         <a href="/${item.type}s/${item.id}/edit"><img src="/images/icons/ui/edit_18dp.png"></a><button class="delete row" form="deleteForm${item.id}"><img src="/images/icons/ui/delete_18dp.png"></button>
@@ -966,8 +966,11 @@ class FeedView {
         template`<div>Start time: ${data.startTime.toLocaleString(lang, options)}</div>
         <div>End time: ${(!!data.endTime) ? data.endTime.toLocaleString(lang, options) : ''}</div>
         <a href="/${data.type}s/${data.id}/edit"><img src="/images/icons/ui/edit_18dp.png"></a>
+        <div class="row">
         <form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"></form>
-        <button form="deleteForm" class="delete"><img src="/images/icons/ui/delete_18dp.png"></button>`)
+        <button form="deleteForm" class="delete"><img src="/images/icons/ui/delete_18dp.png"></button>
+        </div>`
+        )
     )}`;
   }
 
@@ -983,10 +986,6 @@ class FeedView {
       <input type="submit">
     </form></div>
     `))}`;
-  }
-
-  async post(data) {
-    return this.get(data);
   }
 
   async edit(data) {
@@ -1006,10 +1005,6 @@ class FeedView {
     </div>
     </div>
     `))}`;
-  }
-
-  async put(data) {
-    return this.get(data);
   }
 }
 
@@ -1049,10 +1044,7 @@ class FeedController extends Controller {
 
     feed.put();
 
-    // Get the View.
-    const feedView = new FeedView(feed);
-
-    return feedView.post(feed);
+    return this.redirect(FeedController.route);
   }
 
   async edit(url, id) {
@@ -1081,10 +1073,7 @@ class FeedController extends Controller {
 
     feed.put();
 
-    // Get the View.
-    const feedView = new FeedView(feed);
-
-    return feedView.put(feed);
+    return this.redirect(FeedController.route);
   }
 
   async get(url, id) {
