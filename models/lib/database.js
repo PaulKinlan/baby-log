@@ -76,17 +76,19 @@ class Database {
       return Promise.resolve(this.db_);
 
     return new Promise((resolve, reject) => {
-
+    
       var dbOpen = indexedDB.open(this.name_, this.version_);
 
       dbOpen.onupgradeneeded = (e) => {
-
+      
         this.db_ = e.target.result;
 
+        var transaction = e.target.transaction;
         var storeNames = Object.keys(this.stores_);
         var storeName;
 
         for (var s = 0; s < storeNames.length; s++) {
+          var dbStore;
 
           storeName = storeNames[s];
 
@@ -95,25 +97,41 @@ class Database {
 
             // Check to see if the store should be deleted.
             // If so delete, and if not skip to the next store.
-            if (this.stores_[storeName].deleteOnUpgrade)
+            if (this.stores_[storeName].deleteOnUpgrade) {
               this.db_.deleteObjectStore(storeName);
-            else
               continue;
-          }
+            }
 
-          var dbStore = this.db_.createObjectStore(
-            storeName,
-            this.stores_[storeName].properties
-          );
+            dbStore = transaction.objectStore(storeName);
+          }
+          else {
+            dbStore = this.db_.createObjectStore(
+              storeName,
+              this.stores_[storeName].properties
+            );
+          }
 
           if (typeof this.stores_[storeName].indexes !== 'undefined') {
             var indexes = this.stores_[storeName].indexes;
             var indexNames = Object.keys(indexes);
+            var existingIndexNames = dbStore.indexNames;
+
             var index;
 
             for (var i = 0; i < indexNames.length; i++) {
               index = indexNames[i];
-              dbStore.createIndex(index, index.split(','), indexes[index]);
+              if (existingIndexNames.contains(index) === false) {
+                // Only add Index if it doesn't exist
+                dbStore.createIndex(index, index.split(','), indexes[index]);
+              }
+            }
+
+            // Delete indexes that are removed.
+            for (var i = 0; i < dbStore.indexNames.length; i++) {
+              index = dbStore.indexNames[i];
+              if (indexNames.indexOf(index) < 0) {
+                dbStore.deleteIndex(index);
+              }
             }
           }
         }

@@ -287,7 +287,7 @@ class IndexView {
 
 const Config = {
   name: 'babylog',
-  version: 1,
+  version: 6,
   stores: {
     'Log': {
       properties: {
@@ -295,7 +295,8 @@ const Config = {
         keyPath: 'id'
       },
       indexes: {
-        "type,startTime": { unique: true }
+        "type,startTime": { unique: true },
+        "startTime,type": { unique: true }
       }
     }
   }
@@ -423,17 +424,19 @@ class Database {
       return Promise.resolve(this.db_);
 
     return new Promise((resolve, reject) => {
-
+    
       var dbOpen = indexedDB.open(this.name_, this.version_);
 
       dbOpen.onupgradeneeded = (e) => {
-
+      
         this.db_ = e.target.result;
 
+        var transaction = e.target.transaction;
         var storeNames = Object.keys(this.stores_);
         var storeName;
 
         for (var s = 0; s < storeNames.length; s++) {
+          var dbStore;
 
           storeName = storeNames[s];
 
@@ -442,25 +445,41 @@ class Database {
 
             // Check to see if the store should be deleted.
             // If so delete, and if not skip to the next store.
-            if (this.stores_[storeName].deleteOnUpgrade)
+            if (this.stores_[storeName].deleteOnUpgrade) {
               this.db_.deleteObjectStore(storeName);
-            else
               continue;
-          }
+            }
 
-          var dbStore = this.db_.createObjectStore(
-            storeName,
-            this.stores_[storeName].properties
-          );
+            dbStore = transaction.objectStore(storeName);
+          }
+          else {
+            dbStore = this.db_.createObjectStore(
+              storeName,
+              this.stores_[storeName].properties
+            );
+          }
 
           if (typeof this.stores_[storeName].indexes !== 'undefined') {
             var indexes = this.stores_[storeName].indexes;
             var indexNames = Object.keys(indexes);
+            var existingIndexNames = dbStore.indexNames;
+
             var index;
 
             for (var i = 0; i < indexNames.length; i++) {
               index = indexNames[i];
-              dbStore.createIndex(index, index.split(','), indexes[index]);
+              if (existingIndexNames.contains(index) === false) {
+                // Only add Index if it doesn't exist
+                dbStore.createIndex(index, index.split(','), indexes[index]);
+              }
+            }
+
+            // Delete indexes that are removed.
+            for (var i = 0; i < dbStore.indexNames.length; i++) {
+              index = dbStore.indexNames[i];
+              if (indexNames.indexOf(index) < 0) {
+                dbStore.deleteIndex(index);
+              }
             }
           }
         }
@@ -917,7 +936,7 @@ class IndexController extends Controller {
 
   async getAll(url) {
     const view = new IndexView();
-    const logs = await Log.getAll('type,startTime', {filter: ['BETWEEN', ['a', new Date(0)], ['z', new Date(9999999999999)]], order:Log.DESCENDING}) || [];
+    const logs = await Log.getAll('startTime,type', { filter: ['BETWEEN', [new Date(0), 'a'], [new Date(9999999999999), 'z']], order: Log.DESCENDING }) || [];
   
     return view.getAll(logs);
   }
@@ -1092,7 +1111,7 @@ class FeedController extends Controller {
 
   async getAll(url) {
     // Get the Data.....
-    const feeds = await Feed.getAll('type,startTime', { filter: ['BETWEEN', ['feed', new Date(0)], ['feed', new Date(9999999999999)]], order: Feed.DESCENDING }) || [];
+    const feeds = await Feed.getAll('startTime,type', { filter: ['BETWEEN', [new Date(0), 'feed'], [new Date(9999999999999), 'feed']], order: Feed.DESCENDING }) || [];
 
     // Get the View.
     const feedView = new FeedView();
@@ -1245,7 +1264,7 @@ class SleepController extends Controller {
 
   async getAll(url) {
     // Get the Data.....
-    const sleeps = await Sleep.getAll('type,startTime', { filter: ['BETWEEN', ['sleep', new Date(0)], ['sleep', new Date(9999999999999)]], order: Sleep.DESCENDING }) || [];
+    const sleeps = await Sleep.getAll('startTime,type', { filter: ['BETWEEN', [new Date(0), 'sleep'], [new Date(9999999999999), 'sleep']], order: Sleep.DESCENDING }) || [];
 
     // Get the View.
     const sleepView = new SleepView();
@@ -1397,7 +1416,7 @@ class PoopController extends Controller {
 
   async getAll(url) {
     // Get the Data.....
-    const poops = await Poop.getAll('type,startTime', { filter: ['BETWEEN', ['poop', new Date(0)], ['poop', new Date(9999999999999)]], order: Poop.DESCENDING }) || [];
+    const poops = await Poop.getAll('startTime,type', { filter: ['BETWEEN', [new Date(0), 'poop'], [new Date(9999999999999), 'poop']], order: Poop.DESCENDING }) || [];
 
     // Get the View.
     const view = new PoopView();
@@ -1549,7 +1568,7 @@ class WeeController extends Controller {
 
   async getAll(url) {
     // Get the Data.....
-    const wees = await Wee.getAll('type,startTime', { filter: ['BETWEEN', ['wee', new Date(0)], ['wee', new Date(9999999999999)]], order: Wee.DESCENDING }) || [];
+    const wees = await Wee.getAll('startTime,type', { filter: ['BETWEEN', [new Date(0), 'wee'], [new Date(9999999999999), 'wee']], order: Wee.DESCENDING }) || [];
 
     // Get the View.
     const view = new WeeView();

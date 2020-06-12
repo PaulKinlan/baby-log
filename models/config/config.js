@@ -17,7 +17,7 @@
 
 const Config = {
   name: 'babylog',
-  version: 1,
+  version: 6,
   stores: {
     'Log': {
       properties: {
@@ -25,7 +25,8 @@ const Config = {
         keyPath: 'id'
       },
       indexes: {
-        "type,startTime": { unique: true }
+        "type,startTime": { unique: true },
+        "startTime,type": { unique: true }
       }
     }
   }
