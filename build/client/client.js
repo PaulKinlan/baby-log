@@ -103,6 +103,8 @@ class App {
 const routes = [];
 const routeNotFound = new NotFoundController;
 
+const encoder = new TextEncoder();
+
 const pipeInto = async (from, controller) => {
   const reader = from.getReader();
   
@@ -138,7 +140,7 @@ const enqueueItem = async (val, controller) => {
       }
     }
     else if (!!val) {
-      controller.enqueue(new TextEncoder().encode(val));
+      controller.enqueue(encoder.encode(val));
     }
   }
 };
@@ -154,12 +156,12 @@ var template = async (strings, ...values) => {
         let i = 0;
         while (i < values.length) {
           let html = strings[i];
-          controller.enqueue(new TextEncoder().encode(html));
+          controller.enqueue(encoder.encode(html));
           await enqueueItem(values[i], controller);
 
           i++;
         }
-        controller.enqueue(new TextEncoder().encode(strings[i]));
+        controller.enqueue(encoder.encode(strings[i]));
         controller.close();
       }
 
