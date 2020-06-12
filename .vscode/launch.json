@@ -7,7 +7,7 @@
     {
       "name": "Tools/Build SW",
       "program": "${workspaceFolder}/tools/build-sw.js",
-      "args": ["--dir", "client/", "--dir", "build/client/"],
+      "args": ["--dir", "client/", "--dir", "build/client/", "--ignore", "/sw.js"],
       "request": "launch",
       "skipFiles": [
         "<node_internals>/**"
