@@ -76,7 +76,7 @@ export default class PoopController extends Controller {
 
   async getAll(url) {
     // Get the Data.....
-    const poops = await Model.getAll('startTime,type', { filter: ['BETWEEN', [new Date(0), 'poop'], [new Date(9999999999999), 'poop']], order: Model.DESCENDING }) || [];
+    const poops = await Model.getAll('type,startTime', { filter: ['BETWEEN', ['poop', new Date(0)], ['poop', new Date(99999999999999)]], order: Model.DESCENDING }) || [];
 
     // Get the View.
     const view = new View();

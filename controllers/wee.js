@@ -72,7 +72,7 @@ export default class WeeController extends Controller {
 
   async getAll(url) {
     // Get the Data.....
-    const wees = await Model.getAll('startTime,type', { filter: ['BETWEEN', [new Date(0), 'wee'], [new Date(9999999999999), 'wee']], order: Model.DESCENDING }) || [];
+    const wees = await Model.getAll('type,startTime', { filter: ['BETWEEN', ['wee', new Date(0)], ['wee', new Date(99999999999999)]], order: Model.DESCENDING }) || [];
 
     // Get the View.
     const view = new View();

@@ -386,7 +386,7 @@ const parseFilter = ([operator, ...values]) => {
   const [lower, upper] = values;
 
   switch(operator) {
-    case 'BETWEEN': return IDBKeyRange.bound(lower, upper);
+    case 'BETWEEN': return IDBKeyRange.bound(lower, upper, false, false);
     case '=':  return IDBKeyRange.only(lower);
     case '<':  return IDBKeyRange.upperBound(lower);
     case '<=': return IDBKeyRange.upperBound(lower, true);
@@ -580,7 +580,7 @@ class Database {
     });
   }
 
-  getAll(storeName, index, { filter, order }) {
+  getAll(storeName, index, { filter, order, cmpFunc }) {
 
     return this.open().then((db) => {
 
@@ -605,10 +605,12 @@ class Database {
           var cursor = e.target.result;
 
           if (cursor) {
-            dbResults.push({
-              key: cursor.key,
-              value: cursor.value
-            });
+            if (cmpFunc === undefined || cmpFunc(cursor.value)) {
+              dbResults.push({
+                key: cursor.key,
+                value: cursor.value
+              });
+            }
             cursor.continue();
           } else {
             resolve(dbResults);
@@ -759,7 +761,7 @@ class Model {
   /**
    * Gets all the objects from the database.
    */
-  static getAll(index, { filter, order }) {
+  static getAll(index, { filter, order, cmpFunc }) {
 
     if (hasSupport() === false) {
       return Promise.resolve();
@@ -771,7 +773,7 @@ class Model {
     return DatabaseInstance()
 
       // Do the query.
-      .then(db => db.getAll(this.storeName, index, {filter, order}))
+      .then(db => db.getAll(this.storeName, index, {filter, order, cmpFunc}))
 
       // Wrap all the results in the correct class.
       .then(results => {
@@ -1111,7 +1113,7 @@ class FeedController extends Controller {
 
   async getAll(url) {
     // Get the Data.....
-    const feeds = await Feed.getAll('startTime,type', { filter: ['BETWEEN', [new Date(0), 'feed'], [new Date(9999999999999), 'feed']], order: Feed.DESCENDING }) || [];
+    const feeds = await Feed.getAll('type,startTime', { filter: ['BETWEEN', ['feed', new Date(0)], ['feed', new Date(99999999999999)]], order: Feed.DESCENDING }) || [];
 
     // Get the View.
     const feedView = new FeedView();
@@ -1264,7 +1266,7 @@ class SleepController extends Controller {
 
   async getAll(url) {
     // Get the Data.....
-    const sleeps = await Sleep.getAll('startTime,type', { filter: ['BETWEEN', [new Date(0), 'sleep'], [new Date(9999999999999), 'sleep']], order: Sleep.DESCENDING }) || [];
+    const sleeps = await Sleep.getAll('type,startTime', { filter: ['BETWEEN', ['sleep', new Date(0)], ['sleep', new Date(99999999999999)]], order: Sleep.DESCENDING }) || [];
 
     // Get the View.
     const sleepView = new SleepView();
@@ -1416,7 +1418,7 @@ class PoopController extends Controller {
 
   async getAll(url) {
     // Get the Data.....
-    const poops = await Poop.getAll('startTime,type', { filter: ['BETWEEN', [new Date(0), 'poop'], [new Date(9999999999999), 'poop']], order: Poop.DESCENDING }) || [];
+    const poops = await Poop.getAll('type,startTime', { filter: ['BETWEEN', ['poop', new Date(0)], ['poop', new Date(99999999999999)]], order: Poop.DESCENDING }) || [];
 
     // Get the View.
     const view = new PoopView();
@@ -1568,7 +1570,7 @@ class WeeController extends Controller {
 
   async getAll(url) {
     // Get the Data.....
-    const wees = await Wee.getAll('startTime,type', { filter: ['BETWEEN', [new Date(0), 'wee'], [new Date(9999999999999), 'wee']], order: Wee.DESCENDING }) || [];
+    const wees = await Wee.getAll('type,startTime', { filter: ['BETWEEN', ['wee', new Date(0)], ['wee', new Date(99999999999999)]], order: Wee.DESCENDING }) || [];
 
     // Get the View.
     const view = new WeeView();

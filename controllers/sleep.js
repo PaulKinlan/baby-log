@@ -72,7 +72,7 @@ export default class SleepController extends Controller {
 
   async getAll(url) {
     // Get the Data.....
-    const sleeps = await Model.getAll('startTime,type', { filter: ['BETWEEN', [new Date(0), 'sleep'], [new Date(9999999999999), 'sleep']], order: Model.DESCENDING }) || [];
+    const sleeps = await Model.getAll('type,startTime', { filter: ['BETWEEN', ['sleep', new Date(0)], ['sleep', new Date(99999999999999)]], order: Model.DESCENDING }) || [];
 
     // Get the View.
     const sleepView = new View();

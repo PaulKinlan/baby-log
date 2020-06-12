@@ -72,7 +72,7 @@ export default class FeedController extends Controller {
 
   async getAll(url) {
     // Get the Data.....
-    const feeds = await Model.getAll('startTime,type', { filter: ['BETWEEN', [new Date(0), 'feed'], [new Date(9999999999999), 'feed']], order: Model.DESCENDING }) || [];
+    const feeds = await Model.getAll('type,startTime', { filter: ['BETWEEN', ['feed', new Date(0)], ['feed', new Date(99999999999999)]], order: Model.DESCENDING }) || [];
 
     // Get the View.
     const feedView = new View();

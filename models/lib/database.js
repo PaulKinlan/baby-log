@@ -37,7 +37,7 @@ const parseFilter = ([operator, ...values]) => {
   const [lower, upper] = values;
 
   switch(operator) {
-    case 'BETWEEN': return IDBKeyRange.bound(lower, upper);
+    case 'BETWEEN': return IDBKeyRange.bound(lower, upper, false, false);
     case '=':  return IDBKeyRange.only(lower);
     case '<':  return IDBKeyRange.upperBound(lower);
     case '<=': return IDBKeyRange.upperBound(lower, true);
@@ -232,7 +232,7 @@ class Database {
     });
   }
 
-  getAll(storeName, index, { filter, order }) {
+  getAll(storeName, index, { filter, order, cmpFunc }) {
 
     return this.open().then((db) => {
 
@@ -257,10 +257,12 @@ class Database {
           var cursor = e.target.result;
 
           if (cursor) {
-            dbResults.push({
-              key: cursor.key,
-              value: cursor.value
-            });
+            if (cmpFunc === undefined || cmpFunc(cursor.value)) {
+              dbResults.push({
+                key: cursor.key,
+                value: cursor.value
+              });
+            }
             cursor.continue();
           } else {
             resolve(dbResults);
