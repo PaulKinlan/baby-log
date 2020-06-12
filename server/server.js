@@ -47,7 +47,7 @@ const render = (url, request, res) => {
 
   if (!!view) {
     res.statusCode = 200;
-    res.setHeader('Content-Type', mime.getType(url.pathname) || 'text/html');
+    res.setHeader('Content-Type', mime.getType(url.pathname) || 'text/html; charset=utf-8');
     view.then(output => {
       if (typeof output === "string") {
         res.write(output);

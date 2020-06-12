@@ -153,7 +153,10 @@ footer a, footer a:visited {
   justify-content: center;
   align-items: center;
   height: 100%;
-  color: black;
+  color: transparent;
+  text-shadow: hsla(218, 20%, 63%, 1) 0px 0px 0px;
+  text-decoration: none;
+  font-size: 3em;
 }
 
 @media(min-width: 720px) {

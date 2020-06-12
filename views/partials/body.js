@@ -15,7 +15,7 @@ export default (data, items) => {
     </section>
   </main>
   <footer>
-    <span>Add</span><a href="/feeds/new">Feed</a><a href="/sleeps/new">Sleep</a><a href="/poops/new">Poop</a><a href="/wees/new">Wee</a>
+    <span>Add</span><a href="/feeds/new" title="Add a feed">🍼</a><a href="/sleeps/new" title="Add a Sleep">💤</a><a href="/poops/new" title="Add a Poop">💩</a><a href="/wees/new" title="Add a Wee">⛲️</a>
   </footer>
   `;
 };
