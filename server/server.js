@@ -15,7 +15,7 @@ import { SleepController } from '../controllers/sleep.js';
 import { PoopController } from '../controllers/poop.js'
 import { WeeController } from '../controllers/wee.js'
 import { StaticController } from '../controllers/server/static.js';
-import NotFoundException from '../controllers/exception/notfound.js';
+import { NotFoundException } from '../controllers/exception/notfound.js';
 
 const app = new App();
 
