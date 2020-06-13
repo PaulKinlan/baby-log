@@ -1,5 +1,4 @@
 import { Controller } from './lib/controller.js';
-import { Poop as Model } from '../models/poop.js';
 import { NotFoundException } from './exception/notfound.js';
 import { getFormData } from './helpers/formData.js';
 
@@ -11,7 +10,7 @@ export class PoopController extends Controller {
 
   async create(url, request) {
     // Show the create an entry UI.
-    return this.view.create(new Model);
+    return this.view.create(new this.Model);
   }
 
   async post(url, request) {
@@ -20,7 +19,7 @@ export class PoopController extends Controller {
 
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
-    const poop = new Model({ startTime, endTime });
+    const poop = new this.Model({ startTime, endTime });
 
     poop.put();
 
@@ -29,7 +28,7 @@ export class PoopController extends Controller {
 
   async edit(url, id) {
     // Get the Data.
-    const poop = await Model.get(parseInt(id, 10));
+    const poop = await this.Model.get(parseInt(id, 10));
 
     if (!!poop == false) throw new NotFoundException(`Poop ${id} not found`);;
     
@@ -38,7 +37,7 @@ export class PoopController extends Controller {
 
   async put(url, id, request) {
     // Get the Data.
-    const poop = await Model.get(parseInt(id, 10));
+    const poop = await this.Model.get(parseInt(id, 10));
 
     if (!!poop == false) throw new NotFoundException(`Poop ${id} not found`);
 
@@ -57,7 +56,7 @@ export class PoopController extends Controller {
 
   async get(url, id) {
     // Get the Data.
-    const poop = await Model.get(parseInt(id, 10));
+    const poop = await this.Model.get(parseInt(id, 10));
 
     if (!!poop == false) throw new NotFoundException(`Poop ${id} not found`);
 
@@ -66,14 +65,14 @@ export class PoopController extends Controller {
 
   async getAll(url) {
     // Get the Data.....
-    const poops = await Model.getAll('type,startTime', { filter: ['BETWEEN', ['poop', new Date(0)], ['poop', new Date(99999999999999)]], order: Model.DESCENDING }) || [];
+    const poops = await this.Model.getAll('type,startTime', { filter: ['BETWEEN', ['poop', new Date(0)], ['poop', new Date(99999999999999)]], order: this.Model.DESCENDING }) || [];
 
     return this.view.getAll(poops);
   }
 
   async del(url, id) {
     // Get the Data.
-    const model = await Model.get(parseInt(id, 10));
+    const model = await this.Model.get(parseInt(id, 10));
 
     if (!!model == false) throw new NotFoundException(`Poop ${id} not found`);
 

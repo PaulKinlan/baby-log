@@ -7,8 +7,9 @@ class MethodNotFound {
 
 export class Controller {
 
-  constructor(view) {
+  constructor(view, model) {
     this.view = view;
+    this.Model = model;
   }
 
   getView(url, request) {

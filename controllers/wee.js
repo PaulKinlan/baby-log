@@ -1,5 +1,4 @@
 import { Controller } from './lib/controller.js';
-import { Wee as Model } from '../models/wee.js';
 import { NotFoundException } from './exception/notfound.js';
 import { getFormData } from './helpers/formData.js';
 
@@ -9,7 +8,7 @@ export class WeeController extends Controller {
   }
 
   async create(url, request) {
-    return this.view.create(new Model);
+    return this.view.create(new this.Model);
   }
 
   async post(url, request) {
@@ -18,7 +17,7 @@ export class WeeController extends Controller {
 
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
-    const wee = new Model({ startTime, endTime });
+    const wee = new this.Model({ startTime, endTime });
 
     wee.put();
 
@@ -27,7 +26,7 @@ export class WeeController extends Controller {
 
   async edit(url, id) {
     // Get the Data.
-    const wee = await Model.get(parseInt(id, 10));
+    const wee = await this.Model.get(parseInt(id, 10));
 
     if (!!wee == false) throw new NotFoundException(`Wee ${id} not found`);;
     
@@ -36,7 +35,7 @@ export class WeeController extends Controller {
 
   async put(url, id, request) {
     // Get the Data.
-    const wee = await Model.get(parseInt(id, 10));
+    const wee = await this.Model.get(parseInt(id, 10));
 
     if (!!wee == false) throw new NotFoundException(`Wee ${id} not found`);
 
@@ -55,7 +54,7 @@ export class WeeController extends Controller {
 
   async get(url, id) {
     // Get the Data.
-    const wee = await Model.get(parseInt(id, 10));
+    const wee = await this.Model.get(parseInt(id, 10));
 
     if (!!wee == false) throw new NotFoundException(`Wee ${id} not found`);
 
@@ -64,14 +63,14 @@ export class WeeController extends Controller {
 
   async getAll(url) {
     // Get the Data.....
-    const wees = await Model.getAll('type,startTime', { filter: ['BETWEEN', ['wee', new Date(0)], ['wee', new Date(99999999999999)]], order: Model.DESCENDING }) || [];
+    const wees = await this.Model.getAll('type,startTime', { filter: ['BETWEEN', ['wee', new Date(0)], ['wee', new Date(99999999999999)]], order: this.Model.DESCENDING }) || [];
 
     return this.view.getAll(wees);
   }
 
   async del(url, id) {
     // Get the Data.
-    const model = await Model.get(parseInt(id, 10));
+    const model = await this.Model.get(parseInt(id, 10));
 
     if (!!model == false) throw new NotFoundException(`Wee ${id} not found`);
 

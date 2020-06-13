@@ -1,5 +1,4 @@
 import { Controller } from './lib/controller.js';
-import { Sleep as Model } from '../models/sleep.js';
 import { NotFoundException } from './exception/notfound.js';
 import { getFormData } from './helpers/formData.js';
 
@@ -11,7 +10,7 @@ export class SleepController extends Controller {
 
   async create(url, request) {
     // Show the create an entry UI.
-    return this.view.create(new Model);
+    return this.view.create(new this.Model);
   }
 
   async post(url, request) {
@@ -20,7 +19,7 @@ export class SleepController extends Controller {
 
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
-    const sleep = new Model({ startTime, endTime });
+    const sleep = new this.Model({ startTime, endTime });
 
     sleep.put();
 
@@ -29,7 +28,7 @@ export class SleepController extends Controller {
 
   async edit(url, id) {
     // Get the Data.
-    const sleep = await Model.get(parseInt(id, 10));
+    const sleep = await this.Model.get(parseInt(id, 10));
 
     if (!!sleep == false) throw new NotFoundException(`Sleep ${id} not found`);;
     
@@ -38,7 +37,7 @@ export class SleepController extends Controller {
 
   async put(url, id, request) {
     // Get the Data.
-    const sleep = await Model.get(parseInt(id, 10));
+    const sleep = await this.Model.get(parseInt(id, 10));
 
     if (!!sleep == false) throw new NotFoundException(`Sleep ${id} not found`);
 
@@ -56,7 +55,7 @@ export class SleepController extends Controller {
 
   async get(url, id) {
     // Get the Data.
-    const sleep = await Model.get(parseInt(id, 10));
+    const sleep = await this.Model.get(parseInt(id, 10));
 
     if (!!sleep == false) throw new NotFoundException(`Sleep ${id} not found`);
 
@@ -65,14 +64,14 @@ export class SleepController extends Controller {
 
   async getAll(url) {
     // Get the Data.....
-    const sleeps = await Model.getAll('type,startTime', { filter: ['BETWEEN', ['sleep', new Date(0)], ['sleep', new Date(99999999999999)]], order: Model.DESCENDING }) || [];
+    const sleeps = await this.Model.getAll('type,startTime', { filter: ['BETWEEN', ['sleep', new Date(0)], ['sleep', new Date(99999999999999)]], order: this.Model.DESCENDING }) || [];
 
     return this.view.getAll(sleeps);
   }
 
   async del(url, id) {
     // Get the Data.
-    const model = await Model.get(parseInt(id, 10));
+    const model = await this.Model.get(parseInt(id, 10));
 
     if (!!model == false) throw new NotFoundException(`Sleep ${id} not found`);
 
