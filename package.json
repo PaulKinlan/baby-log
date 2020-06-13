@@ -25,5 +25,8 @@
   },
   "engines": {
     "node": "13.0.0"
+  },
+  "devDependencies": {
+    "rollup-plugin-terser": "^6.1.0"
   }
 }
