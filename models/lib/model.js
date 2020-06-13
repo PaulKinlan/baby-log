@@ -18,7 +18,7 @@
 import { DatabaseInstance, hasSupport} from './database.js';
 import ConfigManagerInstance from './configmanager.js';
 
-export default class Model {
+export class Model {
 
   constructor(key) {
     this.key = key;

@@ -75,7 +75,7 @@ class Controller {
 
 class NotFoundController extends Controller {
   render(url) {
-    
+
   }
 }
 
@@ -170,7 +170,7 @@ var template = async (strings, ...values) => {
   });
 };
 
-var head = (data, body) => {
+const head = (data, body) => {
   return template`<!DOCTYPE html>
 <html>
   <head>
@@ -184,7 +184,7 @@ var head = (data, body) => {
 </html>`;
 };
 
-var body = (data, items) => {
+const body = (data, items) => {
   return template`
   <header>
     <h1>Baby Log</h1>
@@ -218,7 +218,7 @@ const calculateDuration = (ms) => {
   return `${hours} ${hourStr} ${minutes} ${minuteStr}`;
 };
 
-var aggregate = (items) => {
+const aggregate = (items) => {
   const templates = [];
   const lang = navigator.language;
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -939,13 +939,13 @@ class IndexController extends Controller {
   async getAll(url) {
     const view = new IndexView();
     const logs = await Log.getAll('startTime,type', { filter: ['BETWEEN', [new Date(0), 'a'], [new Date(9999999999999), 'z']], order: Log.DESCENDING }) || [];
-  
+
     return view.getAll(logs);
   }
 
   get(url) {
     const view = new IndexView();
-    const output = view.render({title: "Ay....", newTitle: "Testing"});
+    const output = view.render({ title: "Ay....", newTitle: "Testing" });
     return output;
   }
 }
@@ -957,10 +957,10 @@ class Feed extends Log {
   }
 }
 
-function correctISOTime(date) {
+const correctISOTime = (date) => {
   const tzoffset = (new Date()).getTimezoneOffset() * 60000;
   return (new Date(date - tzoffset)).toISOString().replace(/:(\d+).(\d+)Z$/, '');
-}
+};
 
 if ('navigator' in globalThis === false) globalThis.navigator = {
   language: 'en-GB'
@@ -1039,7 +1039,7 @@ class NotFoundException extends Error {
 
 // Safari's messed up formData on the request object.
 
-var getFormData = async (request) => {
+const getFormData = async (request) => {
   const data = await request.arrayBuffer();
   const decoder = new TextDecoder("utf-8");
   const params = new URLSearchParams(`?${decoder.decode(data)}`);
@@ -1056,7 +1056,7 @@ class FeedController extends Controller {
     // Show the create an entry UI.
     const feedView = new FeedView();
     return feedView.create(new Feed);
-  } 
+  }
 
   async post(url, request) {
 
@@ -1085,12 +1085,12 @@ class FeedController extends Controller {
     const feed = await Feed.get(parseInt(id, 10));
 
     if (!!feed == false) throw new NotFoundException(`Feed ${id} not found`);
-    
+
     const formData = await getFormData(request);
 
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
-    
+
     feed.startTime = new Date(startTime);
     feed.endTime = new Date(endTime);
 

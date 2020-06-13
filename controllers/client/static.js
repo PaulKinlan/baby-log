@@ -1,7 +1,7 @@
-import Controller from "../lib/controller.js";
+import { Controller } from "../lib/controller.js";
 
 // This will be a server only route;
-export default class StaticController extends Controller {
+export class StaticController extends Controller {
 
   static get route() {
     return ''; // Match everything.

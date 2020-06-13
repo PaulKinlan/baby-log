@@ -1,11 +1,11 @@
-import Controller from './lib/controller.js';
-import Model from '../models/feed.js';
-import View from '../views/feed.js';
-import NotFoundException from './exception/notfound.js';
-import getFormData from './helpers/formData.js';
+import { Controller } from './lib/controller.js';
+import { Feed as Model } from '../models/feed.js';
+import { FeedView as View } from '../views/feed.js';
+import { NotFoundException } from './exception/notfound.js';
+import { getFormData } from './helpers/formData.js';
 
 
-export default class FeedController extends Controller {
+export class FeedController extends Controller {
   static get route() {
     return '/feeds';
   }
@@ -14,7 +14,7 @@ export default class FeedController extends Controller {
     // Show the create an entry UI.
     const feedView = new View();
     return feedView.create(new Model);
-  } 
+  }
 
   async post(url, request) {
 
@@ -44,12 +44,12 @@ export default class FeedController extends Controller {
     const feed = await Model.get(parseInt(id, 10));
 
     if (!!feed == false) throw new NotFoundException(`Feed ${id} not found`);
-    
+
     const formData = await getFormData(request);
 
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
-    
+
     feed.startTime = new Date(startTime);
     feed.endTime = new Date(endTime);
 

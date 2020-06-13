@@ -1,17 +1,17 @@
-import head from './partials/head.js';
-import body from './partials/body.js';
+import { head } from './partials/head.js';
+import { body } from './partials/body.js';
 import template from './lib/florawg.js'
-import aggregate from './helpers/aggregate.js';
-import correctISOTime from './helpers/timezone.js';
+import { aggregate } from './helpers/aggregate.js';
+import { correctISOTime } from './helpers/timezone.js';
 
-export default class WeeView {
+export class WeeView {
   async getAll(data) {
 
     data.type = "Wee";
     data.header = "Wees";
 
-    return template`${head(data, 
-      body(data, 
+    return template`${head(data,
+      body(data,
         template`${aggregate(data)}`)
     )}`;
   }
@@ -22,7 +22,7 @@ export default class WeeView {
 
     const lang = navigator.language;
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-  
+
     return template`${head(data,
       body(data,
         template`<div>Start time: ${data.startTime.toLocaleString(lang, options)}</div>

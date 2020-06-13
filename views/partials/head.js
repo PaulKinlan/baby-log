@@ -1,6 +1,6 @@
 import template from '../lib/florawg.js'
 
-export default (data, body) => {
+export const head = (data, body) => {
   return template`<!DOCTYPE html>
 <html>
   <head>

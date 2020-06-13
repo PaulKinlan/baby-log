@@ -1,10 +1,10 @@
-import head from './partials/head.js';
-import body from './partials/body.js';
+import { head } from './partials/head.js';
+import { body } from './partials/body.js';
 import template from './lib/florawg.js'
-import aggregate from './helpers/aggregate.js';
-import correctISOTime from './helpers/timezone.js';
+import { aggregate } from './helpers/aggregate.js';
+import { correctISOTime } from './helpers/timezone.js';
 
-export default class PoopView {
+export class PoopView {
   async getAll(data) {
 
     data.type = "Poop";

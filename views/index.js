@@ -1,9 +1,9 @@
-import head from './partials/head.js';
-import body from './partials/body.js';
+import { head } from './partials/head.js';
+import { body } from './partials/body.js';
 import template from './lib/florawg.js';
-import aggregate from './helpers/aggregate.js';
+import { aggregate } from './helpers/aggregate.js';
 
-export default class IndexView {
+export class IndexView {
   async getAll(data) {
 
     data.type = "All";

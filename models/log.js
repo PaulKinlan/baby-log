@@ -1,6 +1,6 @@
-import Model from './lib/model.js'
+import { Model }  from './lib/model.js'
 
-export default class Log extends Model {
+export class Log extends Model {
 
   get hasFinished() {
     return !!this.endTime;

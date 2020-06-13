@@ -1,6 +1,6 @@
-import App from '../app.js';
-import IndexController from '../controllers/index.js'
-import FeedController from '../controllers/feed.js'
+import { App } from '../app.js';
+import { IndexController } from '../controllers/index.js'
+import { FeedController } from '../controllers/feed.js'
 
 const app = new App();
 

@@ -1,10 +1,10 @@
-import Controller from './lib/controller.js';
-import Model from '../models/wee.js';
-import View from '../views/wee.js';
-import NotFoundException from './exception/notfound.js';
-import getFormData from './helpers/formData.js';
+import { Controller } from './lib/controller.js';
+import { Wee as Model } from '../models/wee.js';
+import { WeeView as View } from '../views/wee.js';
+import { NotFoundException } from './exception/notfound.js';
+import { getFormData } from './helpers/formData.js';
 
-export default class WeeController extends Controller {
+export class WeeController extends Controller {
   static get route() {
     return '/wees';
   }
@@ -13,7 +13,7 @@ export default class WeeController extends Controller {
     // Show the create an entry UI.
     const view = new View();
     return view.create(new Model);
-  } 
+  }
 
   async post(url, request) {
 
@@ -44,12 +44,12 @@ export default class WeeController extends Controller {
     const wee = await Model.get(parseInt(id, 10));
 
     if (!!wee == false) throw new NotFoundException(`Wee ${id} not found`);
-    
+
     const formData = await getFormData(request);
 
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
-    
+
     wee.startTime = startTime;
     wee.endTime = endTime;
 

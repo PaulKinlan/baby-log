@@ -14,7 +14,7 @@ const calculateDuration = (ms) => {
   return `${hours} ${hourStr} ${minutes} ${minuteStr}`;
 }
 
-export default (items) => {
+export const aggregate = (items) => {
   const templates = [];
   const lang = navigator.language;
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };

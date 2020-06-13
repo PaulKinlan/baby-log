@@ -1,11 +1,11 @@
-import Controller from './lib/controller.js';
-import Model from '../models/poop.js';
-import View from '../views/poop.js';
-import NotFoundException from './exception/notfound.js';
-import getFormData from './helpers/formData.js';
+import { Controller } from './lib/controller.js';
+import { Poop as Model } from '../models/poop.js';
+import { PoopView as View } from '../views/poop.js';
+import { NotFoundException } from './exception/notfound.js';
+import { getFormData } from './helpers/formData.js';
 
 
-export default class PoopController extends Controller {
+export class PoopController extends Controller {
   static get route() {
     return '/poops';
   }
@@ -14,7 +14,7 @@ export default class PoopController extends Controller {
     // Show the create an entry UI.
     const view = new View();
     return view.create(new Model);
-  } 
+  }
 
   async post(url, request) {
 
@@ -48,12 +48,12 @@ export default class PoopController extends Controller {
     const poop = await Model.get(parseInt(id, 10));
 
     if (!!poop == false) throw new NotFoundException(`Poop ${id} not found`);
-    
+
     const formData = await getFormData(request);
 
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
-    
+
     poop.startTime = startTime;
     poop.endTime = endTime;
 

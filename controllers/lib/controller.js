@@ -5,7 +5,7 @@ class MethodNotFound {
   }
 }
 
-export default class Controller {
+export class Controller {
 
   getView(url, request) {
     const { pathname } = new URL(url);

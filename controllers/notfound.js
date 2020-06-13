@@ -1,7 +1,7 @@
-import Controller from "./lib/controller.js";
+import { Controller } from './lib/controller.js';
 
-export default class NotFoundController extends Controller {
+export class NotFoundController extends Controller {
   render(url) {
-    
+
   }
 }

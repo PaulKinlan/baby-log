@@ -1,13 +1,13 @@
-import head from './partials/head.js';
-import body from './partials/body.js';
+import { head } from './partials/head.js';
+import { body } from './partials/body.js';
 import template from './lib/florawg.js';
-import aggregate from './helpers/aggregate.js';
-import correctISOTime from './helpers/timezone.js';
+import { aggregate } from './helpers/aggregate.js';
+import { correctISOTime } from './helpers/timezone.js';
 
 if ('navigator' in globalThis === false) globalThis.navigator = {
   language: 'en-GB'
 };
-export default class FeedView {
+export class FeedView {
   async getAll(data) {
 
     data.type = "Feed";

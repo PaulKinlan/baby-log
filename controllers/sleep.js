@@ -1,11 +1,11 @@
-import Controller from './lib/controller.js';
-import Model from '../models/sleep.js';
-import View from '../views/sleep.js';
-import NotFoundException from './exception/notfound.js';
-import getFormData from './helpers/formData.js';
+import { Controller } from './lib/controller.js';
+import { Sleep as Model } from '../models/sleep.js';
+import { SleepView as View } from '../views/sleep.js';
+import { NotFoundException } from './exception/notfound.js';
+import { getFormData } from './helpers/formData.js';
 
 
-export default class SleepController extends Controller {
+export class SleepController extends Controller {
   static get route() {
     return '/sleeps';
   }
@@ -14,7 +14,7 @@ export default class SleepController extends Controller {
     // Show the create an entry UI.
     const sleepView = new View();
     return sleepView.create(new Model);
-  } 
+  }
 
   async post(url, request) {
 
@@ -45,12 +45,12 @@ export default class SleepController extends Controller {
     const sleep = await Model.get(parseInt(id, 10));
 
     if (!!sleep == false) throw new NotFoundException(`Sleep ${id} not found`);
-    
+
     const formData = await getFormData(request);
 
     const startTime = formData.get('startTime');
     const endTime = formData.get('endTime');
-    
+
     sleep.startTime = new Date(startTime);
     sleep.endTime = new Date(endTime);
     sleep.put();

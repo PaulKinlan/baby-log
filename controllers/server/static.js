@@ -1,4 +1,4 @@
-import Controller from "../lib/controller.js";
+import { Controller } from "../lib/controller.js";
 // Importing node functions
 import * as path from "path";
 import * as fs from 'fs';
@@ -25,7 +25,7 @@ async function get(url) {
 }
 
 // This will be a server only route;
-export default class StaticController extends Controller {
+export class StaticController extends Controller {
 
   static get route() {
     return ''; // Match everything.

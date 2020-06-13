@@ -1,6 +1,6 @@
-import NotFoundController from './controllers/notfound.js'
+import { NotFoundController } from './controllers/notfound.js'
 
-export default class App {
+export class App {
   get routes() {
     return routes;
   }
