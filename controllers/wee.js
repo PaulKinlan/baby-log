@@ -1,6 +1,5 @@
 import { Controller } from './lib/controller.js';
 import { Wee as Model } from '../models/wee.js';
-import { WeeView as View } from '../views/wee.js';
 import { NotFoundException } from './exception/notfound.js';
 import { getFormData } from './helpers/formData.js';
 
@@ -10,9 +9,7 @@ export class WeeController extends Controller {
   }
 
   async create(url, request) {
-    // Show the create an entry UI.
-    const view = new View();
-    return view.create(new Model);
+    return this.view.create(new Model);
   }
 
   async post(url, request) {
@@ -33,10 +30,8 @@ export class WeeController extends Controller {
     const wee = await Model.get(parseInt(id, 10));
 
     if (!!wee == false) throw new NotFoundException(`Wee ${id} not found`);;
-    // Get the View.
-    const view = new View();
-
-    return view.edit(wee);
+    
+    return this.view.edit(wee);
   }
 
   async put(url, id, request) {
@@ -64,20 +59,14 @@ export class WeeController extends Controller {
 
     if (!!wee == false) throw new NotFoundException(`Wee ${id} not found`);
 
-    // Get the View.
-    const view = new View();
-
-    return view.get(wee);
+    return this.view.get(wee);
   }
 
   async getAll(url) {
     // Get the Data.....
     const wees = await Model.getAll('type,startTime', { filter: ['BETWEEN', ['wee', new Date(0)], ['wee', new Date(99999999999999)]], order: Model.DESCENDING }) || [];
 
-    // Get the View.
-    const view = new View();
-
-    return view.getAll(wees);
+    return this.view.getAll(wees);
   }
 
   async del(url, id) {

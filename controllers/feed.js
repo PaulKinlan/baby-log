@@ -1,6 +1,5 @@
 import { Controller } from './lib/controller.js';
 import { Feed as Model } from '../models/feed.js';
-import { FeedView as View } from '../views/feed.js';
 import { NotFoundException } from './exception/notfound.js';
 import { getFormData } from './helpers/formData.js';
 
@@ -12,8 +11,7 @@ export class FeedController extends Controller {
 
   async create(url, request) {
     // Show the create an entry UI.
-    const feedView = new View();
-    return feedView.create(new Model);
+    return this.view.create(new Model);
   }
 
   async post(url, request) {
@@ -33,10 +31,8 @@ export class FeedController extends Controller {
     const feed = await Model.get(parseInt(id, 10));
 
     if (!!feed == false) throw new NotFoundException(`Feed ${id} not found`);;
-    // Get the View.
-    const feedView = new View();
-
-    return feedView.edit(feed);
+    
+    return this.view.edit(feed);
   }
 
   async put(url, id, request) {
@@ -64,10 +60,7 @@ export class FeedController extends Controller {
 
     if (!!feed == false) throw new NotFoundException(`Feed ${id} not found`);
 
-    // Get the View.
-    const feedView = new View();
-
-    return feedView.get(feed);
+    return this.view.get(feed);
   }
 
   async getAll(url) {
@@ -75,9 +68,7 @@ export class FeedController extends Controller {
     const feeds = await Model.getAll('type,startTime', { filter: ['BETWEEN', ['feed', new Date(0)], ['feed', new Date(99999999999999)]], order: Model.DESCENDING }) || [];
 
     // Get the View.
-    const feedView = new View();
-
-    return feedView.getAll(feeds);
+    return this.view.getAll(feeds);
   }
 
   async del(url, id) {

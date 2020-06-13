@@ -7,6 +7,10 @@ class MethodNotFound {
 
 export class Controller {
 
+  constructor(view) {
+    this.view = view;
+  }
+
   getView(url, request) {
     const { pathname } = new URL(url);
     const { method } = request;

@@ -1,6 +1,5 @@
 import { Controller } from './lib/controller.js';
 import { Poop as Model } from '../models/poop.js';
-import { PoopView as View } from '../views/poop.js';
 import { NotFoundException } from './exception/notfound.js';
 import { getFormData } from './helpers/formData.js';
 
@@ -12,8 +11,7 @@ export class PoopController extends Controller {
 
   async create(url, request) {
     // Show the create an entry UI.
-    const view = new View();
-    return view.create(new Model);
+    return this.view.create(new Model);
   }
 
   async post(url, request) {
@@ -26,10 +24,7 @@ export class PoopController extends Controller {
 
     poop.put();
 
-    // Get the View.
-    const view = new View(poop);
-
-    return this.redirect(PoopController.route);
+    return this.view.redirect(PoopController.route);
   }
 
   async edit(url, id) {
@@ -37,10 +32,8 @@ export class PoopController extends Controller {
     const poop = await Model.get(parseInt(id, 10));
 
     if (!!poop == false) throw new NotFoundException(`Poop ${id} not found`);;
-    // Get the View.
-    const view = new View();
-
-    return view.edit(poop);
+    
+    return this.view.edit(poop);
   }
 
   async put(url, id, request) {
@@ -68,20 +61,14 @@ export class PoopController extends Controller {
 
     if (!!poop == false) throw new NotFoundException(`Poop ${id} not found`);
 
-    // Get the View.
-    const view = new View();
-
-    return view.get(poop);
+    return this.view.get(poop);
   }
 
   async getAll(url) {
     // Get the Data.....
     const poops = await Model.getAll('type,startTime', { filter: ['BETWEEN', ['poop', new Date(0)], ['poop', new Date(99999999999999)]], order: Model.DESCENDING }) || [];
 
-    // Get the View.
-    const view = new View();
-
-    return view.getAll(poops);
+    return this.view.getAll(poops);
   }
 
   async del(url, id) {

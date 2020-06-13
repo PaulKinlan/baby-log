@@ -7,6 +7,10 @@ class MethodNotFound {
 
 class Controller {
 
+  constructor(view) {
+    this.view = view;
+  }
+
   getView(url, request) {
     const { pathname } = new URL(url);
     const { method } = request;
@@ -102,171 +106,6 @@ class App {
 
 const routes = [];
 const routeNotFound = new NotFoundController;
-
-const encoder = new TextEncoder();
-
-const pipeInto = async (from, controller) => {
-  const reader = from.getReader();
-  
-  return reader.read().then(function process(result) {
-    if (result.done) {
-      return;
-    }
-    if (!!result.value) {
-      controller.enqueue(result.value);
-    }
-    return reader.read().then(process);
-  });
-};
-
-const enqueueItem = async (val, controller) => {
-  if (val instanceof globalThis.ReadableStream) {
-    await pipeInto(val, controller);
-  } 
-  else if (val instanceof Promise) {
-    let newVal;
-    newVal = await val;
-
-    if (newVal instanceof globalThis.ReadableStream) {
-      await pipeInto(newVal, controller);
-    } else {
-      await enqueueItem(newVal, controller);
-    }
-  }
-  else {
-    if (Array.isArray(val)) {
-      for (let item of val) {
-        await enqueueItem(item, controller);
-      }
-    }
-    else if (!!val) {
-      controller.enqueue(encoder.encode(val));
-    }
-  }
-};
-
-var template = async (strings, ...values) => {
-  if ("ReadableStream" in globalThis === false) {
-    // For node not supporting streams properly..... This should tree-shake away
-    globalThis = {...globalThis, ...await import('./streams-abe0310a.js')};
-  }
-  return new globalThis.ReadableStream({
-    start(controller) {
-      async function push() {
-        let i = 0;
-        while (i < values.length) {
-          let html = strings[i];
-          controller.enqueue(encoder.encode(html));
-          await enqueueItem(values[i], controller);
-
-          i++;
-        }
-        controller.enqueue(encoder.encode(strings[i]));
-        controller.close();
-      }
-
-      push();
-    }
-  });
-};
-
-const head = (data, body) => {
-  return template`<!DOCTYPE html>
-<html>
-  <head>
-    <title>Baby Logger</title>
-    <script src="/client.js" type="module" defer></script>
-    <link rel="stylesheet" href="/styles/main.css">
-    <link rel="manifest" href="/manifest.json">
-    <meta name="viewport" content="width=device-width">
-  </head>
-  ${body}
-</html>`;
-};
-
-const body = (data, items) => {
-  return template`
-  <header>
-    <h1>Baby Log</h1>
-    <div><a href="/">All</a>, <a href="/feeds">Feeds</a>, <a href="/sleeps">Sleeps</a>, <a href="/poops">Poops</a>,  <a href="/wees">Wees</a></div>
-    </header>
-  <main>
-    <header>
-      <h2>${data.header}</h2>
-    </header>
-    <section>
-    ${items}
-    </section>
-  </main>
-  <footer>
-    <span>Add</span><a href="/feeds/new" title="Add a feed">🍼</a><a href="/sleeps/new" title="Add a Sleep">💤</a><a href="/poops/new" title="Add a Poop">💩</a><a href="/wees/new" title="Add a Wee">⛲️</a>
-  </footer>
-  `;
-};
-
-if ('navigator' in globalThis === false) globalThis.navigator = {
-  language: 'en-GB'
-};
-
-const calculateDuration = (ms) => {
-  const hours = Math.floor(ms / (1000 * 60 * 60));
-  ms -= hours * 1000 * 60 * 60;
-  const minutes = Math.floor(ms / (1000 * 60));
-
-  const hourStr = (hours == 1) ? 'Hour' : 'Hours';
-  const minuteStr = (minutes == 1) ? 'Minute' : 'Minutes';
-  return `${hours} ${hourStr} ${minutes} ${minuteStr}`;
-};
-
-const aggregate = (items) => {
-  const templates = [];
-  const lang = navigator.language;
-  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  let dayAggregate = {};
-  let currentDay;
-  let firstDay= true;
-  for (let item of items) {
-    if (item.startTime.toLocaleDateString(lang, options) != currentDay) {
-      if (firstDay == false) {
-        templates.push(template`<div>${Object.entries(dayAggregate).map(([key, value]) => `${value} ${key}${value > 1 ? 's' : ''}`).join(', ')}</div>`);
-        dayAggregate = {};
-      }
-      firstDay = false;
-      currentDay = item.startTime.toLocaleDateString(lang, options);
-      templates.push(template`<h3>${currentDay}</h3>`);
-    }
-
-    if (item.type in dayAggregate == false) dayAggregate[item.type] = 0;
-    dayAggregate[item.type]++;
-
-    templates.push(template`<div class="row">
-      <img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png" alt="${item.type}"><span>
-        ${item.startTime.toLocaleTimeString(navigator.language, {hour: 'numeric', minute: 'numeric'})} 
-        ${(item.isDuration) ?
-        (`- ${calculateDuration(item.duration)} ${(item.hasFinished === false) ? `(Still ${item.type}ing)` : ``} `)
-        : ``}
-        </span>
-        <a href="/${item.type}s/${item.id}/edit"><img src="/images/icons/ui/edit_18dp.png"></a><button class="delete row" form="deleteForm${item.id}"><img src="/images/icons/ui/delete_18dp.png"></button>
-        <form id="deleteForm${item.id}" class="deleteForm" method="POST" action="/${item.type}s/${item.id}/delete"></form>
-    </div>`);
-  }
-  // Add a final aggregate. 
-  templates.push(template`<div>${Object.entries(dayAggregate).map(([key, value]) => `${value} ${key}${value > 1 ? 's' : ''}`).join(', ')}</div>`);
-  return templates;
-};
-
-class IndexView {
-  async getAll(data) {
-
-    data.type = "All";
-    data.header = "All";
-
-    return template`${head(data, 
-      body(data, 
-        template`${aggregate(data)}`)
-    )}`;
-  }
-}
 
 /**
  *
@@ -937,97 +776,19 @@ class IndexController extends Controller {
   }
 
   async getAll(url) {
-    const view = new IndexView();
     const logs = await Log.getAll('startTime,type', { filter: ['BETWEEN', [new Date(0), 'a'], [new Date(9999999999999), 'z']], order: Log.DESCENDING }) || [];
 
-    return view.getAll(logs);
+    return this.view.getAll(logs);
   }
 
   get(url) {
-    const view = new IndexView();
-    const output = view.render({ title: "Ay....", newTitle: "Testing" });
-    return output;
-  }
+    return this.view.render({ title: "Ay....", newTitle: "Testing" });  }
 }
 
 class Feed extends Log {
   constructor(data = {}, key) {
     super({...data, ...{isDuration: true}}, key);
     this.type = 'feed';
-  }
-}
-
-const correctISOTime = (date) => {
-  const tzoffset = (new Date()).getTimezoneOffset() * 60000;
-  return (new Date(date - tzoffset)).toISOString().replace(/:(\d+).(\d+)Z$/, '');
-};
-
-if ('navigator' in globalThis === false) globalThis.navigator = {
-  language: 'en-GB'
-};
-class FeedView {
-  async getAll(data) {
-
-    data.type = "Feed";
-    data.header = "Feeds";
-
-    return template`${head(data,
-      body(data,
-        template`${aggregate(data)}`
-    ))}`;
-  }
-
-  async get(data) {
-
-    data.header = "Feed";
-
-    const lang = navigator.language;
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-  
-    return template`${head(data,
-      body(data,
-        template`<div>Start time: ${data.startTime.toLocaleString(lang, options)}</div>
-        <div>End time: ${(!!data.endTime) ? data.endTime.toLocaleString(lang, options) : ''}</div>
-        <a href="/${data.type}s/${data.id}/edit"><img src="/images/icons/ui/edit_18dp.png"></a>
-        <div class="row">
-        <form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"></form>
-        <button form="deleteForm" class="delete"><img src="/images/icons/ui/delete_18dp.png"></button>
-        </div>`
-        )
-    )}`;
-  }
-
-  async create(data) {
-
-    data.header = "Add a Feed";
-
-    return template`${head(data,
-      body(data, `<div>
-    <form method="POST" action="/feeds">
-      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" value="${correctISOTime(new Date())}"></label></div>
-      <div><label for=endTime>End time:<input type="datetime-local" name="endTime"></label></div>
-      <input type="submit">
-    </form></div>
-    `))}`;
-  }
-
-  async edit(data) {
-    data.header = "Update a Feed";
-
-    return template`${head(data,
-      body(data, `<div class="form">
-    <form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"></form>
-    <form method="POST" id="editForm" action="/${data.type}s/${data.id}/edit"></form>
-    <div>
-      <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" form="editForm" value="${correctISOTime(data.startTime)}"></label></div>
-      <div><label for=endTime>End time:<input type="datetime-local" name="endTime" form="editForm" value="${data.hasFinished ? correctISOTime(new Date()) : ''}"></label></div>
-      <div class="controls">
-        <button form="deleteForm" class="delete"><img src="/images/icons/ui/delete_18dp.png"></button>
-        <input type="submit" form="editForm" value="Save">
-      </div>
-    </div>
-    </div>
-    `))}`;
   }
 }
 
@@ -1054,8 +815,7 @@ class FeedController extends Controller {
 
   async create(url, request) {
     // Show the create an entry UI.
-    const feedView = new FeedView();
-    return feedView.create(new Feed);
+    return this.view.create(new Feed);
   }
 
   async post(url, request) {
@@ -1074,10 +834,8 @@ class FeedController extends Controller {
     // Get the Data.
     const feed = await Feed.get(parseInt(id, 10));
 
-    if (!!feed == false) throw new NotFoundException(`Feed ${id} not found`);    // Get the View.
-    const feedView = new FeedView();
-
-    return feedView.edit(feed);
+    if (!!feed == false) throw new NotFoundException(`Feed ${id} not found`);    
+    return this.view.edit(feed);
   }
 
   async put(url, id, request) {
@@ -1105,10 +863,7 @@ class FeedController extends Controller {
 
     if (!!feed == false) throw new NotFoundException(`Feed ${id} not found`);
 
-    // Get the View.
-    const feedView = new FeedView();
-
-    return feedView.get(feed);
+    return this.view.get(feed);
   }
 
   async getAll(url) {
@@ -1116,9 +871,7 @@ class FeedController extends Controller {
     const feeds = await Feed.getAll('type,startTime', { filter: ['BETWEEN', ['feed', new Date(0)], ['feed', new Date(99999999999999)]], order: Feed.DESCENDING }) || [];
 
     // Get the View.
-    const feedView = new FeedView();
-
-    return feedView.getAll(feeds);
+    return this.view.getAll(feeds);
   }
 
   async del(url, id) {
@@ -1138,3 +891,4 @@ app.registerRoute(IndexController.route, new IndexController);
 app.registerRoute(FeedController.route, new FeedController);
 
 navigator.serviceWorker.register('/sw.js');
+//# sourceMappingURL=client.js.map

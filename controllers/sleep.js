@@ -1,6 +1,5 @@
 import { Controller } from './lib/controller.js';
 import { Sleep as Model } from '../models/sleep.js';
-import { SleepView as View } from '../views/sleep.js';
 import { NotFoundException } from './exception/notfound.js';
 import { getFormData } from './helpers/formData.js';
 
@@ -12,8 +11,7 @@ export class SleepController extends Controller {
 
   async create(url, request) {
     // Show the create an entry UI.
-    const sleepView = new View();
-    return sleepView.create(new Model);
+    return this.view.create(new Model);
   }
 
   async post(url, request) {
@@ -34,10 +32,8 @@ export class SleepController extends Controller {
     const sleep = await Model.get(parseInt(id, 10));
 
     if (!!sleep == false) throw new NotFoundException(`Sleep ${id} not found`);;
-    // Get the View.
-    const sleepView = new View();
-
-    return sleepView.edit(sleep);
+    
+    return this.view.edit(sleep);
   }
 
   async put(url, id, request) {
@@ -64,20 +60,14 @@ export class SleepController extends Controller {
 
     if (!!sleep == false) throw new NotFoundException(`Sleep ${id} not found`);
 
-    // Get the View.
-    const sleepView = new View();
-
-    return sleepView.get(sleep);
+    return this.view.get(sleep);
   }
 
   async getAll(url) {
     // Get the Data.....
     const sleeps = await Model.getAll('type,startTime', { filter: ['BETWEEN', ['sleep', new Date(0)], ['sleep', new Date(99999999999999)]], order: Model.DESCENDING }) || [];
 
-    // Get the View.
-    const sleepView = new View();
-
-    return sleepView.getAll(sleeps);
+    return this.view.getAll(sleeps);
   }
 
   async del(url, id) {

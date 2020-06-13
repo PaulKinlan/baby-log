@@ -9,21 +9,19 @@ const Request = fetch.Request;
 import FromWhatWGReadableStream from './private/streams/fromreadable.js';
 
 import { App } from '../app.js';
-import { IndexController } from '../controllers/index.js';
-import { FeedController } from '../controllers/feed.js';
-import { SleepController } from '../controllers/sleep.js';
-import { PoopController } from '../controllers/poop.js'
-import { WeeController } from '../controllers/wee.js'
+import { IndexController, FeedController, SleepController, WeeController, PoopController } from '../controllers/_.js';
+import { IndexView, FeedView, SleepView, WeeView, PoopView } from '../views/_.js';
+
 import { StaticController } from '../controllers/server/static.js';
 import { NotFoundException } from '../controllers/exception/notfound.js';
 
 const app = new App();
 
-app.registerRoute(IndexController.route, new IndexController);
-app.registerRoute(FeedController.route, new FeedController);
-app.registerRoute(SleepController.route, new SleepController);
-app.registerRoute(PoopController.route, new PoopController);
-app.registerRoute(WeeController.route, new WeeController);
+app.registerRoute(IndexController.route, new IndexController(new IndexView));
+app.registerRoute(FeedController.route, new FeedController(new FeedView));
+app.registerRoute(SleepController.route, new SleepController(new SleepView));
+app.registerRoute(PoopController.route, new PoopController(new PoopView));
+app.registerRoute(WeeController.route, new WeeController(new WeeView));
 app.registerRoute(StaticController.route, new StaticController(['./build/client/']));
 
 class FormData {

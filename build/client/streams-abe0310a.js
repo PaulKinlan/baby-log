@@ -2960,3 +2960,4 @@ function streamBrandCheckException$2(name) {
 }
 
 export { ByteLengthQueuingStrategy, CountQueuingStrategy, ReadableStream, TransformStream, WritableStream };
+//# sourceMappingURL=streams-abe0310a.js.map
