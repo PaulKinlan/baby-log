@@ -21,12 +21,12 @@
     "firebase": "^7.15.1",
     "mime": "^2.4.6",
     "node-fetch": "^2.6.0",
-    "rollup": "^2.13.1"
+    "rollup": "^2.13.1",    
+    "rollup-plugin-terser": "^6.1.0"
   },
   "engines": {
     "node": "13.0.0"
   },
   "devDependencies": {
-    "rollup-plugin-terser": "^6.1.0"
   }
 }
