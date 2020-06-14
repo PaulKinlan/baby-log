@@ -62,7 +62,7 @@ export class FeedView {
     <form method="POST" id="editForm" action="/${data.type}s/${data.id}/edit"></form>
     <div>
       <div><label for=startTime>Start time: <input type="datetime-local" name="startTime" form="editForm" value="${correctISOTime(data.startTime)}"></label></div>
-      <div><label for=endTime>End time:<input type="datetime-local" name="endTime" form="editForm" value="${data.hasFinished ? correctISOTime(new Date()) : ''}"></label></div>
+      <div><label for=endTime>End time:<input type="datetime-local" name="endTime" form="editForm" value="${data.hasFinished ? correctISOTime(data.endTime) : ''}"></label></div>
       <div class="controls">
         <button form="deleteForm" class="delete"><img src="/images/icons/ui/delete_18dp.png"></button>
         <input type="submit" form="editForm" value="Save">
