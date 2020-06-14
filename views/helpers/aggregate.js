@@ -19,12 +19,15 @@ export const aggregate = (items) => {
   const lang = navigator.language;
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   let dayAggregate = {};
+  let timeAggregate = {};
   let currentDay;
   let firstDay= true;
   for (let item of items) {
     if (item.startTime.toLocaleDateString(lang, options) != currentDay) {
       if (firstDay == false) {
         templates.push(template`<div>${Object.entries(dayAggregate).map(([key, value]) => `${value} ${key}${value > 1 ? 's' : ''}`).join(', ')}</div>`);
+        templates.push(template`<div>${Object.entries(timeAggregate).map(([key, value]) => `${calculateDuration(value)} ${key}ing`).join(', ')}</div>`);
+
         dayAggregate = {};
       }
       firstDay = false;
@@ -35,6 +38,11 @@ export const aggregate = (items) => {
     if (item.type in dayAggregate == false) dayAggregate[item.type] = 0;
     dayAggregate[item.type]++
 
+    if (item.isDuration && item.hasFinished) {
+      if (item.type in timeAggregate == false) timeAggregate[item.type] = 0;
+      timeAggregate[item.type] += item.duration;
+    }
+   
     templates.push(template`<div class="row">
       <img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png" alt="${item.type}"><span>
         ${item.startTime.toLocaleTimeString(navigator.language, {hour: 'numeric', minute: 'numeric'})} 
@@ -48,5 +56,7 @@ export const aggregate = (items) => {
   }
   // Add a final aggregate. 
   templates.push(template`<div>${Object.entries(dayAggregate).map(([key, value]) => `${value} ${key}${value > 1 ? 's' : ''}`).join(', ')}</div>`);
+  templates.push(template`<div>${Object.entries(timeAggregate).map(([key, value]) => `${calculateDuration(value)} ${key}ing`).join(', ')}</div>`);
+
   return templates;
 }
