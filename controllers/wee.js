@@ -14,10 +14,13 @@ export class WeeController extends Controller {
   async post(url, request) {
 
     const formData = await getFormData(request);
-
+    
+    const startDate = formData.get('startDate');
     const startTime = formData.get('startTime');
-    const endTime = formData.get('endTime');
-    const wee = new this.Model({ startTime, endTime });
+
+    const start = `${startDate}T${startTime}`;
+    
+    const wee = new this.Model({ startTime: start });
 
     wee.put();
 
@@ -41,11 +44,10 @@ export class WeeController extends Controller {
 
     const formData = await getFormData(request);
 
+    const startDate = formData.get('startDate');
     const startTime = formData.get('startTime');
-    const endTime = formData.get('endTime');
 
-    wee.startTime = startTime;
-    wee.endTime = endTime;
+    wee.startTime = new Date(`${startDate}T${startTime}`);
 
     wee.put();
 

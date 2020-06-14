@@ -16,10 +16,16 @@ export class SleepController extends Controller {
   async post(url, request) {
 
     const formData = await getFormData(request);
-
+    
+    const startDate = formData.get('startDate');
     const startTime = formData.get('startTime');
+    const endDate = formData.get('endDate');
     const endTime = formData.get('endTime');
-    const sleep = new this.Model({ startTime, endTime });
+
+    const start = new Date(`${startDate}T${startTime}`);
+    const end = (!!endDate && !!endTime) ? new Date(`${endDate}T${endTime}`) : undefined;
+    
+    const sleep = new this.Model({ startTime: start, endTime: end });
 
     sleep.put();
 
@@ -43,11 +49,14 @@ export class SleepController extends Controller {
 
     const formData = await getFormData(request);
 
+    const startDate = formData.get('startDate');
     const startTime = formData.get('startTime');
+    const endDate = formData.get('endDate');
     const endTime = formData.get('endTime');
 
-    sleep.startTime = new Date(startTime);
-    sleep.endTime = new Date(endTime);
+    sleep.startTime = new Date(`${startDate}T${startTime}`);
+    sleep.endTime = (!!endDate && !!endTime) ? new Date(`${endDate}T${endTime}`) : undefined;
+    
     sleep.put();
 
     return this.redirect(SleepController.route);

@@ -17,9 +17,12 @@ export class PoopController extends Controller {
 
     const formData = await getFormData(request);
 
+    const startDate = formData.get('startDate');
     const startTime = formData.get('startTime');
-    const endTime = formData.get('endTime');
-    const poop = new this.Model({ startTime, endTime });
+
+    const start = `${startDate}T${startTime}`;
+    
+    const poop = new this.Model({ startTime: start });
 
     poop.put();
 
@@ -43,11 +46,10 @@ export class PoopController extends Controller {
 
     const formData = await getFormData(request);
 
+    const startDate = formData.get('startDate');
     const startTime = formData.get('startTime');
-    const endTime = formData.get('endTime');
 
-    poop.startTime = startTime;
-    poop.endTime = endTime;
+    poop.startTime = new Date(`${startDate}T${startTime}`);
 
     poop.put();
 

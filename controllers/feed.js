@@ -16,9 +16,15 @@ export class FeedController extends Controller {
   async post(url, request) {
 
     const formData = await getFormData(request);
+    const startDate = formData.get('startDate');
     const startTime = formData.get('startTime');
+    const endDate = formData.get('endDate');
     const endTime = formData.get('endTime');
-    const feed = new this.Model({ startTime, endTime });
+
+    const start = new Date(`${startDate}T${startTime}`);
+    const end = (!!endDate && !!endTime) ? new Date(`${endDate}T${endDate}`) : undefined;
+    
+    const feed = new this.Model({ startTime: start, endTime: end });
 
     feed.put();
 
@@ -42,12 +48,14 @@ export class FeedController extends Controller {
 
     const formData = await getFormData(request);
 
+    const startDate = formData.get('startDate');
     const startTime = formData.get('startTime');
+    const endDate = formData.get('endDate');
     const endTime = formData.get('endTime');
 
-    feed.startTime = new Date(startTime);
-    feed.endTime = new Date(endTime);
-
+    feed.startTime = new Date(`${startDate}T${startTime}`);
+    feed.endTime  = (!!endDate && !!endTime) ? new Date(`${endDate}T${endTime}`) : undefined;
+    
     feed.put();
 
     return this.redirect(FeedController.route);
