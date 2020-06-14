@@ -23,7 +23,7 @@ export class PoopController extends Controller {
 
     poop.put();
 
-    return this.view.redirect(PoopController.route);
+    return this.redirect(PoopController.route);
   }
 
   async edit(url, id) {
