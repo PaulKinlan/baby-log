@@ -1,7 +1,7 @@
-import template from '../lib/florawg.js'
+import html from '../lib/florawg.js'
 
 export const body = (data, items) => {
-  return template`
+  return html`
   <header>
     <h1>Baby Log</h1>
     <div><a href="/">All</a>, <a href="/feeds">Feeds</a>, <a href="/sleeps">Sleeps</a>, <a href="/poops">Poops</a>,  <a href="/wees">Wees</a></div>

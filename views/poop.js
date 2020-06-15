@@ -1,6 +1,6 @@
 import { head } from './partials/head.js';
 import { body } from './partials/body.js';
-import template from './lib/florawg.js'
+import html from './lib/florawg.js'
 import { aggregate } from './helpers/aggregate.js';
 import { correctISOTime, getDate, getTime } from './helpers/timezone.js';
 
@@ -10,9 +10,9 @@ export class PoopView {
     data.type = "Poop";
     data.header = "Poops";
 
-    return template`${head(data,
+    return html`${head(data,
       body(data,
-        template`${aggregate(data)}`)
+        html`${aggregate(data)}`)
     )}`;
   }
 
@@ -23,9 +23,9 @@ export class PoopView {
     const lang = navigator.language;
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
   
-    return template`${head(data,
+    return html`${head(data,
       body(data,
-        template`<div>Start time: ${data.startTime.toLocaleString(lang, options)}</div>
+        html`<div>Start time: ${data.startTime.toLocaleString(lang, options)}</div>
         <div>End time: ${(!!data.endTime) ? data.endTime.toLocaleString(lang, options) : ''}</div>`)
     )}`;
   }
@@ -34,7 +34,7 @@ export class PoopView {
 
     data.header = "Add a Poop";
 
-    return template`${head(data,
+    return html`${head(data,
       body(data, `<div class="form">
     <form method="POST" action="/${data.type}s">
     <div>
@@ -53,7 +53,7 @@ export class PoopView {
 
     data.header = "Update a Poop";
 
-    return template`${head(data,
+    return html`${head(data,
       body(data, `<div class="form">
     <form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"></form>
     <form method="POST" id="editForm" action="/${data.type}s/${data.id}/edit"></form>
