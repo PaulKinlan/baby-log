@@ -39,8 +39,8 @@ export class WeeView {
   <form method="POST" action="/${data.type}s">
     <div>
       <label for=startDate>Start time: 
-        <input type="date" name="startDate" value="${getDate(correctISOTime(new Date()))}">
-        <input type="time" name="startTime" value="${getTime(correctISOTime(new Date()))}">
+        <input type="date" name="startDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="YYYY-MM-DD" value="${getDate(correctISOTime(new Date()))}">
+        <input type="time" name="startTime" pattern="[0-9]{2}:[0-9]{2}" placeholder="HH:MM" value="${getTime(correctISOTime(new Date()))}">
       </label>
     </div>
     <div class="controls">
