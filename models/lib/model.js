@@ -15,39 +15,37 @@
  * limitations under the License.
  */
 
-import { DatabaseInstance, hasSupport} from './database.js';
-import ConfigManagerInstance from './configmanager.js';
+import { DatabaseInstance, hasSupport } from "./database.js";
+import ConfigManagerInstance from "./configmanager.js";
 
 export class Model {
-
   constructor(key) {
     this.key = key;
   }
 
   static get ASCENDING() {
-    return 'next';
+    return "next";
   }
 
   static get DESCENDING() {
-    return 'prev';
+    return "prev";
   }
 
   static get UPDATED() {
-    return 'Model-updated';
+    return "Model-updated";
   }
 
   static get storeName() {
-    return 'Model';
+    return "Model";
   }
 
   static nuke() {
     return DatabaseInstance()
-      .then(db => db.close())
-      .then(db => db.nuke());
+      .then((db) => db.close())
+      .then((db) => db.nuke());
   }
 
   static get(key) {
-
     if (hasSupport() === false) {
       return Promise.resolve();
     }
@@ -55,41 +53,34 @@ export class Model {
     if (this instanceof Model)
       Promise.reject("Can't call get on Model directly. Inherit first.");
 
-    return DatabaseInstance()
+    return (
+      DatabaseInstance()
+        // Do the query.
+        .then((db) => db.get(this.storeName, key))
 
-      // Do the query.
-      .then(db => db.get(this.storeName, key))
+        // Wrap the result in the correct class.
+        .then((result) => {
+          return ConfigManagerInstance().then((configManager) => {
+            var store = configManager.getStore(this.storeName);
 
-      // Wrap the result in the correct class.
-      .then(result => {
+            if (!result) return;
 
-        return ConfigManagerInstance().then(configManager => {
+            var resultKey = key;
 
-          var store = configManager.getStore(this.storeName);
+            // If the store uses a keypath then reset
+            // the key back to undefined.
+            if (store.properties.keyPath) resultKey = undefined;
 
-          if (!result)
-            return;
-
-          var resultKey = key;
-
-          // If the store uses a keypath then reset
-          // the key back to undefined.
-          if (store.properties.keyPath)
-            resultKey = undefined;
-
-          return new this(result, resultKey);
-
-        });
-
-      });
-
+            return new this(result, resultKey);
+          });
+        })
+    );
   }
 
   /**
    * Gets all the objects from the database.
    */
   static getAll(index, { filter, order, cmpFunc }) {
-
     if (hasSupport() === false) {
       return Promise.resolve();
     }
@@ -97,37 +88,33 @@ export class Model {
     if (this instanceof Model)
       Promise.reject("Can't call getAll on Model directly. Inherit first.");
 
-    return DatabaseInstance()
+    return (
+      DatabaseInstance()
+        // Do the query.
+        .then((db) =>
+          db.getAll(this.storeName, index, { filter, order, cmpFunc })
+        )
 
-      // Do the query.
-      .then(db => db.getAll(this.storeName, index, {filter, order, cmpFunc}))
+        // Wrap all the results in the correct class.
+        .then((results) => {
+          return ConfigManagerInstance().then((configManager) => {
+            var store = configManager.getStore(this.storeName);
+            var results_ = [];
 
-      // Wrap all the results in the correct class.
-      .then(results => {
+            for (let result of results) {
+              var key = result.key;
 
-        return ConfigManagerInstance().then(configManager => {
+              // If the store uses a keypath then reset
+              // the key back to undefined.
+              if (store.properties.keyPath) key = undefined;
 
-          var store = configManager.getStore(this.storeName);
-          var results_ = [];
+              results_.push(new this(result.value, key));
+            }
 
-          for (let result of results) {
-
-            var key = result.key;
-
-            // If the store uses a keypath then reset
-            // the key back to undefined.
-            if (store.properties.keyPath)
-              key = undefined;
-
-            results_.push(new this(result.value, key));
-          }
-
-          return results_;
-
-        });
-
-      });
-
+            return results_;
+          });
+        })
+    );
   }
 
   put() {
@@ -142,53 +129,42 @@ export class Model {
    * value's key is set then the object is updated.
    */
   static put(value) {
-
     if (this instanceof Model)
       Promise.reject("Can't call put on Model directly. Inherit first.");
 
-    return DatabaseInstance()
+    return (
+      DatabaseInstance()
+        // Do the query.
+        .then((db) => db.put(this.storeName, value, value.key))
 
-      // Do the query.
-      .then(db => db.put(this.storeName, value, value.key))
+        .then((key) => {
+          return ConfigManagerInstance().then((configManager) => {
+            // Inserting may provide a key. If there is no keyPath set
+            // the object needs to be updated with a key value so it can
+            // be altered and saved again without creating a new record.
+            var store = configManager.getStore(this.storeName);
 
-      .then(key => {
+            var keyPath = store.properties.keyPath;
 
-        return ConfigManagerInstance().then(configManager => {
+            if (!keyPath) value.key = key;
 
-          // Inserting may provide a key. If there is no keyPath set
-          // the object needs to be updated with a key value so it can
-          // be altered and saved again without creating a new record.
-          var store = configManager.getStore(this.storeName);
-
-          var keyPath =
-            store.properties.keyPath;
-
-          if (!keyPath)
-            value.key = key;
-
-          return value;
-
+            return value;
+          });
         })
-
-      });
-
+    );
   }
 
   static deleteAll() {
-
     if (this instanceof Model)
       Promise.reject("Can't call deleteAll on Model directly. Inherit first.");
 
     return DatabaseInstance()
+      .then((db) => db.deleteAll(this.storeName))
 
-      .then(db => db.deleteAll(this.storeName))
-
-      .catch(e => {
+      .catch((e) => {
         // It may be that the store doesn't exist yet, so relax for that one.
-        if (e.name !== 'NotFoundError')
-          throw e;
+        if (e.name !== "NotFoundError") throw e;
       });
-
   }
 
   delete() {
@@ -196,29 +172,21 @@ export class Model {
   }
 
   static delete(value) {
-
     if (this instanceof Model)
       Promise.reject("Can't call delete on Model directly. Inherit first.");
 
-    return ConfigManagerInstance().then(configManager => {
-
+    return ConfigManagerInstance().then((configManager) => {
       // If passed the full object to delete then
       // grab its key for the delete
       if (value instanceof this) {
-
         var store = configManager.getStore(this.storeName);
         var keyPath = store.properties.keyPath;
 
-        if (keyPath)
-          value = value[keyPath];
-        else
-          value = value.key;
+        if (keyPath) value = value[keyPath];
+        else value = value.key;
       }
 
-      return DatabaseInstance()
-
-        .then(db => db.delete(this.storeName, value));
-
+      return DatabaseInstance().then((db) => db.delete(this.storeName, value));
     });
   }
 }

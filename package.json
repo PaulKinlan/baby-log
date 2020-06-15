@@ -10,6 +10,7 @@
     "build:file-manifest": "node tools/build-sw.js --dir client/ --dir build/client/ --ignore /sw.js --ignore .map --ignore res/mipmap-xxxhdpi --ignore web_hi_res_512.png > client/sw-manifest.json",
     "build": "npm run build:copy && npm run build:file-manifest && npm run build:service-worker && npm run build:client",
     "start": "node server/server.js",
+    "fmt": "prettier --write 'controllers/**/*.{js,json}' 'views/**/*.{js,json}' 'models/**/*.{js,json}' 'tools/**/*.{js,json}' 'client/**/*.{js,json}'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Paul Kinlan",
@@ -28,5 +29,7 @@
   "engines": {
     "node": "13.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "prettier": "^2.0.5"
+  }
 }

@@ -15,11 +15,10 @@
  * limitations under the License.
  */
 
-import Config from '../config/config.js';
+import Config from "../config/config.js";
 
-export default function ConfigManagerInstance () {
-
-  if (typeof globalThis.ConfigManagerInstance_ !== 'undefined')
+export default function ConfigManagerInstance() {
+  if (typeof globalThis.ConfigManagerInstance_ !== "undefined")
     return Promise.resolve(globalThis.ConfigManagerInstance_);
 
   globalThis.ConfigManagerInstance_ = new ConfigManager();
@@ -28,21 +27,19 @@ export default function ConfigManagerInstance () {
 }
 
 class ConfigManager {
-
-  constructor () {
+  constructor() {
     this.config = Config;
   }
 
-  set config (c) {
+  set config(c) {
     this.config_ = c;
   }
 
-  get config () {
+  get config() {
     return this.config_;
   }
 
-  getStore (storeName) {
+  getStore(storeName) {
     return this.config_.stores[storeName];
   }
-
 }

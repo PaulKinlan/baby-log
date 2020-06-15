@@ -2,7 +2,7 @@ const encoder = new TextEncoder();
 
 const pipeInto = async (from, controller) => {
   const reader = from.getReader();
-  
+
   return reader.read().then(function process(result) {
     if (result.done) {
       return;
@@ -17,8 +17,7 @@ const pipeInto = async (from, controller) => {
 const enqueueItem = async (val, controller) => {
   if (val instanceof globalThis.ReadableStream) {
     await pipeInto(val, controller);
-  } 
-  else if (val instanceof Promise) {
+  } else if (val instanceof Promise) {
     let newVal;
     newVal = await val;
 
@@ -27,23 +26,24 @@ const enqueueItem = async (val, controller) => {
     } else {
       await enqueueItem(newVal, controller);
     }
-  }
-  else {
+  } else {
     if (Array.isArray(val)) {
       for (let item of val) {
-        await enqueueItem(item, controller)
+        await enqueueItem(item, controller);
       }
-    }
-    else if (!!val) {
+    } else if (!!val) {
       controller.enqueue(encoder.encode(val));
     }
   }
-}
+};
 
 export default async (strings, ...values) => {
   if ("ReadableStream" in globalThis === false) {
     // For node not supporting streams properly..... This should tree-shake away
-    globalThis = {...globalThis, ...await import("./private/streams/streams.js")};
+    globalThis = {
+      ...globalThis,
+      ...(await import("./private/streams/streams.js")),
+    };
   }
   return new globalThis.ReadableStream({
     start(controller) {
@@ -61,6 +61,6 @@ export default async (strings, ...values) => {
       }
 
       push();
-    }
+    },
   });
 };

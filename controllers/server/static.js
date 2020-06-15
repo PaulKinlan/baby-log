@@ -1,7 +1,7 @@
 import { Controller } from "../lib/controller.js";
 // Importing node functions
 import * as path from "path";
-import * as fs from 'fs';
+import * as fs from "fs";
 const { readFile } = fs.promises;
 
 let staticPaths;
@@ -26,15 +26,14 @@ async function get(url) {
 
 // This will be a server only route;
 export class StaticController extends Controller {
-
   static get route() {
-    return ''; // Match everything.
+    return ""; // Match everything.
   }
 
   constructor(paths) {
     super();
 
-    staticPaths = [...paths, './'];
+    staticPaths = [...paths, "./"];
   }
 
   async get(url) {

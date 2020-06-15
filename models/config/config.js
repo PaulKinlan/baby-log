@@ -16,20 +16,20 @@
  */
 
 const Config = {
-  name: 'babylog',
+  name: "babylog",
   version: 6,
   stores: {
-    'Log': {
+    Log: {
       properties: {
         autoIncrement: true,
-        keyPath: 'id'
+        keyPath: "id",
       },
       indexes: {
         "type,startTime": { unique: true },
-        "startTime,type": { unique: true }
-      }
-    }
-  }
+        "startTime,type": { unique: true },
+      },
+    },
+  },
 };
 
 export default Config;

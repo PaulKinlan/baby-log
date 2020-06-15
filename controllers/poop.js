@@ -1,27 +1,25 @@
-import { Controller } from './lib/controller.js';
-import { NotFoundException } from './exception/notfound.js';
-import { getFormData } from './helpers/formData.js';
-
+import { Controller } from "./lib/controller.js";
+import { NotFoundException } from "./exception/notfound.js";
+import { getFormData } from "./helpers/formData.js";
 
 export class PoopController extends Controller {
   static get route() {
-    return '/poops';
+    return "/poops";
   }
 
   async create(url, request) {
     // Show the create an entry UI.
-    return this.view.create(new this.Model);
+    return this.view.create(new this.Model());
   }
 
   async post(url, request) {
-
     const formData = await getFormData(request);
 
-    const startDate = formData.get('startDate');
-    const startTime = formData.get('startTime');
+    const startDate = formData.get("startDate");
+    const startTime = formData.get("startTime");
 
     const start = `${startDate}T${startTime}`;
-    
+
     const poop = new this.Model({ startTime: start });
 
     poop.put();
@@ -31,11 +29,17 @@ export class PoopController extends Controller {
 
   async edit(url, id) {
     // Get the Data.
-    const poop = await this.Model.get(parseInt(id, 10));
+    let model = await this.Model.get(parseInt(id, 10));
+    const extras = {
+      notFound: false,
+    };
 
-    if (!!poop == false) throw new NotFoundException(`Poop ${id} not found`);;
-    
-    return this.view.edit(poop);
+    if (!!model == false) {
+      model = new this.Model();
+      extras.notFound = true;
+    }
+
+    return this.view.edit(model, extras);
   }
 
   async put(url, id, request) {
@@ -46,8 +50,8 @@ export class PoopController extends Controller {
 
     const formData = await getFormData(request);
 
-    const startDate = formData.get('startDate');
-    const startTime = formData.get('startTime');
+    const startDate = formData.get("startDate");
+    const startTime = formData.get("startTime");
 
     poop.startTime = new Date(`${startDate}T${startTime}`);
 
@@ -58,16 +62,28 @@ export class PoopController extends Controller {
 
   async get(url, id) {
     // Get the Data.
-    const poop = await this.Model.get(parseInt(id, 10));
+    const model = await this.Model.get(parseInt(id, 10));
+    const extras = { notFound: false };
 
-    if (!!poop == false) throw new NotFoundException(`Poop ${id} not found`);
+    if (!!model == false) {
+      model = new this.Model();
+      extras.notFound = true;
+    }
 
-    return this.view.get(poop);
+    return this.view.get(model, extras);
   }
 
   async getAll(url) {
     // Get the Data.....
-    const poops = await this.Model.getAll('type,startTime', { filter: ['BETWEEN', ['poop', new Date(0)], ['poop', new Date(99999999999999)]], order: this.Model.DESCENDING }) || [];
+    const poops =
+      (await this.Model.getAll("type,startTime", {
+        filter: [
+          "BETWEEN",
+          ["poop", new Date(0)],
+          ["poop", new Date(99999999999999)],
+        ],
+        order: this.Model.DESCENDING,
+      })) || [];
 
     return this.view.getAll(poops);
   }

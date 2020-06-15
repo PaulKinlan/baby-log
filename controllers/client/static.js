@@ -2,9 +2,8 @@ import { Controller } from "../lib/controller.js";
 
 // This will be a server only route;
 export class StaticController extends Controller {
-
   static get route() {
-    return ''; // Match everything.
+    return ""; // Match everything.
   }
 
   constructor(paths) {
@@ -12,7 +11,7 @@ export class StaticController extends Controller {
   }
 
   async get(url, id, request) {
-    return caches.match(request).then(response => {
+    return caches.match(request).then((response) => {
       if (!!response) return response;
       return fetch(url);
     });

@@ -17,25 +17,45 @@
       "name": "Start Feed",
       "description": "The baby started a feed.",
       "url": "/feeds/new",
-      "icons": [{ "src": "/images/icons/feed/res/mipmap-xxxhdpi/feed.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/images/icons/feed/res/mipmap-xxxhdpi/feed.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Start Sleep",
       "description": "The baby just started to sleep.",
       "url": "/sleeps/new",
-      "icons": [{ "src": "/images/icons/sleep/res/mipmap-xxxhdpi/sleep.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/images/icons/sleep/res/mipmap-xxxhdpi/sleep.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Had a Poop",
       "description": "The baby had a poop.",
       "url": "/poops/new",
-      "icons": [{ "src": "/images/icons/poop/res/mipmap-xxxhdpi/poop.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/images/icons/poop/res/mipmap-xxxhdpi/poop.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Had a Wee",
       "description": "The baby had a wee.",
       "url": "/sleeps/new",
-      "icons": [{ "src": "/images/icons/wee/res/mipmap-xxxhdpi/wee.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/images/icons/wee/res/mipmap-xxxhdpi/wee.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }
