@@ -1,1 +1,1 @@
-{"version":3,"file":"client.js","sources":["../../client/client.js"],"sourcesContent":["navigator.serviceWorker.register('/sw.js');\n"],"names":[],"mappings":"AAAA,SAAS,CAAC,aAAa,CAAC,QAAQ,CAAC,QAAQ,CAAC"}
+{"version":3,"file":"client.js","sources":["../../client/client.js"],"sourcesContent":["navigator.serviceWorker.register('/sw.js');\n"],"names":["navigator","serviceWorker","register"],"mappings":"AAAAA,UAAUC,cAAcC,SAAS"}
