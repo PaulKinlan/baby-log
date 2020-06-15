@@ -22,7 +22,7 @@ export class FeedController extends Controller {
     const endTime = formData.get('endTime');
 
     const start = new Date(`${startDate}T${startTime}`);
-    const end = (!!endDate && !!endTime) ? new Date(`${endDate}T${endDate}`) : undefined;
+    const end = (!!endDate && !!endTime) ? new Date(`${endDate}T${endTime}`) : undefined;
     
     const feed = new this.Model({ startTime: start, endTime: end });
 
