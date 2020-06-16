@@ -4,10 +4,10 @@ import template from "./lib/florawg.js";
 import { aggregate } from "./helpers/aggregate.js";
 
 export class IndexView {
-  async getAll(data) {
+  async getAll(data, extras) {
     data.type = "All";
     data.header = "All";
 
-    return template`${head(data, body(data, template`${aggregate(data)}`))}`;
+    return template`${head(data, body(data, template`${aggregate(data, extras)}`))}`;
   }
 }

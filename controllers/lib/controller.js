@@ -21,7 +21,7 @@ export class Controller {
     if (method === "GET") {
       const idMatch = pathname.match(`${route}/(.+)/`);
       if (pathname.match(`${route}/new`)) {
-        return this.create(url);
+        return this.create(url, request);
       } else if (pathname.match(`${route}/(.+)/edit$`)) {
         return this.edit(url, idMatch[1], request);
       } else if (pathname.match(`${route}/(.+)/`)) {

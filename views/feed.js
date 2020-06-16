@@ -56,7 +56,9 @@ export class FeedView {
               method="POST"
               id="deleteForm"
               action="/${data.type}s/${data.id}/delete"
-            ></form>
+            >
+            <input type="hidden" name="return-url" value="${extras.referrer}">
+            </form>
             <button form="deleteForm" class="delete">
               <img src="/images/icons/ui/delete_24px.svg" />
             </button>
@@ -65,7 +67,7 @@ export class FeedView {
     )}`;
   }
 
-  async create(data) {
+  async create(data, extras) {
     data.header = "Add a Feed";
 
     return html`${head(
@@ -74,6 +76,7 @@ export class FeedView {
         data,
         html`<div class="form">
           <form method="POST" action="/${data.type}s">
+            <input type="hidden" name="return-url" value="${extras.referrer}">
             <div>
               <label for="startDate"
                 >Start time:
@@ -136,12 +139,16 @@ export class FeedView {
             method="POST"
             id="deleteForm"
             action="/${data.type}s/${data.id}/delete"
-          ></form>
+          >
+          <input type="hidden" name="return-url" value="${extras.referrer}">
+          </form>
           <form
             method="POST"
             id="editForm"
             action="/${data.type}s/${data.id}/edit"
-          ></form>
+          >
+          <input type="hidden" name="return-url" value="${extras.referrer}">
+          </form>
           <div>
             <div>
               <label for="startDate"

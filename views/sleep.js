@@ -9,7 +9,7 @@ export class SleepView {
     data.type = "Sleep";
     data.header = "Sleeps";
 
-    return html`${head(data, body(data, html`${aggregate(data)}`))}`;
+    return html`${head(data, body(data, html`${aggregate(data, extras)}`))}`;
   }
 
   async get(data, extras) {
@@ -45,7 +45,7 @@ export class SleepView {
     )}`;
   }
 
-  async create(data) {
+  async create(data, extras) {
     data.header = "Add a Sleep";
 
     return html`${head(
@@ -54,6 +54,7 @@ export class SleepView {
         data,
         html`<div class="form">
           <form method="POST" action="/${data.type}s">
+            <input type="hidden" name="return-url" value="${extras.referrer}">
             <div>
               <label for="startDate"
                 >Start time:
@@ -116,12 +117,16 @@ export class SleepView {
               method="POST"
               id="deleteForm"
               action="/${data.type}s/${data.id}/delete"
-            ></form>
+            >
+            <input type="hidden" name="return-url" value="${extras.referrer}">
+            </form>
             <form
               method="POST"
               id="editForm"
               action="/${data.type}s/${data.id}/edit"
-            ></form>
+            >
+            <input type="hidden" name="return-url" value="${extras.referrer}">
+            </form>
             <div>
               <div>
                 <label for="startDate"

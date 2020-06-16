@@ -15,7 +15,7 @@ const calculateDuration = (ms) => {
   return `${hours} ${hourStr} ${minutes} ${minuteStr}`;
 };
 
-export const aggregate = (items) => {
+export const aggregate = (items, extras) => {
   const templates = [];
   const lang = navigator.language;
   const options = {
@@ -83,7 +83,9 @@ export const aggregate = (items) => {
           item.id
         }" class="deleteForm" method="POST" action="/${item.type}s/${
       item.id
-    }/delete"></form>
+    }/delete">
+          <input type="hidden" name="return-url" value="${extras.referrer}">
+        </form>
     </div>`);
   }
   // Add a final aggregate.
