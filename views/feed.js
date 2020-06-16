@@ -9,11 +9,11 @@ if ("navigator" in globalThis === false)
     language: "en-GB",
   };
 export class FeedView {
-  async getAll(data) {
+  async getAll(data, extras) {
     data.type = "Feed";
     data.header = "Feeds";
 
-    return html`${head(data, body(data, html`${aggregate(data)}`))}`;
+    return html`${head(data, body(data, html`${aggregate(data, extras)}`))}`;
   }
 
   async get(data, extras) {
