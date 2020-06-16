@@ -49,7 +49,7 @@ export class FeedView {
             ${!!data.endTime ? data.endTime.toLocaleString(lang, options) : ""}
           </div>
           <a href="/${data.type}s/${data.id}/edit"
-            ><img src="/images/icons/ui/edit_18dp.png"
+            ><img src="/images/icons/ui/edit_24px.svg"
           /></a>
           <div class="row">
             <form
@@ -58,7 +58,7 @@ export class FeedView {
               action="/${data.type}s/${data.id}/delete"
             ></form>
             <button form="deleteForm" class="delete">
-              <img src="/images/icons/ui/delete_18dp.png" />
+              <img src="/images/icons/ui/delete_24px.svg" />
             </button>
           </div>`
       )
@@ -199,7 +199,7 @@ export class FeedView {
               <div>
                 <div class="controls">
                   <button form="deleteForm" class="delete">
-                    <img src="/images/icons/ui/delete_18dp.png" />
+                    <img src="/images/icons/ui/delete_24px.svg" />
                   </button>
                   <input type="submit" form="editForm" value="Save" />
                 </div>

@@ -179,7 +179,7 @@ export class SleepView {
                 <div>
                   <div class="controls">
                     <button form="deleteForm" class="delete">
-                      <img src="/images/icons/ui/delete_18dp.png" />
+                      <img src="/images/icons/ui/delete_24px.svg" />
                     </button>
                     <input type="submit" form="editForm" value="Save" />
                   </div>

@@ -141,6 +141,7 @@ form.deleteForm {
 button.delete {
   background-color: transparent;
   border: none;
+  padding: 0;
 }
 
 button.delete img {
@@ -149,6 +150,13 @@ button.delete img {
 }
 
 button.delete.row img {
+  margin-right: 0;
+  width: 32px;
+  height: 32px;
+  filter: initial;
+}
+
+a.edit.row img {
   margin-right: 0;
   filter: initial;
 }

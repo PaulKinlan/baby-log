@@ -75,9 +75,10 @@ export const aggregate = (items) => {
         </span>
         <a href="/${item.type}s/${
       item.id
-    }/edit" title="Edit ${item.type} (${item.startTime})"><img src="/images/icons/ui/edit_18dp.png"></a><button class="delete row" form="deleteForm${
+    }/edit" class="edit row" title="Edit ${item.type} (${item.startTime})">
+    <img src="/images/icons/ui/edit_24px.svg"></a><button class="delete row" form="deleteForm${
       item.id
-    }"><img src="/images/icons/ui/delete_18dp.png"></button>
+    }"><img src="/images/icons/ui/delete_24px.svg"></button>
         <form id="deleteForm${
           item.id
         }" class="deleteForm" method="POST" action="/${item.type}s/${
