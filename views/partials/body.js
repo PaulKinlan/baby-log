@@ -3,12 +3,12 @@ import html from "../lib/florawg.js";
 export const body = (data, items) => {
   return html`
     <header>
-      <h1>Baby Log</h1>
-      <div>
-        <a href="/">All</a>, <a href="/feeds">Feeds</a>,
-        <a href="/sleeps">Sleeps</a>, <a href="/poops">Poops</a>,
+      <img src="/images/icons/log/res/mipmap-xhdpi/log.png">
+      <nav>
+        <a href="/">All</a> <a href="/feeds">Feeds</a>
+        <a href="/sleeps">Sleeps</a> <a href="/poops">Poops</a>
         <a href="/wees">Wees</a>
-      </div>
+      </nav>
     </header>
     <main>
       <header>

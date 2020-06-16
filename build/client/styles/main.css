@@ -14,13 +14,43 @@ body {
 }
 
 body > header {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  background-color: #448aff;
+  padding: 0.5em 0 0.5em 0;
+  max-width: 720px;
+  width: 100%;
+  border-radius: 0 0px 5px 5px;
+  box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.20);
+}
+
+body > header > img {
+  margin-left: 2em;
+}
+
+body > header > nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex: 1;
+
+}
+
+body > header > nav > a, body > header > nav > a:visited {
+  color: white;
+  text-decoration: none;
+}
+
+header img {
+  height: 3em;
+  width: 3em;
 }
 
 main {
   flex: 1;
   background-color: white;
-  margin: 2em 1em 1em;
+  margin: 1em 1em 1em;
   color: black;
   padding: 0 1em 1em;
   border-radius: 5px 5px;
@@ -109,8 +139,6 @@ button.delete.row img {
   margin-right: 0;
   filter: initial;
 }
-
-
 
 main section div.form div.controls {
   display: flex;
