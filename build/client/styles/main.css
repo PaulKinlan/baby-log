@@ -192,7 +192,7 @@ footer > a:visited {
   position: fixed;
   bottom: 0;
   right: 0;
-  margin: 2em;
+  margin: 1em;
 }
 
 footer > a[href~='#add-nav'] {
@@ -216,8 +216,8 @@ footer nav:target {
   display: flex;
   flex-direction: column;
   position: fixed;
-  bottom: 4.5em;
-  right: 2em;
+  bottom: 3.5em;
+  right: 1em;
   font-size: 2em;
   padding: 0.1em 0.3em;
 }
