@@ -86,7 +86,6 @@ self.onfetch = (event) => {
 };
 
 let urls = [];
-
 self.oninstall = async (event) => {
   // We will do something a lot more clever here soon.
   event.waitUntil(
