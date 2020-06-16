@@ -1,4 +1,5 @@
 import { Controller } from "../lib/controller.js";
+import { version } from "../../package.json";
 
 // This will be a server only route;
 export class StaticController extends Controller {
@@ -11,9 +12,11 @@ export class StaticController extends Controller {
   }
 
   async get(url, id, request) {
-    return caches.match(request).then((response) => {
-      if (!!response) return response;
-      return fetch(url);
+    return caches.open(version).then(cache => {
+      cache.match(request).then((response) => {
+        if (!!response) return response;
+        return fetch(url);
+      });
     });
   }
 

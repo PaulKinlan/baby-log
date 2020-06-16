@@ -20,6 +20,7 @@ import { NotFoundController } from "../controllers/notfound.js";
 import { StaticController } from "../controllers/client/static.js";
 
 import paths from "./sw-manifest.json";
+import { version } from "../package.json";
 
 const app = new App();
 
@@ -89,7 +90,7 @@ let urls = [];
 self.oninstall = async (event) => {
   // We will do something a lot more clever here soon.
   event.waitUntil(
-    caches.open("v1").then(async (cache) => {
+    caches.open(version).then(async (cache) => {
       return cache.addAll(paths);
     })
   );
