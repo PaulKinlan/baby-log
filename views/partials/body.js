@@ -21,10 +21,14 @@ export const body = (data, items) => {
       </section>
     </main>
     <footer>
-      <span>Add</span><a href="/feeds/new" title="Add a feed">🍼</a
-      ><a href="/sleeps/new" title="Add a Sleep">💤</a
-      ><a href="/poops/new" title="Add a Poop">💩</a
-      ><a href="/wees/new" title="Add a Wee">⛲️</a>
+      <nav id="add-nav">
+        <a href="/feeds/new" title="Add a feed">🍼</a>
+        <a href="/sleeps/new" title="Add a Sleep">💤</a>
+        <a href="/poops/new" title="Add a Poop">💩</a>
+        <a href="/wees/new" title="Add a Wee">⛲️</a>
+      </nav>
+      <a href="#remove-nav">-</a>
+      <a href="#add-nav">+</a>
     </footer>
   `;
 };
