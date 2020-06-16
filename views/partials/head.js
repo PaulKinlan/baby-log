@@ -8,11 +8,12 @@ export const head = (data, body) => {
         <script src="/client.js" type="module" defer></script>
         <link rel="stylesheet" href="/styles/main.css" />
         <link rel="manifest" href="/manifest.json" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="description" content="Akachan is a baby activity logger. It let's you track when your baby has slept, eaten, wee'd or pooped." />
         <link
           rel="shortcut icon"
           href="/images/icons/log/res/mipmap-hdpi/log.png"
         />
-        <meta name="viewport" content="width=device-width" />
       </head>
       ${body}
     </html>`;
