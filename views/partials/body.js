@@ -3,7 +3,7 @@ import html from "../lib/florawg.js";
 export const body = (data, items) => {
   return html`
     <header class="${data.type.toLowerCase()}">
-      <img src="/images/icons/ui/logo.svg" />
+      <img src="/images/icons/ui/logo.svg" alt="" />
       <nav>
         <a href="/" class="all" title="View all activities">All</a>
         <a href="/feeds" class="feed" title="View all feeds">Feeds</a>
@@ -27,8 +27,8 @@ export const body = (data, items) => {
         <a href="/poops/new" title="Add a Poop">💩</a>
         <a href="/wees/new" title="Add a Wee">⛲️</a>
       </nav>
-      <a href="#remove-nav"><img src="/images/icons/ui/remove_white_18dp.svg"></a>
-      <a href="#add-nav"><img src="/images/icons/ui/add_white_18dp.svg" title="Add"></a>
+      <a href="#remove-nav"><img src="/images/icons/ui/remove_white_18dp.svg" alt=""></a>
+      <a href="#add-nav" title="Add"><img src="/images/icons/ui/add_white_18dp.svg" alt=""></a>
     </footer>
   `;
 };
