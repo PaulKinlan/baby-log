@@ -16,10 +16,10 @@ body {
 body > header {
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: center;
   background-color: #448aff;
-  max-width: 720px;
   width: 100%;
+  overflow-x: auto;
 }
 
 body > header > nav {
@@ -35,7 +35,7 @@ body > header > nav > a:visited {
   text-decoration: none;
   height: 100%;
   flex: 1;
-  padding: 0 1em;
+  padding: 0 0.5em 0 0.5em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -52,6 +52,7 @@ body > header.wee a.wee {
 header img {
   height: 3em;
   width: 3em;
+  margin-right: 0.5em;
 }
 
 main {
