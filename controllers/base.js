@@ -3,12 +3,11 @@ import { NotFoundException } from "./exception/notfound.js";
 import { getFormData } from "./helpers/formData.js";
 
 export class BaseController extends Controller {
-  
   async create(url, request) {
     // Show the create an entry UI.
-    const {referrer} = request;
+    const { referrer } = request;
     const extras = {
-      referrer: referrer
+      referrer: referrer,
     };
     return this.view.create(new this.Model(), extras);
   }
@@ -16,10 +15,10 @@ export class BaseController extends Controller {
   async edit(url, id, request) {
     // Get the Data.
     let model = await this.Model.get(parseInt(id, 10));
-    const {referrer} = request;
+    const { referrer } = request;
     const extras = {
       notFound: false,
-      referrer: referrer
+      referrer: referrer,
     };
 
     if (!!model == false) {
@@ -46,9 +45,9 @@ export class BaseController extends Controller {
   async getAll(url) {
     // Get the Data.....
     const extras = {
-      referrer: url
+      referrer: url,
     };
-    
+
     const feeds =
       (await this.Model.getAll("type,startTime", {
         filter: [

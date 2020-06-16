@@ -12,7 +12,7 @@ export class StaticController extends Controller {
   }
 
   async get(url, id, request) {
-    return caches.open(version).then(cache => {
+    return caches.open(version).then((cache) => {
       return cache.match(request).then((response) => {
         if (!!response) return response;
         return fetch(url);

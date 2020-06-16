@@ -9,7 +9,10 @@ export const head = (data, body) => {
         <link rel="stylesheet" href="/styles/main.css" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="viewport" content="width=device-width" />
-        <meta name="description" content="Akachan is a baby activity logger. It let's you track when your baby has slept, eaten, wee'd or pooped." />
+        <meta
+          name="description"
+          content="Akachan is a baby activity logger. It let's you track when your baby has slept, eaten, wee'd or pooped."
+        />
         <link
           rel="shortcut icon"
           href="/images/icons/log/res/mipmap-hdpi/log.png"

@@ -57,7 +57,11 @@ export class FeedView {
               id="deleteForm"
               action="/${data.type}s/${data.id}/delete"
             >
-            <input type="hidden" name="return-url" value="${extras.referrer}">
+              <input
+                type="hidden"
+                name="return-url"
+                value="${extras.referrer}"
+              />
             </form>
             <button form="deleteForm" class="delete">
               <img src="/images/icons/ui/delete_24px.svg" />
@@ -76,7 +80,7 @@ export class FeedView {
         data,
         html`<div class="form">
           <form method="POST" action="/${data.type}s">
-            <input type="hidden" name="return-url" value="${extras.referrer}">
+            <input type="hidden" name="return-url" value="${extras.referrer}" />
             <div>
               <label for="startDate"
                 >Start time:
@@ -140,14 +144,14 @@ export class FeedView {
             id="deleteForm"
             action="/${data.type}s/${data.id}/delete"
           >
-          <input type="hidden" name="return-url" value="${extras.referrer}">
+            <input type="hidden" name="return-url" value="${extras.referrer}" />
           </form>
           <form
             method="POST"
             id="editForm"
             action="/${data.type}s/${data.id}/edit"
           >
-          <input type="hidden" name="return-url" value="${extras.referrer}">
+            <input type="hidden" name="return-url" value="${extras.referrer}" />
           </form>
           <div>
             <div>

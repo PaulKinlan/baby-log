@@ -8,6 +8,9 @@ export class IndexView {
     data.type = "All";
     data.header = "All";
 
-    return template`${head(data, body(data, template`${aggregate(data, extras)}`))}`;
+    return template`${head(
+      data,
+      body(data, template`${aggregate(data, extras)}`)
+    )}`;
   }
 }

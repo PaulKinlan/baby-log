@@ -73,9 +73,9 @@ export const aggregate = (items, extras) => {
             : ``
         }
         </span>
-        <a href="/${item.type}s/${
-      item.id
-    }/edit" class="edit row" title="Edit ${item.type} (${item.startTime})">
+        <a href="/${item.type}s/${item.id}/edit" class="edit row" title="Edit ${
+      item.type
+    } (${item.startTime})">
     <img src="/images/icons/ui/edit_24px.svg"></a><button class="delete row" form="deleteForm${
       item.id
     }"><img src="/images/icons/ui/delete_24px.svg"></button>

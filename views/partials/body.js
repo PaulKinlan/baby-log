@@ -27,8 +27,12 @@ export const body = (data, items) => {
         <a href="/poops/new" title="Add a Poop">💩</a>
         <a href="/wees/new" title="Add a Wee">⛲️</a>
       </nav>
-      <a href="#remove-nav"><img src="/images/icons/ui/remove_white_18dp.svg" alt=""></a>
-      <a href="#add-nav" title="Add"><img src="/images/icons/ui/add_white_18dp.svg" alt=""></a>
+      <a href="#remove-nav"
+        ><img src="/images/icons/ui/remove_white_18dp.svg" alt=""
+      /></a>
+      <a href="#add-nav" title="Add"
+        ><img src="/images/icons/ui/add_white_18dp.svg" alt=""
+      /></a>
     </footer>
   `;
 };

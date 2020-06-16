@@ -10,15 +10,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { promises as fsp } from 'fs';
-import { parse as parsePath, resolve as resolvePath, dirname } from 'path';
+import { promises as fsp } from "fs";
+import { parse as parsePath, resolve as resolvePath, dirname } from "path";
 
-import postHTML from 'posthtml';
+import postHTML from "posthtml";
 
-const prefix = 'html:';
-const assetRe = new RegExp('/fake/path/to/asset/([^/]+)/');
+const prefix = "html:";
+const assetRe = new RegExp("/fake/path/to/asset/([^/]+)/");
 
-export default function() {
+export default function () {
   let emittedHTMLIds;
   let htmlEntries;
 
@@ -28,9 +28,9 @@ export default function() {
     const file = await fsp.readFile(id);
 
     const htmlResult = await postHTML()
-      .use(tree => {
+      .use((tree) => {
         const scriptNodes = [];
-        tree.match({ tag: 'script', attrs: { src: true } }, node => {
+        tree.match({ tag: "script", attrs: { src: true } }, (node) => {
           scriptNodes.push(node);
           return node;
         });
@@ -38,7 +38,7 @@ export default function() {
         for (const scriptNode of scriptNodes) {
           const fullPath = resolvePath(dirname(id), scriptNode.attrs.src);
           const fileId = rollupContext.emitFile({
-            type: 'chunk',
+            type: "chunk",
             id: fullPath,
           });
           scriptNode.attrs.src = `/fake/path/to/asset/${fileId}/`;
@@ -48,7 +48,7 @@ export default function() {
       .process(file);
 
     const fileId = rollupContext.emitFile({
-      type: 'asset',
+      type: "asset",
       source: htmlResult.html,
       fileName: parsedPath.base,
     });
@@ -57,28 +57,28 @@ export default function() {
   }
 
   return {
-    name: 'html',
+    name: "html",
     options(opts) {
       // Remove HTML entries from input so Rollup doesn't handle them itself.
       const inputs = Array.isArray(opts.input) ? opts.input : [opts.input];
-      htmlEntries = inputs.filter(id => id.startsWith(prefix));
-      opts.input = inputs.filter(id => !id.startsWith(prefix));
+      htmlEntries = inputs.filter((id) => id.startsWith(prefix));
+      opts.input = inputs.filter((id) => !id.startsWith(prefix));
       emittedHTMLIds = [];
     },
     async buildStart() {
       await Promise.all(
-        htmlEntries.map(htmlEntry =>
-          loadHTML(htmlEntry.slice(prefix.length), this),
-        ),
+        htmlEntries.map((htmlEntry) =>
+          loadHTML(htmlEntry.slice(prefix.length), this)
+        )
       );
     },
     async generateBundle(_, bundle) {
-      const htmlAssets = emittedHTMLIds.map(id => this.getFileName(id));
+      const htmlAssets = emittedHTMLIds.map((id) => this.getFileName(id));
 
       for (const htmlAsset of htmlAssets) {
         bundle[htmlAsset].source = bundle[htmlAsset].source.replace(
           assetRe,
-          (_, id) => '/' + this.getFileName(id),
+          (_, id) => "/" + this.getFileName(id)
         );
       }
     },

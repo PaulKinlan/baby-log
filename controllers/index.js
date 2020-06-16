@@ -11,7 +11,7 @@ export class IndexController extends BaseController {
 
   async getAll(url) {
     const extras = {
-      referrer: url
+      referrer: url,
     };
 
     const logs =
