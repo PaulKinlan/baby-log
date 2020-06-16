@@ -7,7 +7,7 @@
     {
       "name": "Tools/Build SW",
       "program": "${workspaceFolder}/tools/build-sw.js",
-      "args": ["--dir", "client/", "--dir", "build/client/", "--ignore", "/sw.js", "--ignore", "\\.map", "--ignore", "res/mipmap-xxxhdpi", "--ignore", "web_hi_res_512.png"],
+      "args": ["--dir", "client/", "--dir", "build/client/", "--ignore", "/sw.js", "--ignore", ".map$", "--ignore", "res/mipmap-xxxhdpi", "--ignore", "web_hi_res_512.png"],
       "request": "launch",
       "skipFiles": [
         "<node_internals>/**"
