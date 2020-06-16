@@ -6,7 +6,7 @@ import { correctISOTime, getDate, getTime } from "./helpers/timezone.js";
 
 export class SleepView {
   async getAll(data, extras) {
-    data.type = "Sleeps";
+    data.type = "Sleep";
     data.header = "Sleeps";
 
     return html`${head(data, body(data, html`${aggregate(data)}`))}`;
