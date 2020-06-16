@@ -3,7 +3,7 @@ import html from "../lib/florawg.js";
 export const body = (data, items) => {
   return html`
     <header class="${data.type.toLowerCase()}">
-      <img src="/images/icons/log/res/mipmap-xhdpi/log.png" />
+      <img src="/images/icons/ui/logo.svg" />
       <nav>
         <a href="/" class="all">All</a>
         <a href="/feeds" class="feed">Feeds</a>
