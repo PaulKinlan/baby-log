@@ -10,5 +10,5 @@ export default {
     format: 'cjs',
     sourcemap: true
   },
-  plugins: [json(), terser({}), minifyHTML()]
+  plugins: [json(), minifyHTML()]
 };

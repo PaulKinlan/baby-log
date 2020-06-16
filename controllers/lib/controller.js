@@ -29,13 +29,13 @@ export class Controller {
       }
       return this.getAll(url, request);
     } else if (method === "POST") {
-      if (pathname.match(`${route}/*$`)) {
-        return this.post(url, request);
-      } else if (pathname.match(`${route}/(.+)/edit$`)) {
+      if (pathname.match(`${route}/(.+)/edit$`)) {
         return this.put(url, idMatch[1], request);
       } else if (pathname.match(`${route}/(.+)/delete$`)) {
         const idMatch = pathname.match(`${route}/(.+)/`);
         return this.del(url, idMatch[1], request);
+      } else if (pathname.match(`${route}/*$`)) {
+        return this.post(url, request);
       }
     } else if (method === "PUT") {
       return this.put(url, idMatch[1], request);

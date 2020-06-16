@@ -87,13 +87,14 @@ export class WeeController extends Controller {
     return this.view.getAll(wees);
   }
 
-  async del(url, id) {
+  async del(url, id, request) {
     // Get the Data.
     const model = await this.Model.get(parseInt(id, 10));
+    const { referrer } = request;
 
     if (!!model == false) throw new NotFoundException(`Wee ${id} not found`);
 
     await model.delete();
-    return this.redirect(WeeController.route);
+    return this.redirect(referrer || this.constructor.route);
   }
 }

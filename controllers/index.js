@@ -14,8 +14,4 @@ export class IndexController extends Controller {
 
     return this.view.getAll(logs);
   }
-
-  get(url) {
-    return this.view.render({ title: "Ay....", newTitle: "Testing" });
-  }
 }

@@ -96,13 +96,14 @@ export class SleepController extends Controller {
     return this.view.getAll(sleeps);
   }
 
-  async del(url, id) {
+  async del(url, id, request) {
     // Get the Data.
     const model = await this.Model.get(parseInt(id, 10));
+    const { referrer } = request;
 
     if (!!model == false) throw new NotFoundException(`Sleep ${id} not found`);
 
     await model.delete();
-    return this.redirect(SleepController.route);
+    return this.redirect(referrer || this.constructor.route);
   }
 }

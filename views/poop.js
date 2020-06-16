@@ -93,56 +93,57 @@ export class PoopView {
       body(
         data,
         html`${extras.notFound
-          ? `<input type="hidden" name="data-loaded" value="${
-              !!extras.notFound === false
-            }">`
-          : ""}<div class="form">
-          <form
-            method="POST"
-            id="deleteForm"
-            action="/${data.type}s/${data.id}/delete"
-          ></form>
-          <form
-            method="POST"
-            id="editForm"
-            action="/${data.type}s/${data.id}/edit"
-          ></form>
-          <div>
+            ? `<input type="hidden" name="data-loaded" value="${
+                !!extras.notFound === false
+              }">`
+            : ""}
+          <div class="form">
+            <form
+              method="POST"
+              id="deleteForm"
+              action="/${data.type}s/${data.id}/delete"
+            ></form>
+            <form
+              method="POST"
+              id="editForm"
+              action="/${data.type}s/${data.id}/edit"
+            ></form>
             <div>
-              <label for="startDate"
-                >Start time:
-                <input
-                  type="date"
-                  name="startDate"
-                  form="editForm"
-                  pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-                  placeholder="YYYY-MM-DD"
-                  value="${getDate(
-                    correctISOTime(
-                      extras.notFound == false ? data.startTime : undefined
-                    )
-                  )}"
-                />
-                <input
-                  type="time"
-                  name="startTime"
-                  form="editForm"
-                  value="${getTime(
-                    correctISOTime(
-                      extras.notFound == false ? data.startTime : undefined
-                    )
-                  )}"
-                />
-              </label>
+              <div>
+                <label for="startDate"
+                  >Start time:
+                  <input
+                    type="date"
+                    name="startDate"
+                    form="editForm"
+                    pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                    placeholder="YYYY-MM-DD"
+                    value="${getDate(
+                      correctISOTime(
+                        extras.notFound == false ? data.startTime : undefined
+                      )
+                    )}"
+                  />
+                  <input
+                    type="time"
+                    name="startTime"
+                    form="editForm"
+                    value="${getTime(
+                      correctISOTime(
+                        extras.notFound == false ? data.startTime : undefined
+                      )
+                    )}"
+                  />
+                </label>
+              </div>
+              <div class="controls">
+                <button form="deleteForm" class="delete">
+                  <img src="/images/icons/ui/delete_18dp.png" />
+                </button>
+                <input type="submit" form="editForm" value="Save" />
+              </div>
             </div>
-            <div class="controls">
-              <button form="deleteForm" class="delete">
-                <img src="/images/icons/ui/delete_18dp.png" />
-              </button>
-              <input type="submit" form="editForm" value="Save" />
-            </div>
-          </div>
-        </div> `
+          </div> `
       )
     )}`;
   }
