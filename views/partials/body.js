@@ -28,7 +28,7 @@ export const body = (data, items) => {
         <a href="/wees/new" title="Add a Wee">⛲️</a>
       </nav>
       <a href="#remove-nav"><img src="/images/icons/ui/remove_white_18dp.svg"></a>
-      <a href="#add-nav"><img src="/images/icons/ui/add_white_18dp.svg"></a>
+      <a href="#add-nav"><img src="/images/icons/ui/add_white_18dp.svg" title="Add"></a>
     </footer>
   `;
 };
