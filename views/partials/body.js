@@ -5,11 +5,11 @@ export const body = (data, items) => {
     <header class="${data.type.toLowerCase()}">
       <img src="/images/icons/ui/logo.svg" />
       <nav>
-        <a href="/" class="all">All</a>
-        <a href="/feeds" class="feed">Feeds</a>
-        <a href="/sleeps" class="sleep">Sleeps</a>
-        <a href="/poops" class="poop">Poops</a>
-        <a href="/wees" class="wee">Wees</a>
+        <a href="/" class="all" title="View all activities">All</a>
+        <a href="/feeds" class="feed" title="View all feeds">Feeds</a>
+        <a href="/sleeps" class="sleep" title="View all sleeps">Sleeps</a>
+        <a href="/poops" class="poop" title="View all poops">Poops</a>
+        <a href="/wees" class="wee" title="View all wees">Wees</a>
       </nav>
     </header>
     <main>
