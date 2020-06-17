@@ -15,7 +15,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Paul Kinlan",
-  "license": "ISC",
+  "license": "Apache2",
   "type": "module",
   "dependencies": {
     "@google-cloud/debug-agent": "^5.0.0",
