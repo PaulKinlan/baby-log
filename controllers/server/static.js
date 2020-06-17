@@ -19,6 +19,7 @@ async function get(url) {
       return await readFile(hostedFile);
     } catch (err) {
       // Fall through
+      console.warn('Static file not found', currentPath, hostedFile, staticPaths, url);
       continue;
     }
   }
