@@ -3,6 +3,8 @@ import mime from 'mime';
 import fetch from 'node-fetch';
 import querystring from 'querystring';
 import { StringDecoder } from 'string_decoder';
+import agent from '@google-cloud/debug-agent';
+agent.start();
 
 const Request = fetch.Request;
 
