@@ -48,7 +48,7 @@ export class BaseController extends Controller {
       referrer: url,
     };
 
-    const feeds =
+    const models =
       (await this.Model.getAll("type,startTime", {
         filter: [
           "BETWEEN",
@@ -59,7 +59,7 @@ export class BaseController extends Controller {
       })) || [];
 
     // Get the View.
-    return this.view.getAll(feeds, extras);
+    return this.view.getAll(models, extras);
   }
 
   async del(url, id, request) {

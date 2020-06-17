@@ -62,7 +62,8 @@ main {
   color: black;
   padding: 0 1em 1em;
   border-radius: 5px 5px;
-  box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
   box-sizing: border-box;
   max-width: 720px;
   overflow-y: auto;
@@ -188,7 +189,8 @@ footer > a:visited {
   justify-content: center;
   align-content: center;
   align-items: center;
-  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
   background-color: #f44336;
   color: white;
   text-decoration: none;
@@ -200,16 +202,16 @@ footer > a:visited {
   margin: 1em;
 }
 
-footer > a[href~='#add-nav'] {
-  display:flex;
+footer > a[href~="#add-nav"] {
+  display: flex;
   box-shadow: none;
 }
 
-footer > a[href~='#remove-nav'] {
-  display:flex;
+footer > a[href~="#remove-nav"] {
+  display: flex;
 }
 
-footer nav:target ~ a[href~='#add-nav'] {
+footer nav:target ~ a[href~="#add-nav"] {
   display: none;
 }
 
@@ -227,7 +229,7 @@ footer nav:target {
   padding: 0.1em 0.3em;
 }
 
-footer nav:target a { 
+footer nav:target a {
   display: flex;
   display: flex;
   text-shadow: hsla(218, 20%, 63%, 1) 0px 0px 0px;
@@ -236,7 +238,8 @@ footer nav:target a {
   color: transparent;
   background-color: white;
   border-radius: 50%;
-  box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
   width: 1.3em;
   height: 1.3em;
   justify-content: center;
