@@ -46,8 +46,7 @@ const render = (url, request, res) => {
   const view = controller.getView(url, request);
 
   if (!!view) {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', mime.getType(url.pathname) || 'text/html; charset=utf-8');
+    response.writeHead(200, { 'Content-Type': mime.getType(url.pathname) || 'text/html; charset=utf-8'});
     view.then(output => {
       if (typeof output === "string") {
         res.write(output);
