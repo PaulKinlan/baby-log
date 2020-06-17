@@ -8,6 +8,7 @@ steps:
 # Deploy container image to Cloud Run
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
+  - 'alpha'
   - 'run'
   - 'deploy'
   - 'web-server'
