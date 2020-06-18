@@ -30,7 +30,7 @@ export class PoopView {
       body(
         data,
         html`${extras.notFound
-            ? `<input type="hidden" name="data-loaded" value="${
+            ? html`<input type="hidden" name="data-loaded" value="${
                 !!extras.notFound === false
               }">`
             : ""}
@@ -94,7 +94,7 @@ export class PoopView {
       body(
         data,
         html`${extras.notFound
-            ? `<input type="hidden" name="data-loaded" value="${
+            ? html`<input type="hidden" name="data-loaded" value="${
                 !!extras.notFound === false
               }">`
             : ""}

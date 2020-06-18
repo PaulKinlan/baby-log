@@ -30,7 +30,7 @@ export class SleepView {
       body(
         data,
         html`${extras.notFound
-            ? `<input type="hidden" name="data-loaded" value="${
+            ? html`<input type="hidden" name="data-loaded" value="${
                 !!extras.notFound === false
               }">`
             : ""}
@@ -108,7 +108,7 @@ export class SleepView {
       body(
         data,
         html`${extras.notFound
-            ? `<input type="hidden" name="data-loaded" value="${
+            ? html`<input type="hidden" name="data-loaded" value="${
                 !!extras.notFound === false
               }">`
             : ""}

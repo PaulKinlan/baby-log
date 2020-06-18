@@ -1,4 +1,4 @@
-import template from "../lib/florawg.js";
+import html from "../lib/florawg.js";
 
 if ("navigator" in globalThis === false)
   globalThis.navigator = {
@@ -32,12 +32,12 @@ export const aggregate = (items, extras) => {
     if (item.startTime.toLocaleDateString(lang, options) != currentDay) {
       if (firstDay == false) {
         templates.push(
-          template`<div>${Object.entries(dayAggregate)
+          html`<div>${Object.entries(dayAggregate)
             .map(([key, value]) => `${value} ${key}${value > 1 ? "s" : ""}`)
             .join(", ")}</div>`
         );
         templates.push(
-          template`<div>${Object.entries(timeAggregate)
+          html`<div>${Object.entries(timeAggregate)
             .map(([key, value]) => `${calculateDuration(value)} ${key}ing`)
             .join(", ")}</div>`
         );
@@ -46,7 +46,7 @@ export const aggregate = (items, extras) => {
       }
       firstDay = false;
       currentDay = item.startTime.toLocaleDateString(lang, options);
-      templates.push(template`<h3>${currentDay}</h3>`);
+      templates.push(html`<h3>${currentDay}</h3>`);
     }
 
     if (item.type in dayAggregate == false) dayAggregate[item.type] = 0;
@@ -57,7 +57,7 @@ export const aggregate = (items, extras) => {
       timeAggregate[item.type] += item.duration;
     }
 
-    templates.push(template`<div class="row">
+    templates.push(html`<div class="row">
       <img src="/images/icons/${item.type}/res/mipmap-xxhdpi/${
       item.type
     }.png" alt="${item.type}"><span>
@@ -90,12 +90,12 @@ export const aggregate = (items, extras) => {
   }
   // Add a final aggregate.
   templates.push(
-    template`<div>${Object.entries(dayAggregate)
+    html`<div>${Object.entries(dayAggregate)
       .map(([key, value]) => `${value} ${key}${value > 1 ? "s" : ""}`)
       .join(", ")}</div>`
   );
   templates.push(
-    template`<div>${Object.entries(timeAggregate)
+    html`<div>${Object.entries(timeAggregate)
       .map(([key, value]) => `${calculateDuration(value)} ${key}ing`)
       .join(", ")}</div>`
   );
