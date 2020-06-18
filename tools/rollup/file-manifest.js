@@ -2,8 +2,11 @@
 import { resolve, dirname, basename, join } from 'path';
 import hasha from 'hasha';
 import { readFileSync } from 'fs';
-export default function URLResolverPlugin(assets) {
 
+
+export default function FileManifest() {
+
+  // Generates a list of files the SW needs to cache.
   const newAssets = {}
 
   return ({

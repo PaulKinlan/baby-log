@@ -19,8 +19,9 @@ import { Log, Feed, Sleep, Wee, Poop } from "../models/_.js";
 import { NotFoundController } from "../controllers/notfound.js";
 import { StaticController } from "../controllers/client/static.js";
 
-import paths from "./sw-manifest.json";
 import { version } from "../package.json";
+
+import { assets } from "../assets.js";
 
 const app = new App();
 
@@ -85,12 +86,11 @@ self.onfetch = (event) => {
   // If not caught by a controller, go to the network.
 };
 
-let urls = [];
 self.oninstall = async (event) => {
   // We will do something a lot more clever here soon.
   event.waitUntil(
     caches.open(version).then(async (cache) => {
-      return cache.addAll(paths);
+      return cache.addAll(Object.values(assets));
     })
   );
   self.skipWaiting();

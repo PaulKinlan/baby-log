@@ -3,6 +3,7 @@ import { body } from "./partials/body.js";
 import html from "./lib/florawg.js";
 import { aggregate } from "./helpers/aggregate.js";
 import { correctISOTime, getDate, getTime } from "./helpers/timezone.js";
+import { assets } from "../assets.js";
 
 export class WeeView {
   async getAll(data, extras) {
@@ -149,7 +150,7 @@ export class WeeView {
               </div>
               <div class="controls">
                 <button form="deleteForm" class="delete">
-                  <img src="/images/icons/ui/delete_24px.svg" />
+                  <img src="${assets["/images/icons/ui/delete_24px.svg"]}" />
                 </button>
                 <input type="submit" form="editForm" value="Save" />
               </div>

@@ -1,9 +1,10 @@
 import html from "../lib/florawg.js";
+import { assets } from "../../assets.js";
 
 export const body = (data, items) => {
   return html`
     <header class="${data.type.toLowerCase()}">
-      <img src="/images/icons/ui/logo.svg" alt="" />
+      <img src="${assets["/images/icons/ui/logo.svg"]}" alt="" />
       <nav>
         <a href="/" class="all" title="View all activities">All</a>
         <a href="/feeds" class="feed" title="View all feeds">Feeds</a>
@@ -28,10 +29,10 @@ export const body = (data, items) => {
         <a href="/wees/new" title="Add a Wee">⛲️</a>
       </nav>
       <a href="#remove-nav"
-        ><img src="/images/icons/ui/remove_white_18dp.svg" alt=""
+        ><img src="${assets["/images/icons/ui/remove_white_18dp.svg"]}" alt=""
       /></a>
       <a href="#add-nav" title="Add"
-        ><img src="/images/icons/ui/add_white_18dp.svg" alt=""
+        ><img src="${assets["/images/icons/ui/add_white_18dp.svg"]}" alt=""
       /></a>
     </footer>
   `;

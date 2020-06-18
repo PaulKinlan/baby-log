@@ -1,4 +1,5 @@
 import html from "../lib/florawg.js";
+import { assets } from "../../assets.js";
 
 export const head = (data, body) => {
   return html`<!DOCTYPE html>
@@ -6,8 +7,8 @@ export const head = (data, body) => {
       <head>
         <title>Baby Logger</title>
         <script src="/client.js" type="module" defer></script>
-        <link rel="stylesheet" href="/styles/main.css" />
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="stylesheet" href="${assets['/styles/main.css']}" />
+        <link rel="manifest" href="${assets['/manifest.json']}" />
         <meta name="viewport" content="width=device-width" />
         <meta
           name="description"
@@ -15,7 +16,7 @@ export const head = (data, body) => {
         />
         <link
           rel="shortcut icon"
-          href="/images/icons/log/res/mipmap-hdpi/log.png"
+          href="${assets["/images/icons/log/res/mipmap-hdpi/log.png"]}"
         />
       </head>
       ${body}

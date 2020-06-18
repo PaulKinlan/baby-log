@@ -1,0 +1,61 @@
+{
+  "name": "Akachan Baby Log",
+  "short_name": "Akachan",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#448AFF",
+  "theme_color": "#448AFF",
+  "icons": [
+    {
+      "src": "/images/icons/log/res/mipmap-xxxhdpi/log.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Start Feed",
+      "description": "The baby started a feed.",
+      "url": "/feeds/new",
+      "icons": [
+        {
+          "src": "/images/icons/feed/res/mipmap-xxxhdpi/feed.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Start Sleep",
+      "description": "The baby just started to sleep.",
+      "url": "/sleeps/new",
+      "icons": [
+        {
+          "src": "/images/icons/sleep/res/mipmap-xxxhdpi/sleep.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Had a Poop",
+      "description": "The baby had a poop.",
+      "url": "/poops/new",
+      "icons": [
+        {
+          "src": "/images/icons/poop/res/mipmap-xxxhdpi/poop.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Had a Wee",
+      "description": "The baby had a wee.",
+      "url": "/sleeps/new",
+      "icons": [
+        {
+          "src": "/images/icons/wee/res/mipmap-xxxhdpi/wee.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

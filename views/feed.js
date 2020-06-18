@@ -2,6 +2,7 @@ import { head } from "./partials/head.js";
 import { body } from "./partials/body.js";
 import html from "./lib/florawg.js";
 import { aggregate } from "./helpers/aggregate.js";
+import { assets } from "../assets.js";
 import { correctISOTime, getDate, getTime } from "./helpers/timezone.js";
 
 if ("navigator" in globalThis === false)
@@ -49,7 +50,7 @@ export class FeedView {
             ${!!data.endTime ? data.endTime.toLocaleString(lang, options) : ""}
           </div>
           <a href="/${data.type}s/${data.id}/edit"
-            ><img src="/images/icons/ui/edit_24px.svg"
+            ><img src="${assets["/images/icons/ui/edit_24px.svg"]}"
           /></a>
           <div class="row">
             <form
@@ -64,7 +65,7 @@ export class FeedView {
               />
             </form>
             <button form="deleteForm" class="delete">
-              <img src="/images/icons/ui/delete_24px.svg" />
+              <img src="${assets["/images/icons/ui/delete_24px.svg"]}" />
             </button>
           </div>`
       )
@@ -210,7 +211,7 @@ export class FeedView {
               <div>
                 <div class="controls">
                   <button form="deleteForm" class="delete">
-                    <img src="/images/icons/ui/delete_24px.svg" />
+                    <img src="${assets["/images/icons/ui/delete_24px.svg"]}" />
                   </button>
                   <input type="submit" form="editForm" value="Save" />
                 </div>
