@@ -33,14 +33,18 @@ export const aggregate = (items, extras) => {
     if (item.startTime.toLocaleDateString(lang, options) != currentDay) {
       if (firstDay == false) {
         templates.push(
-          html`<div>${Object.entries(dayAggregate)
-            .map(([key, value]) => `${value} ${key}${value > 1 ? "s" : ""}`)
-            .join(", ")}</div>`
+          html`<div>
+            ${Object.entries(dayAggregate)
+              .map(([key, value]) => `${value} ${key}${value > 1 ? "s" : ""}`)
+              .join(", ")}
+          </div>`
         );
         templates.push(
-          html`<div>${Object.entries(timeAggregate)
-            .map(([key, value]) => `${calculateDuration(value)} ${key}ing`)
-            .join(", ")}</div>`
+          html`<div>
+            ${Object.entries(timeAggregate)
+              .map(([key, value]) => `${calculateDuration(value)} ${key}ing`)
+              .join(", ")}
+          </div>`
         );
 
         dayAggregate = {};
@@ -58,46 +62,56 @@ export const aggregate = (items, extras) => {
       timeAggregate[item.type] += item.duration;
     }
 
-
     templates.push(html`<div class="row">
-      <img src="${assets[`/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png`]}" alt="${item.type}"><span>
+      <img
+        src="${assets[
+          `/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png`
+        ]}"
+        alt="${item.type}"
+      /><span>
         ${item.startTime.toLocaleTimeString(navigator.language, {
-      hour: "numeric",
-      minute: "numeric",
-    })} 
-        ${
-      item.isDuration
-        ? `- ${calculateDuration(item.duration)} ${
-        item.hasFinished === false ? `(Still ${item.type}ing)` : ``
-        } `
-        : ``
-      }
-        </span>
-        <a href="/${item.type}s/${item.id}/edit" class="edit row" title="Edit ${
-      item.type
-      } (${item.startTime})">
-    <img src="${assets['/images/icons/ui/edit_24px.svg']}"></a><button class="delete row" form="deleteForm${
-      item.id
-      }"><img src="${assets["/images/icons/ui/delete_24px.svg"]}"></button>
-        <form id="deleteForm${
-      item.id
-      }" class="deleteForm" method="POST" action="/${item.type}s/${
-      item.id
-      }/delete">
-          <input type="hidden" name="return-url" value="${extras.referrer}">
-        </form>
+          hour: "numeric",
+          minute: "numeric",
+        })}
+        ${item.isDuration
+          ? `- ${calculateDuration(item.duration)} ${
+              item.hasFinished === false ? `(Still ${item.type}ing)` : ``
+            } `
+          : ``}
+      </span>
+      <a
+        href="/${item.type}s/${item.id}/edit"
+        class="edit row"
+        title="Edit ${item.type} (${item.startTime})"
+      >
+        <img src="${assets["/images/icons/ui/edit_24px.svg"]}" /></a
+      ><button class="delete row" form="deleteForm${item.id}">
+        <img src="${assets["/images/icons/ui/delete_24px.svg"]}" />
+      </button>
+      <form
+        id="deleteForm${item.id}"
+        class="deleteForm"
+        method="POST"
+        action="/${item.type}s/${item.id}/delete"
+      >
+        <input type="hidden" name="return-url" value="${extras.referrer}" />
+      </form>
     </div>`);
   }
   // Add a final aggregate.
   templates.push(
-    html`<div>${Object.entries(dayAggregate)
-      .map(([key, value]) => `${value} ${key}${value > 1 ? "s" : ""}`)
-      .join(", ")}</div>`
+    html`<div>
+      ${Object.entries(dayAggregate)
+        .map(([key, value]) => `${value} ${key}${value > 1 ? "s" : ""}`)
+        .join(", ")}
+    </div>`
   );
   templates.push(
-    html`<div>${Object.entries(timeAggregate)
-      .map(([key, value]) => `${calculateDuration(value)} ${key}ing`)
-      .join(", ")}</div>`
+    html`<div>
+      ${Object.entries(timeAggregate)
+        .map(([key, value]) => `${calculateDuration(value)} ${key}ing`)
+        .join(", ")}
+    </div>`
   );
 
   return templates;

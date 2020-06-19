@@ -13,7 +13,10 @@ export class Log extends Model {
     return end - this.startTime;
   }
 
-  constructor({ id, endTime, startTime, type, notes, isDuration = false }, key) {
+  constructor(
+    { id, endTime, startTime, type, notes, isDuration = false },
+    key
+  ) {
     super(key);
 
     if (!!id) {

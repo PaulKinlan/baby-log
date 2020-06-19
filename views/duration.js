@@ -13,7 +13,7 @@ if ("navigator" in globalThis === false) {
 
 const sanitize = (input = "") => {
   return input.replace("<", "&lt;").replace(">", "&gt;");
-}
+};
 
 export class DurationBaseView {
   async getAll(data, extras) {
@@ -36,9 +36,11 @@ export class DurationBaseView {
       body(
         data,
         html`${extras.notFound
-            ? html`<input type="hidden" name="data-loaded" value="${
-                !!extras.notFound === false
-              }">`
+            ? html`<input
+                type="hidden"
+                name="data-loaded"
+                value="${!!extras.notFound === false}"
+              />`
             : ""}
           <div>
             Start time: ${data.startTime.toLocaleString(lang, options)}
@@ -96,7 +98,9 @@ export class DurationBaseView {
               </label>
             </div>
             <div class="notes">
-              <label for="notes">Notes: <textarea name="notes"></textarea></label> 
+              <label for="notes"
+                >Notes: <textarea name="notes"></textarea>
+              </label>
             </div>
             <div class="controls">
               <input type="submit" value="Save" />
@@ -113,9 +117,11 @@ export class DurationBaseView {
       body(
         data,
         html`${extras.notFound
-            ? html`<input type="hidden" name="data-loaded" value="${
-                !!extras.notFound === false
-              }">`
+            ? html`<input
+                type="hidden"
+                name="data-loaded"
+                value="${!!extras.notFound === false}"
+              />`
             : ""}
           <div class="form">
             <form
@@ -196,7 +202,12 @@ export class DurationBaseView {
                 </label>
               </div>
               <div class="notes">
-                <label for="notes">Notes: <textarea form="editForm" name="notes">${sanitize(data.notes)}</textarea></label> 
+                <label for="notes"
+                  >Notes:
+                  <textarea form="editForm" name="notes">
+${sanitize(data.notes)}</textarea
+                  >
+                </label>
               </div>
               <div>
                 <div class="controls">
@@ -207,7 +218,8 @@ export class DurationBaseView {
                 </div>
               </div>
             </div>
-          </div>`)
+          </div>`
+      )
     )}`;
   }
 }

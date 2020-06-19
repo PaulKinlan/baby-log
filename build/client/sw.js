@@ -204,12 +204,14 @@ class BaseController extends Controller {
     const values = {};
 
     for (let key of formData.keys()) {
-      if (key === 'return-url') continue;
+      if (key === "return-url") continue;
       values[key] = formData.get(key);
     }
 
-    values['startTime'] = new Date(`${values['startDate']}T${values['startTime']}`);
-    Object.keys(values).forEach(key => model[key] = values[key]);
+    values["startTime"] = new Date(
+      `${values["startDate"]}T${values["startTime"]}`
+    );
+    Object.keys(values).forEach((key) => (model[key] = values[key]));
 
     model.put();
 
@@ -223,14 +225,16 @@ class BaseController extends Controller {
     const values = {};
 
     for (let key of formData.keys()) {
-      if (key === 'return-url') continue;
+      if (key === "return-url") continue;
       values[key] = formData.get(key);
     }
 
-    values['startTime'] = new Date(`${values['startDate']}T${values['startTime']}`);
+    values["startTime"] = new Date(
+      `${values["startDate"]}T${values["startTime"]}`
+    );
 
     let model = new this.Model();
-    Object.keys(values).forEach(key => model[key] = values[key]);
+    Object.keys(values).forEach((key) => (model[key] = values[key]));
 
     model.put();
 
@@ -247,17 +251,22 @@ class DurationController extends BaseController {
     const values = {};
     const formData = await getFormData(request);
     const redirectTo = formData.get("return-url");
-   
+
     for (let key of formData.keys()) {
-      if (key === 'return-url') continue;
+      if (key === "return-url") continue;
       values[key] = formData.get(key);
     }
 
-    values['startTime'] = new Date(`${values['startDate']}T${values['startTime']}`);
-    values['endTime'] = !!values['endDate'] && !!values['endTime'] ? new Date(`${values['endDate']}T${values['endTime']}`):  undefined;
+    values["startTime"] = new Date(
+      `${values["startDate"]}T${values["startTime"]}`
+    );
+    values["endTime"] =
+      !!values["endDate"] && !!values["endTime"]
+        ? new Date(`${values["endDate"]}T${values["endTime"]}`)
+        : undefined;
 
     let model = new this.Model();
-    Object.keys(values).forEach(key => model[key] = values[key]);
+    Object.keys(values).forEach((key) => (model[key] = values[key]));
 
     model.put();
 
@@ -271,16 +280,21 @@ class DurationController extends BaseController {
     const values = {};
     const formData = await getFormData(request);
     const redirectTo = formData.get("return-url");
-   
+
     for (let key of formData.keys()) {
-      if (key === 'return-url') continue;
+      if (key === "return-url") continue;
       values[key] = formData.get(key);
     }
 
-    values['startTime'] = new Date(`${values['startDate']}T${values['startTime']}`);
-    values['endTime'] = !!values['endDate'] && !!values['endTime'] ? new Date(`${values['endDate']}T${values['endTime']}`):  undefined;
+    values["startTime"] = new Date(
+      `${values["startDate"]}T${values["startTime"]}`
+    );
+    values["endTime"] =
+      !!values["endDate"] && !!values["endTime"]
+        ? new Date(`${values["endDate"]}T${values["endTime"]}`)
+        : undefined;
 
-    Object.keys(values).forEach(key => model[key] = values[key]);
+    Object.keys(values).forEach((key) => (model[key] = values[key]));
 
     model.put();
 
@@ -422,7 +436,7 @@ var html = async (strings, ...values) => {
 const assets = {"/manifest.json":"/5337bd0e6c5abb0d48a69f9bd7ed84be.manifest.json","/styles/main.css":"/styles/5fff5b8cc71f4c798942ba32ce1d98f1.main.css","/images/icons/log/res/mipmap-hdpi/log.png":"/images/icons/log/res/mipmap-hdpi/7f5ddb2fa48dee066e11616aa12e8e23.log.png","/images/icons/ui/edit_24px.svg":"/images/icons/ui/552fcd66ad801255e07d7753c5b8a0d6.edit_24px.svg","/images/icons/ui/delete_24px.svg":"/images/icons/ui/ef23de4f7b0f03ca043c5503aae6ba51.delete_24px.svg","/images/icons/ui/logo.svg":"/images/icons/ui/f5f85afdb8ce4435ade5bd215d152e75.logo.svg","/images/icons/ui/remove_white_18dp.svg":"/images/icons/ui/7e8dbbeeffe7094cb2687673eecdbd5d.remove_white_18dp.svg","/images/icons/ui/add_white_18dp.svg":"/images/icons/ui/6f5fbe37367574efef3eefce6dfff3ef.add_white_18dp.svg","/images/icons/feed/res/mipmap-xxhdpi/feed.png":"/images/icons/feed/res/mipmap-xxhdpi/faabd3c7cf0f36899885540413343c1b.feed.png","/images/icons/wee/res/mipmap-xxhdpi/wee.png":"/images/icons/wee/res/mipmap-xxhdpi/58beedcd5f7c5142f758a827b12e31b4.wee.png","/images/icons/poop/res/mipmap-xxhdpi/poop.png":"/images/icons/poop/res/mipmap-xxhdpi/ac941f024144be78de74ac1c38a565e6.poop.png","/images/icons/sleep/res/mipmap-xxhdpi/sleep.png":"/images/icons/sleep/res/mipmap-xxhdpi/c99d1fc60d972f9b0979889b2554f917.sleep.png"};
 
 const head = (data, body) => {
-  return html`<!doctype html><html lang="en"><head><title>Baby Logger</title><script src="/client.js" type="module" defer="defer"></script><link rel="stylesheet" href="${assets['/styles/main.css']}"><link rel="manifest" href="${assets['/manifest.json']}"><meta name="viewport" content="width=device-width"><meta name="description" content="Akachan is a baby activity logger. It let's you track when your baby has slept, eaten, wee'd or pooped."><link rel="shortcut icon" href="${assets["/images/icons/log/res/mipmap-hdpi/log.png"]}"></head>${body}</html>`;
+  return html`<!doctype html><html lang="en"><head><title>Baby Logger</title><script src="/client.js" type="module" defer="defer"></script><link rel="stylesheet" href="${assets["/styles/main.css"]}"><link rel="manifest" href="${assets["/manifest.json"]}"><meta name="viewport" content="width=device-width"><meta name="description" content="Akachan is a baby activity logger. It let's you track when your baby has slept, eaten, wee'd or pooped."><link rel="shortcut icon" href="${assets["/images/icons/log/res/mipmap-hdpi/log.png"]}"></head>${body}</html>`;
 };
 
 const body = (data, items) => {
@@ -462,13 +476,13 @@ const aggregate = (items, extras) => {
       if (firstDay == false) {
         templates.push(
           html`<div>${Object.entries(dayAggregate)
-            .map(([key, value]) => `${value} ${key}${value > 1 ? "s" : ""}`)
-            .join(", ")}</div>`
+              .map(([key, value]) => `${value} ${key}${value > 1 ? "s" : ""}`)
+              .join(", ")}</div>`
         );
         templates.push(
           html`<div>${Object.entries(timeAggregate)
-            .map(([key, value]) => `${calculateDuration(value)} ${key}ing`)
-            .join(", ")}</div>`
+              .map(([key, value]) => `${calculateDuration(value)} ${key}ing`)
+              .join(", ")}</div>`
         );
 
         dayAggregate = {};
@@ -486,36 +500,27 @@ const aggregate = (items, extras) => {
       timeAggregate[item.type] += item.duration;
     }
 
-
-    templates.push(html`<div class="row"><img src="${assets[`/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png`]}" alt="${item.type}"><span>${item.startTime.toLocaleTimeString(navigator.language, {
-      hour: "numeric",
-      minute: "numeric",
-    })} ${
-      item.isDuration
-        ? `- ${calculateDuration(item.duration)} ${
-        item.hasFinished === false ? `(Still ${item.type}ing)` : ``
-        } `
-        : ``
- } </span><a href="/${item.type}s/${item.id}/edit" class="edit row" title="Edit ${
-      item.type
-      } (${item.startTime})"><img src="${assets['/images/icons/ui/edit_24px.svg']}"></a><button class="delete row" form="deleteForm${
-      item.id
-      }"><img src="${assets["/images/icons/ui/delete_24px.svg"]}"></button><form id="deleteForm${
-      item.id
-      }" class="deleteForm" method="POST" action="/${item.type}s/${
-      item.id
-      }/delete"><input type="hidden" name="return-url" value="${extras.referrer}"></form></div>`);
+    templates.push(html`<div class="row"><img src="${assets[
+          `/images/icons/${item.type}/res/mipmap-xxhdpi/${item.type}.png`
+        ]}" alt="${item.type}"><span>${item.startTime.toLocaleTimeString(navigator.language, {
+          hour: "numeric",
+          minute: "numeric",
+        })} ${item.isDuration
+          ? `- ${calculateDuration(item.duration)} ${
+              item.hasFinished === false ? `(Still ${item.type}ing)` : ``
+            } `
+          : ``} </span><a href="/${item.type}s/${item.id}/edit" class="edit row" title="Edit ${item.type} (${item.startTime})"><img src="${assets["/images/icons/ui/edit_24px.svg"]}"></a><button class="delete row" form="deleteForm${item.id}"><img src="${assets["/images/icons/ui/delete_24px.svg"]}"></button><form id="deleteForm${item.id}" class="deleteForm" method="POST" action="/${item.type}s/${item.id}/delete"><input type="hidden" name="return-url" value="${extras.referrer}"></form></div>`);
   }
   // Add a final aggregate.
   templates.push(
     html`<div>${Object.entries(dayAggregate)
-      .map(([key, value]) => `${value} ${key}${value > 1 ? "s" : ""}`)
-      .join(", ")}</div>`
+        .map(([key, value]) => `${value} ${key}${value > 1 ? "s" : ""}`)
+        .join(", ")}</div>`
   );
   templates.push(
     html`<div>${Object.entries(timeAggregate)
-      .map(([key, value]) => `${calculateDuration(value)} ${key}ing`)
-      .join(", ")}</div>`
+        .map(([key, value]) => `${calculateDuration(value)} ${key}ing`)
+        .join(", ")}</div>`
   );
 
   return templates;
@@ -583,9 +588,7 @@ class DurationBaseView {
       body(
         data,
         html`${extras.notFound
-            ? html`<input type="hidden" name="data-loaded" value="${
-                !!extras.notFound === false
-              }">`
+            ? html`<input type="hidden" name="data-loaded" value="${!!extras.notFound === false}">`
             : ""}<div>Start time: ${data.startTime.toLocaleString(lang, options)}</div><div>End time: ${!!data.endTime ? data.endTime.toLocaleString(lang, options) : ""}</div>`
       )
     )}`;
@@ -607,9 +610,7 @@ class DurationBaseView {
       body(
         data,
         html`${extras.notFound
-            ? html`<input type="hidden" name="data-loaded" value="${
-                !!extras.notFound === false
-              }">`
+            ? html`<input type="hidden" name="data-loaded" value="${!!extras.notFound === false}">`
             : ""}<div class="form"><form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"><input type="hidden" name="return-url" value="${extras.referrer}"></form><form method="POST" id="editForm" action="/${data.type}s/${data.id}/edit"><input type="hidden" name="return-url" value="${extras.referrer}"></form><div><div><label for="startDate">Start time: <input type="date" name="startDate" form="editForm" value="${getDate(
                       correctISOTime(
                         extras.notFound == false ? data.startTime : undefined
@@ -630,7 +631,9 @@ class DurationBaseView {
                           ? data.endTime || new Date()
                           : undefined
                       )
-                    )}"></label></div><div class="notes"><label for="notes">Notes: <textarea form="editForm" name="notes">${sanitize(data.notes)}</textarea></label></div><div><div class="controls"><button form="deleteForm" class="delete"><img src="${assets["/images/icons/ui/delete_24px.svg"]}"></button> <input type="submit" form="editForm" value="Save"></div></div></div></div>`)
+                    )}"></label></div><div class="notes"><label for="notes">Notes: <textarea form="editForm" name="notes">
+${sanitize(data.notes)}</textarea></label></div><div><div class="controls"><button form="deleteForm" class="delete"><img src="${assets["/images/icons/ui/delete_24px.svg"]}"></button> <input type="submit" form="editForm" value="Save"></div></div></div></div>`
+      )
     )}`;
   }
 }
@@ -692,9 +695,7 @@ class BaseView {
       body(
         data,
         html`${extras.notFound
-            ? html`<input type="hidden" name="data-loaded" value="${
-                !!extras.notFound === false
-              }">`
+            ? html`<input type="hidden" name="data-loaded" value="${!!extras.notFound === false}">`
             : ""}<div>Start time: ${extras.notFound == false
               ? data.startTime.toLocaleString(lang, options)
               : ""}</div><div>End time: ${!!data.endTime ? data.endTime.toLocaleString(lang, options) : ""}</div>`
@@ -707,7 +708,7 @@ class BaseView {
       data,
       body(
         data,
-        html`<div class="form"><form method="POST" action="/${data.type}s"><input type="hidden" name="return-url" value="${extras.referrer}"><div><label for="startDate">Start time: <input type="date" name="startDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="YYYY-MM-DD" value="${getDate(correctISOTime(new Date()))}"> <input type="time" name="startTime" pattern="[0-9]{2}:[0-9]{2}" placeholder="HH:MM" value="${getTime(correctISOTime(new Date()))}"></label></div>${(!!extras.fieldsTemplates) ? extras.fieldsTemplates : undefined }<div class="notes"><label for="notes">Notes: <textarea name="notes"></textarea></label></div><div class="controls"><input type="submit" value="Save"></div></form></div>`
+        html`<div class="form"><form method="POST" action="/${data.type}s"><input type="hidden" name="return-url" value="${extras.referrer}"><div><label for="startDate">Start time: <input type="date" name="startDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="YYYY-MM-DD" value="${getDate(correctISOTime(new Date()))}"> <input type="time" name="startTime" pattern="[0-9]{2}:[0-9]{2}" placeholder="HH:MM" value="${getTime(correctISOTime(new Date()))}"></label></div>${!!extras.fieldsTemplates ? extras.fieldsTemplates : undefined}<div class="notes"><label for="notes">Notes: <textarea name="notes"></textarea></label></div><div class="controls"><input type="submit" value="Save"></div></form></div>`
       )
     )}`;
   }
@@ -718,9 +719,7 @@ class BaseView {
       body(
         data,
         html`${extras.notFound
-            ? html`<input type="hidden" name="data-loaded" value="${
-                !!extras.notFound === false
-              }">`
+            ? html`<input type="hidden" name="data-loaded" value="${!!extras.notFound === false}">`
             : ""}<div class="form"><form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"><input type="hidden" name="return-url" value="${extras.referrer}"></form><form method="POST" id="editForm" action="/${data.type}s/${data.id}/edit"><input type="hidden" name="return-url" value="${extras.referrer}"></form><div><div><label for="startDate">Start time: <input type="date" name="startDate" form="editForm" value="${getDate(
                       correctISOTime(
                         extras.notFound == false ? data.startTime : undefined
@@ -729,7 +728,8 @@ class BaseView {
                       correctISOTime(
                         extras.notFound == false ? data.startTime : undefined
                       )
-                    )}"></label></div>${(!!extras.fieldsTemplates) ? extras.fieldsTemplates : undefined }<div class="notes"><label for="notes">Notes: <textarea form="editForm" name="notes">${sanitize$1(data.notes)}</textarea></label></div><div class="controls"><button form="deleteForm" class="delete"><img src="${assets["/images/icons/ui/delete_24px.svg"]}"></button> <input type="submit" form="editForm" value="Save"></div></div></div>`
+                    )}"></label></div>${!!extras.fieldsTemplates ? extras.fieldsTemplates : undefined}<div class="notes"><label for="notes">Notes: <textarea form="editForm" name="notes">
+${sanitize$1(data.notes)}</textarea></label></div><div class="controls"><button form="deleteForm" class="delete"><img src="${assets["/images/icons/ui/delete_24px.svg"]}"></button> <input type="submit" form="editForm" value="Save"></div></div></div>`
       )
     )}`;
   }
@@ -740,7 +740,7 @@ class IndexView extends BaseView {
     data.type = "All";
     data.header = "All";
 
-    return super.getAll(data, extras)
+    return super.getAll(data, extras);
   }
 }
 
@@ -822,7 +822,7 @@ class PoopView extends BaseView {
   async edit(data, extras) {
     data.header = "Update a Poop";
 
-    extras.fieldsTemplates = html`<div><label for="color">Colour: <input type="color" form="editForm" name="color" value="${(!!data.color) ? data.color : ""}"></label></div>`;
+    extras.fieldsTemplates = html`<div><label for="color">Colour: <input type="color" form="editForm" name="color" value="${!!data.color ? data.color : ""}"></label></div>`;
 
     return super.edit(data, extras);
   }
@@ -1395,7 +1395,10 @@ class Log extends Model {
     return end - this.startTime;
   }
 
-  constructor({ id, endTime, startTime, type, notes, isDuration = false }, key) {
+  constructor(
+    { id, endTime, startTime, type, notes, isDuration = false },
+    key
+  ) {
     super(key);
 
     if (!!id) {

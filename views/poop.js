@@ -18,7 +18,9 @@ export class PoopView extends BaseView {
   async create(data, extras) {
     data.header = "Add a Poop";
 
-    extras.fieldsTemplates = html`<div><label for="color">Colour: <input type="color" name="color"></label></div>`;
+    extras.fieldsTemplates = html`<div>
+      <label for="color">Colour: <input type="color" name="color" /></label>
+    </div>`;
 
     return super.create(data, extras);
   }
@@ -26,7 +28,16 @@ export class PoopView extends BaseView {
   async edit(data, extras) {
     data.header = "Update a Poop";
 
-    extras.fieldsTemplates = html`<div><label for="color">Colour: <input type="color" form="editForm" name="color" value="${(!!data.color) ? data.color : ""}"></label></div>`;
+    extras.fieldsTemplates = html`<div>
+      <label for="color"
+        >Colour:
+        <input
+          type="color"
+          form="editForm"
+          name="color"
+          value="${!!data.color ? data.color : ""}"
+      /></label>
+    </div>`;
 
     return super.edit(data, extras);
   }

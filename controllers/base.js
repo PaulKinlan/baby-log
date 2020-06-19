@@ -83,15 +83,17 @@ export class BaseController extends Controller {
     const formData = await getFormData(request);
     const redirectTo = formData.get("return-url");
 
-    const values = {}
+    const values = {};
 
     for (let key of formData.keys()) {
-      if (key === 'return-url') continue;
+      if (key === "return-url") continue;
       values[key] = formData.get(key);
     }
 
-    values['startTime'] = new Date(`${values['startDate']}T${values['startTime']}`);
-    Object.keys(values).forEach(key => model[key] = values[key]);
+    values["startTime"] = new Date(
+      `${values["startDate"]}T${values["startTime"]}`
+    );
+    Object.keys(values).forEach((key) => (model[key] = values[key]));
 
     model.put();
 
@@ -102,17 +104,19 @@ export class BaseController extends Controller {
     const formData = await getFormData(request);
     const redirectTo = formData.get("return-url");
 
-    const values = {}
+    const values = {};
 
     for (let key of formData.keys()) {
-      if (key === 'return-url') continue;
+      if (key === "return-url") continue;
       values[key] = formData.get(key);
     }
 
-    values['startTime'] = new Date(`${values['startDate']}T${values['startTime']}`);
+    values["startTime"] = new Date(
+      `${values["startDate"]}T${values["startTime"]}`
+    );
 
     let model = new this.Model();
-    Object.keys(values).forEach(key => model[key] = values[key]);
+    Object.keys(values).forEach((key) => (model[key] = values[key]));
 
     model.put();
 

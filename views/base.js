@@ -13,7 +13,7 @@ if ("navigator" in globalThis === false) {
 
 const sanitize = (input = "") => {
   return input.replace("<", "&lt;").replace(">", "&gt;");
-}
+};
 
 export class BaseView {
   async getAll(data, extras) {
@@ -36,9 +36,11 @@ export class BaseView {
       body(
         data,
         html`${extras.notFound
-            ? html`<input type="hidden" name="data-loaded" value="${
-                !!extras.notFound === false
-              }">`
+            ? html`<input
+                type="hidden"
+                name="data-loaded"
+                value="${!!extras.notFound === false}"
+              />`
             : ""}
           <div>
             Start time:
@@ -81,10 +83,11 @@ export class BaseView {
                 />
               </label>
             </div>
-            ${(!!extras.fieldsTemplates) ? extras.fieldsTemplates : undefined }
+            ${!!extras.fieldsTemplates ? extras.fieldsTemplates : undefined}
             <div class="notes">
-              <label for="notes">Notes: 
-              <textarea name="notes"></textarea></label>
+              <label for="notes"
+                >Notes: <textarea name="notes"></textarea>
+              </label>
             </div>
             <div class="controls">
               <input type="submit" value="Save" />
@@ -101,9 +104,11 @@ export class BaseView {
       body(
         data,
         html`${extras.notFound
-            ? html`<input type="hidden" name="data-loaded" value="${
-                !!extras.notFound === false
-              }">`
+            ? html`<input
+                type="hidden"
+                name="data-loaded"
+                value="${!!extras.notFound === false}"
+              />`
             : ""}
           <div class="form">
             <form
@@ -154,9 +159,14 @@ export class BaseView {
                   />
                 </label>
               </div>
-              ${(!!extras.fieldsTemplates) ? extras.fieldsTemplates : undefined }
+              ${!!extras.fieldsTemplates ? extras.fieldsTemplates : undefined}
               <div class="notes">
-                <label for="notes">Notes: <textarea form="editForm" name="notes">${sanitize(data.notes)}</textarea></label> 
+                <label for="notes"
+                  >Notes:
+                  <textarea form="editForm" name="notes">
+${sanitize(data.notes)}</textarea
+                  >
+                </label>
               </div>
               <div class="controls">
                 <button form="deleteForm" class="delete">

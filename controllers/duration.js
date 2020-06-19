@@ -10,17 +10,22 @@ export class DurationController extends BaseController {
     const values = {};
     const formData = await getFormData(request);
     const redirectTo = formData.get("return-url");
-   
+
     for (let key of formData.keys()) {
-      if (key === 'return-url') continue;
+      if (key === "return-url") continue;
       values[key] = formData.get(key);
     }
 
-    values['startTime'] = new Date(`${values['startDate']}T${values['startTime']}`);
-    values['endTime'] = !!values['endDate'] && !!values['endTime'] ? new Date(`${values['endDate']}T${values['endTime']}`):  undefined;
+    values["startTime"] = new Date(
+      `${values["startDate"]}T${values["startTime"]}`
+    );
+    values["endTime"] =
+      !!values["endDate"] && !!values["endTime"]
+        ? new Date(`${values["endDate"]}T${values["endTime"]}`)
+        : undefined;
 
     let model = new this.Model();
-    Object.keys(values).forEach(key => model[key] = values[key]);
+    Object.keys(values).forEach((key) => (model[key] = values[key]));
 
     model.put();
 
@@ -34,16 +39,21 @@ export class DurationController extends BaseController {
     const values = {};
     const formData = await getFormData(request);
     const redirectTo = formData.get("return-url");
-   
+
     for (let key of formData.keys()) {
-      if (key === 'return-url') continue;
+      if (key === "return-url") continue;
       values[key] = formData.get(key);
     }
 
-    values['startTime'] = new Date(`${values['startDate']}T${values['startTime']}`);
-    values['endTime'] = !!values['endDate'] && !!values['endTime'] ? new Date(`${values['endDate']}T${values['endTime']}`):  undefined;
+    values["startTime"] = new Date(
+      `${values["startDate"]}T${values["startTime"]}`
+    );
+    values["endTime"] =
+      !!values["endDate"] && !!values["endTime"]
+        ? new Date(`${values["endDate"]}T${values["endTime"]}`)
+        : undefined;
 
-    Object.keys(values).forEach(key => model[key] = values[key]);
+    Object.keys(values).forEach((key) => (model[key] = values[key]));
 
     model.put();
 

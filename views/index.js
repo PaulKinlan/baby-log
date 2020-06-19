@@ -5,6 +5,6 @@ export class IndexView extends BaseView {
     data.type = "All";
     data.header = "All";
 
-    return super.getAll(data, extras)
+    return super.getAll(data, extras);
   }
 }

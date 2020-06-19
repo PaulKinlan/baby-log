@@ -7,8 +7,8 @@ export const head = (data, body) => {
       <head>
         <title>Baby Logger</title>
         <script src="/client.js" type="module" defer></script>
-        <link rel="stylesheet" href="${assets['/styles/main.css']}" />
-        <link rel="manifest" href="${assets['/manifest.json']}" />
+        <link rel="stylesheet" href="${assets["/styles/main.css"]}" />
+        <link rel="manifest" href="${assets["/manifest.json"]}" />
         <meta name="viewport" content="width=device-width" />
         <meta
           name="description"
