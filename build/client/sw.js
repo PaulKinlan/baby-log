@@ -543,118 +543,18 @@ const getTime = (date) => {
     .padStart(2, 0)}:${date.getMinutes().toString().padStart(2, 0)}`;
 };
 
-if ("navigator" in globalThis === false)
+if ("navigator" in globalThis === false) {
   globalThis.navigator = {
     language: "en-GB",
   };
-class FeedView {
-  async getAll(data, extras) {
-    data.type = "Feed";
-    data.header = "Feeds";
+}
 
+class DurationBaseView {
+  async getAll(data, extras) {
     return html`${head(data, body(data, html`${aggregate(data, extras)}`))}`;
   }
 
   async get(data, extras) {
-    data.header = "Feed";
-
-    const lang = navigator.language;
-    const options = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    };
-
-    return html`${head(
-      data,
-      body(
-        data,
-        html`${extras.notFound
-            ? html`<input type="hidden" name="data-loaded" value="${
-                !!extras.notFound === false
-              }">`
-            : ""}<div>Start time: ${extras.notFound == false
-              ? data.startTime.toLocaleString(lang, options)
-              : ""}</div><div>End time: ${!!data.endTime ? data.endTime.toLocaleString(lang, options) : ""}</div><a href="/${data.type}s/${data.id}/edit"><img src="${assets["/images/icons/ui/edit_24px.svg"]}"></a><div class="row"><form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"><input type="hidden" name="return-url" value="${extras.referrer}"></form><button form="deleteForm" class="delete"><img src="${assets["/images/icons/ui/delete_24px.svg"]}"></button></div>`
-      )
-    )}`;
-  }
-
-  async create(data, extras) {
-    data.header = "Add a Feed";
-
-    return html`${head(
-      data,
-      body(
-        data,
-        html`<div class="form"><form method="POST" action="/${data.type}s"><input type="hidden" name="return-url" value="${extras.referrer}"><div><label for="startDate">Start time: <input type="date" name="startDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="YYYY-MM-DD" value="${getDate(correctISOTime(new Date()))}"> <input type="time" name="startTime" pattern="[0-9]{2}:[0-9]{2}" placeholder="HH:MM" value="${getTime(correctISOTime(new Date()))}"></label></div><div><label for="endDate">End time: <input type="date" name="endDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="YYYY-MM-DD"> <input type="time" name="endTime" pattern="[0-9]{2}:[0-9]{2}" placeholder="HH:MM"></label></div><div class="controls"><input type="submit" value="Save"></div></form></div>`
-      )
-    )}`;
-  }
-
-  async edit(data, extras) {
-    data.header = "Update a Feed";
-
-    return html`${head(
-      data,
-      body(
-        data,
-        html`<div class="form">${extras.notFound
-            ? html`<input type="hidden" name="data-loaded" value="${
-                !!extras.notFound === false
-              }">`
-            : ""}<form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"><input type="hidden" name="return-url" value="${extras.referrer}"></form><form method="POST" id="editForm" action="/${data.type}s/${data.id}/edit"><input type="hidden" name="return-url" value="${extras.referrer}"></form><div><div><label for="startDate">Start time: <input type="date" name="startDate" form="editForm" value="${getDate(
-                    correctISOTime(
-                      extras.notFound == false ? data.startTime : undefined
-                    )
-                  )}"> <input type="time" name="startTime" form="editForm" value="${getTime(
-                    correctISOTime(
-                      extras.notFound == false ? data.startTime : undefined
-                    )
-                  )}"></label></div><div><label for="endDate">End time: <input type="date" name="endDate" form="editForm" value="${getDate(
-                    correctISOTime(
-                      extras.notFound == false
-                        ? data.endTime || new Date()
-                        : undefined
-                    )
-                  )}"> <input type="time" name="endTime" form="editForm" value="${getTime(
-                    correctISOTime(
-                      extras.notFound == false
-                        ? data.endTime || new Date()
-                        : undefined
-                    )
-                  )}"></label><div><div class="controls"><button form="deleteForm" class="delete"><img src="${assets["/images/icons/ui/delete_24px.svg"]}"></button> <input type="submit" form="editForm" value="Save"></div></div></div></div></div>`
-      )
-    )}`;
-  }
-}
-
-class IndexView {
-  async getAll(data, extras) {
-    data.type = "All";
-    data.header = "All";
-
-    return html`${head(
-      data,
-      body(data, html`${aggregate(data, extras)}`)
-    )}`;
-  }
-}
-
-class SleepView {
-  async getAll(data, extras) {
-    data.type = "Sleep";
-    data.header = "Sleeps";
-
-    return html`${head(data, body(data, html`${aggregate(data, extras)}`))}`;
-  }
-
-  async get(data, extras) {
-    data.header = "Sleep";
-
     const lang = navigator.language;
     const options = {
       weekday: "long",
@@ -679,8 +579,6 @@ class SleepView {
   }
 
   async create(data, extras) {
-    data.header = "Add a Sleep";
-
     return html`${head(
       data,
       body(
@@ -691,8 +589,6 @@ class SleepView {
   }
 
   async edit(data, extras) {
-    data.header = "Update a Sleep";
-
     return html`${head(
       data,
       body(
@@ -727,17 +623,49 @@ class SleepView {
   }
 }
 
-class WeeView {
+if ("navigator" in globalThis === false) {
+  globalThis.navigator = {
+    language: "en-GB",
+  };
+}
+class FeedView extends DurationBaseView {
   async getAll(data, extras) {
-    data.type = "Wee";
-    data.header = "Wees";
+    data.type = "Feed";
+    data.header = "Feeds";
 
+    return super.getAll(data, extras);
+  }
+
+  async get(data, extras) {
+    data.header = "Feed";
+    return super.get(data, extras);
+  }
+
+  async create(data, extras) {
+    data.header = "Add a Feed";
+
+    return super.create(data, extras);
+  }
+
+  async edit(data, extras) {
+    data.header = "Update a Feed";
+
+    return super.edit(data, extras);
+  }
+}
+
+if ("navigator" in globalThis === false) {
+  globalThis.navigator = {
+    language: "en-GB",
+  };
+}
+
+class BaseView {
+  async getAll(data, extras) {
     return html`${head(data, body(data, html`${aggregate(data, extras)}`))}`;
   }
 
   async get(data, extras) {
-    data.header = "Wee";
-
     const lang = navigator.language;
     const options = {
       weekday: "long",
@@ -764,8 +692,6 @@ class WeeView {
   }
 
   async create(data, extras) {
-    data.header = "Add a Wee";
-
     return html`${head(
       data,
       body(
@@ -776,8 +702,6 @@ class WeeView {
   }
 
   async edit(data, extras) {
-    data.header = "Update a Wee";
-
     return html`${head(
       data,
       body(
@@ -800,76 +724,92 @@ class WeeView {
   }
 }
 
-class PoopView {
+class IndexView extends BaseView {
   async getAll(data, extras) {
-    data.type = "Poop";
-    data.header = "Poops";
+    data.type = "All";
+    data.header = "All";
 
-    return html`${head(data, body(data, html`${aggregate(data, extras)}`))}`;
+    return super.getAll(data, extras)
+  }
+}
+
+class SleepView extends DurationBaseView {
+  async getAll(data, extras) {
+    data.type = "Sleep";
+    data.header = "Sleeps";
+
+    return super.getAll(data, extras);
+  }
+
+  async get(data, extras) {
+    data.header = "Sleep";
+    return super.get(data, extras);
+  }
+
+  async create(data, extras) {
+    data.header = "Add a Sleep";
+
+    return super.create(data, extras);
+  }
+
+  async edit(data, extras) {
+    data.header = "Update a Sleep";
+
+    return super.edit(data, extras);
+  }
+}
+
+class WeeView extends BaseView {
+  async getAll(data, extras) {
+    data.type = "Wee";
+    data.header = "Wees";
+
+    return super.getAll(data, extras);
   }
 
   async get(data, extras) {
     data.header = "Poop";
 
-    const lang = navigator.language;
-    const options = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    };
+    return super.get(data, extras);
+  }
 
-    return html`${head(
-      data,
-      body(
-        data,
-        html`${extras.notFound
-            ? html`<input type="hidden" name="data-loaded" value="${
-                !!extras.notFound === false
-              }">`
-            : ""}<div>Start time: ${extras.notFound == false
-              ? data.startTime.toLocaleString(lang, options)
-              : ""}</div><div>End time: ${!!data.endTime ? data.endTime.toLocaleString(lang, options) : ""}</div>`
-      )
-    )}`;
+  async create(data, extras) {
+    data.header = "Add a Wee";
+
+    return super.create(data, extras);
+  }
+
+  async edit(data, extras) {
+    data.header = "Update a Wee";
+
+    return super.edit(data, extras);
+  }
+}
+
+class PoopView extends BaseView {
+  async getAll(data, extras) {
+    data.type = "Poop";
+    data.header = "Poops";
+
+    return super.getAll(data, extras);
+  }
+
+  async get(data, extras) {
+    data.header = "Poop";
+
+    return super.get(data, extras);
   }
 
   async create(data, extras) {
     data.header = "Add a Poop";
 
-    return html`${head(
-      data,
-      body(
-        data,
-        html`<div class="form"><form method="POST" action="/${data.type}s"><input type="hidden" name="return-url" value="${extras.referrer}"><div><label for="startDate">Start time: <input type="date" name="startDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="YYYY-MM-DD" value="${getDate(correctISOTime(new Date()))}"> <input type="time" name="startTime" pattern="[0-9]{2}:[0-9]{2}" placeholder="HH:MM" value="${getTime(correctISOTime(new Date()))}"></label></div><div class="controls"><input type="submit" value="Save"></div></form></div>`
-      )
-    )}`;
+    return super.create(data, extras);
   }
 
   async edit(data, extras) {
     data.header = "Update a Poop";
 
-    return html`${head(
-      data,
-      body(
-        data,
-        html`${extras.notFound
-            ? html`<input type="hidden" name="data-loaded" value="${
-                !!extras.notFound === false
-              }">`
-            : ""}<div class="form"><form method="POST" id="deleteForm" action="/${data.type}s/${data.id}/delete"><input type="hidden" name="return-url" value="${extras.referrer}"></form><form method="POST" id="editForm" action="/${data.type}s/${data.id}/edit"><input type="hidden" name="return-url" value="${extras.referrer}"></form><div><div><label for="startDate">Start time: <input type="date" name="startDate" form="editForm" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="YYYY-MM-DD" value="${getDate(
-                      correctISOTime(
-                        extras.notFound == false ? data.startTime : undefined
-                      )
-                    )}"> <input type="time" name="startTime" form="editForm" value="${getTime(
-                      correctISOTime(
-                        extras.notFound == false ? data.startTime : undefined
-                      )
-                    )}"></label></div><div class="controls"><button form="deleteForm" class="delete"><img src="${assets["/images/icons/ui/delete_24px.svg"]}"></button> <input type="submit" form="editForm" value="Save"></div></div></div>`
-      )
-    )}`;
+    return super.edit(data, extras);
   }
 }
 

@@ -1,16 +1,10 @@
-import { head } from "./partials/head.js";
-import { body } from "./partials/body.js";
-import template from "./lib/florawg.js";
-import { aggregate } from "./helpers/aggregate.js";
+import { BaseView } from "./base.js";
 
-export class IndexView {
+export class IndexView extends BaseView {
   async getAll(data, extras) {
     data.type = "All";
     data.header = "All";
 
-    return template`${head(
-      data,
-      body(data, template`${aggregate(data, extras)}`)
-    )}`;
+    return super.getAll(data, extras)
   }
 }
