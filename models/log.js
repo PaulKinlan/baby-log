@@ -13,7 +13,7 @@ export class Log extends Model {
     return end - this.startTime;
   }
 
-  constructor({ id, endTime, startTime, type, isDuration = false }, key) {
+  constructor({ id, endTime, startTime, type, notes, isDuration = false }, key) {
     super(key);
 
     if (!!id) {
@@ -29,6 +29,7 @@ export class Log extends Model {
     }
 
     this.isDuration = isDuration;
+    this.notes = notes;
     this.type = type;
   }
 

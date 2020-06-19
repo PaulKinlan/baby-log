@@ -22,7 +22,7 @@ export default function URLResolverPlugin(assets) {
         const emit = this.emitFile({
           type: name.endsWith(".js") ? "chunk" : "asset",
           id: file,
-          fileName: join('./', dir, `${hasha(contents, { algorithm: 'md5' })}.${name}`),
+          fileName: join('./', dir, `${hasha.fromFileSync(`client${file}`, { algorithm: 'md5' })}.${name}`),
           source: contents
         });
 

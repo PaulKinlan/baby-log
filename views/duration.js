@@ -11,6 +11,10 @@ if ("navigator" in globalThis === false) {
   };
 }
 
+const sanitize = (input = "") => {
+  return input.replace("<", "&lt;").replace(">", "&gt;");
+}
+
 export class DurationBaseView {
   async getAll(data, extras) {
     return html`${head(data, body(data, html`${aggregate(data, extras)}`))}`;
@@ -90,6 +94,9 @@ export class DurationBaseView {
                   placeholder="HH:MM"
                 />
               </label>
+            </div>
+            <div class="notes">
+              <label for="notes">Notes: <textarea name="notes"></textarea></label> 
             </div>
             <div class="controls">
               <input type="submit" value="Save" />
@@ -187,18 +194,20 @@ export class DurationBaseView {
                     )}"
                   />
                 </label>
-                <div>
-                  <div class="controls">
-                    <button form="deleteForm" class="delete">
-                      <img src="${assets["/images/icons/ui/delete_24px.svg"]}" />
-                    </button>
-                    <input type="submit" form="editForm" value="Save" />
-                  </div>
+              </div>
+              <div class="notes">
+                <label for="notes">Notes: <textarea form="editForm" name="notes">${sanitize(data.notes)}</textarea></label> 
+              </div>
+              <div>
+                <div class="controls">
+                  <button form="deleteForm" class="delete">
+                    <img src="${assets["/images/icons/ui/delete_24px.svg"]}" />
+                  </button>
+                  <input type="submit" form="editForm" value="Save" />
                 </div>
               </div>
             </div>
-          </div> `
-      )
+          </div>`)
     )}`;
   }
 }

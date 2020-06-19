@@ -7,19 +7,20 @@ export class DurationController extends BaseController {
   }
 
   async post(url, request) {
+    const values = {};
     const formData = await getFormData(request);
-
-    const startDate = formData.get("startDate");
-    const startTime = formData.get("startTime");
-    const endDate = formData.get("endDate");
-    const endTime = formData.get("endTime");
     const redirectTo = formData.get("return-url");
+   
+    for (let key of formData.keys()) {
+      if (key === 'return-url') continue;
+      values[key] = formData.get(key);
+    }
 
-    const model = new this.Model();
+    values['startTime'] = new Date(`${values['startDate']}T${values['startTime']}`);
+    values['endTime'] = !!values['endDate'] && !!values['endTime'] ? new Date(`${values['endDate']}T${values['endTime']}`):  undefined;
 
-    model.startTime = new Date(`${startDate}T${startTime}`);
-    model.endTime =
-      !!endDate && !!endTime ? new Date(`${endDate}T${endTime}`) : undefined;
+    let model = new this.Model();
+    Object.keys(values).forEach(key => model[key] = values[key]);
 
     model.put();
 
@@ -30,21 +31,19 @@ export class DurationController extends BaseController {
     // Get the Data.
     const model = await this.Model.get(parseInt(id, 10));
 
-    if (!!model == false) {
-      return this.redirect(FeedController.route);
+    const values = {};
+    const formData = await getFormData(request);
+    const redirectTo = formData.get("return-url");
+   
+    for (let key of formData.keys()) {
+      if (key === 'return-url') continue;
+      values[key] = formData.get(key);
     }
 
-    const formData = await getFormData(request);
+    values['startTime'] = new Date(`${values['startDate']}T${values['startTime']}`);
+    values['endTime'] = !!values['endDate'] && !!values['endTime'] ? new Date(`${values['endDate']}T${values['endTime']}`):  undefined;
 
-    const startDate = formData.get("startDate");
-    const startTime = formData.get("startTime");
-    const endDate = formData.get("endDate");
-    const endTime = formData.get("endTime");
-    const redirectTo = formData.get("return-url");
-
-    model.startTime = new Date(`${startDate}T${startTime}`);
-    model.endTime =
-      !!endDate && !!endTime ? new Date(`${endDate}T${endTime}`) : undefined;
+    Object.keys(values).forEach(key => model[key] = values[key]);
 
     model.put();
 

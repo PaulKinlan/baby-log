@@ -175,6 +175,12 @@ main section div.form input[type="submit"] {
   flex: 3;
 }
 
+main section div.form div.notes textarea {
+  margin-left: 1em;
+  width: 100%;
+  height: 5em;
+}
+
 main div img {
   width: 2em;
   height: 2em;
