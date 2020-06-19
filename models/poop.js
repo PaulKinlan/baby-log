@@ -4,5 +4,6 @@ export class Poop extends Log {
   constructor(data = {}, key) {
     super(data, key);
     this.type = "poop";
+    this.color = data.color;
   }
 }

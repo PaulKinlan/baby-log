@@ -77,6 +77,7 @@ export class BaseView {
                 />
               </label>
             </div>
+            ${(!!extras.fieldsTemplates) ? extras.fieldsTemplates : undefined }
             <div class="controls">
               <input type="submit" value="Save" />
             </div>
@@ -145,6 +146,7 @@ export class BaseView {
                   />
                 </label>
               </div>
+              ${(!!extras.fieldsTemplates) ? extras.fieldsTemplates : undefined }
               <div class="controls">
                 <button form="deleteForm" class="delete">
                   <img src="${assets["/images/icons/ui/delete_24px.svg"]}" />

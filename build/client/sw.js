@@ -194,17 +194,22 @@ class BaseController extends Controller {
 
   async put(url, id, request) {
     // Get the Data.
-    const model = await this.Model.get(parseInt(id, 10));
+    let model = await this.Model.get(parseInt(id, 10));
 
     if (!!model == false) throw new NotFoundException(`${id} not found`);
 
     const formData = await getFormData(request);
-
-    const startDate = formData.get("startDate");
-    const startTime = formData.get("startTime");
     const redirectTo = formData.get("return-url");
 
-    model.startTime = new Date(`${startDate}T${startTime}`);
+    const values = {};
+
+    for (let key of formData.keys()) {
+      if (key === 'return-url') continue;
+      values[key] = formData.get(key);
+    }
+
+    values['startTime'] = new Date(`${values['startDate']}T${values['startTime']}`);
+    Object.keys(values).forEach(key => model[key] = values[key]);
 
     model.put();
 
@@ -213,14 +218,19 @@ class BaseController extends Controller {
 
   async post(url, request) {
     const formData = await getFormData(request);
-
-    const startDate = formData.get("startDate");
-    const startTime = formData.get("startTime");
     const redirectTo = formData.get("return-url");
 
-    const start = `${startDate}T${startTime}`;
+    const values = {};
 
-    const model = new this.Model({ startTime: start });
+    for (let key of formData.keys()) {
+      if (key === 'return-url') continue;
+      values[key] = formData.get(key);
+    }
+
+    values['startTime'] = new Date(`${values['startDate']}T${values['startTime']}`);
+
+    let model = new this.Model();
+    Object.keys(values).forEach(key => model[key] = values[key]);
 
     model.put();
 
@@ -623,11 +633,6 @@ class DurationBaseView {
   }
 }
 
-if ("navigator" in globalThis === false) {
-  globalThis.navigator = {
-    language: "en-GB",
-  };
-}
 class FeedView extends DurationBaseView {
   async getAll(data, extras) {
     data.type = "Feed";
@@ -696,7 +701,7 @@ class BaseView {
       data,
       body(
         data,
-        html`<div class="form"><form method="POST" action="/${data.type}s"><input type="hidden" name="return-url" value="${extras.referrer}"><div><label for="startDate">Start time: <input type="date" name="startDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="YYYY-MM-DD" value="${getDate(correctISOTime(new Date()))}"> <input type="time" name="startTime" pattern="[0-9]{2}:[0-9]{2}" placeholder="HH:MM" value="${getTime(correctISOTime(new Date()))}"></label></div><div class="controls"><input type="submit" value="Save"></div></form></div>`
+        html`<div class="form"><form method="POST" action="/${data.type}s"><input type="hidden" name="return-url" value="${extras.referrer}"><div><label for="startDate">Start time: <input type="date" name="startDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="YYYY-MM-DD" value="${getDate(correctISOTime(new Date()))}"> <input type="time" name="startTime" pattern="[0-9]{2}:[0-9]{2}" placeholder="HH:MM" value="${getTime(correctISOTime(new Date()))}"></label></div>${(!!extras.fieldsTemplates) ? extras.fieldsTemplates : undefined }<div class="controls"><input type="submit" value="Save"></div></form></div>`
       )
     )}`;
   }
@@ -718,7 +723,7 @@ class BaseView {
                       correctISOTime(
                         extras.notFound == false ? data.startTime : undefined
                       )
-                    )}"></label></div><div class="controls"><button form="deleteForm" class="delete"><img src="${assets["/images/icons/ui/delete_24px.svg"]}"></button> <input type="submit" form="editForm" value="Save"></div></div></div>`
+                    )}"></label></div>${(!!extras.fieldsTemplates) ? extras.fieldsTemplates : undefined }<div class="controls"><button form="deleteForm" class="delete"><img src="${assets["/images/icons/ui/delete_24px.svg"]}"></button> <input type="submit" form="editForm" value="Save"></div></div></div>`
       )
     )}`;
   }
@@ -803,11 +808,15 @@ class PoopView extends BaseView {
   async create(data, extras) {
     data.header = "Add a Poop";
 
+    extras.fieldsTemplates = html`<div><label for="color">Colour: <input type="color" name="color"></label></div>`;
+
     return super.create(data, extras);
   }
 
   async edit(data, extras) {
     data.header = "Update a Poop";
+
+    extras.fieldsTemplates = html`<div><label for="color">Colour: <input type="color" form="editForm" name="color" value="${(!!data.color) ? data.color : ""}"></label></div>`;
 
     return super.edit(data, extras);
   }
@@ -1429,6 +1438,7 @@ class Poop extends Log {
   constructor(data = {}, key) {
     super(data, key);
     this.type = "poop";
+    this.color = data.color;
   }
 }
 

@@ -76,17 +76,22 @@ export class BaseController extends Controller {
 
   async put(url, id, request) {
     // Get the Data.
-    const model = await this.Model.get(parseInt(id, 10));
+    let model = await this.Model.get(parseInt(id, 10));
 
     if (!!model == false) throw new NotFoundException(`${id} not found`);
 
     const formData = await getFormData(request);
-
-    const startDate = formData.get("startDate");
-    const startTime = formData.get("startTime");
     const redirectTo = formData.get("return-url");
 
-    model.startTime = new Date(`${startDate}T${startTime}`);
+    const values = {}
+
+    for (let key of formData.keys()) {
+      if (key === 'return-url') continue;
+      values[key] = formData.get(key);
+    }
+
+    values['startTime'] = new Date(`${values['startDate']}T${values['startTime']}`);
+    Object.keys(values).forEach(key => model[key] = values[key]);
 
     model.put();
 
@@ -95,14 +100,19 @@ export class BaseController extends Controller {
 
   async post(url, request) {
     const formData = await getFormData(request);
-
-    const startDate = formData.get("startDate");
-    const startTime = formData.get("startTime");
     const redirectTo = formData.get("return-url");
 
-    const start = `${startDate}T${startTime}`;
+    const values = {}
 
-    const model = new this.Model({ startTime: start });
+    for (let key of formData.keys()) {
+      if (key === 'return-url') continue;
+      values[key] = formData.get(key);
+    }
+
+    values['startTime'] = new Date(`${values['startDate']}T${values['startTime']}`);
+
+    let model = new this.Model();
+    Object.keys(values).forEach(key => model[key] = values[key]);
 
     model.put();
 
