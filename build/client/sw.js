@@ -1447,7 +1447,7 @@ class Poop extends Log {
   }
 }
 
-var version = "1.0.5";
+var version = "1.0.6";
 
 // This will be a server only route;
 class StaticController extends Controller {
