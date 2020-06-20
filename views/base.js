@@ -85,9 +85,8 @@ export class BaseView {
             </div>
             ${!!extras.fieldsTemplates ? extras.fieldsTemplates : undefined}
             <div class="notes">
-              <label for="notes"
-                >Notes: <textarea name="notes"></textarea>
-              </label>
+              <label for="notes">Notes:</label>
+              <textarea name="notes"></textarea>
             </div>
             <div class="controls">
               <input type="submit" value="Save" />
@@ -161,12 +160,8 @@ export class BaseView {
               </div>
               ${!!extras.fieldsTemplates ? extras.fieldsTemplates : undefined}
               <div class="notes">
-                <label for="notes"
-                  >Notes:
-                  <textarea form="editForm" name="notes">
-${sanitize(data.notes)}</textarea
-                  >
-                </label>
+                <label for="notes">Notes:</label>
+                <textarea name="notes"></textarea>
               </div>
               <div class="controls">
                 <button form="deleteForm" class="delete">

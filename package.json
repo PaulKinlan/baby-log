@@ -1,6 +1,6 @@
 {
   "name": "baby-log",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Baby Logger Web App",
   "main": "sever/server.js",
   "scripts": {
