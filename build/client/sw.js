@@ -1539,10 +1539,10 @@ self.onfetch = (event) => {
   // If not caught by a controller, go to the network.
 };
 
-self.oninstall = async (event) => {
+self.oninstall = (event) => {
   // We will do something a lot more clever here soon.
   event.waitUntil(
-    caches.open(version).then(async (cache) => {
+    caches.open(version).then((cache) => {
       return cache.addAll(Object.values(assets));
     })
   );
@@ -1550,6 +1550,15 @@ self.oninstall = async (event) => {
 };
 
 self.onactivate = (event) => {
-  event.waitUntil(clients.claim());
+  const result = clients.claim()
+    .then(_ => caches.keys())
+    .then(cacheKeys => {
+      if (!!cacheKeys) {
+        const cachesToDelete = cacheKeys.filter(cacheKey => cacheKey != version).map(cacheKey => caches.delete(cacheKey));
+        return Promise.all(cachesToDelete);
+      }
+    });
+
+  event.waitUntil(result);
 };
 //# sourceMappingURL=sw.js.map
