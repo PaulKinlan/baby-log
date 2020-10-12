@@ -51,11 +51,7 @@ const render = (url, request, res) => {
     res.writeHead(200, { 'Content-Type': mime.getType(url.pathname) || 'text/html; charset=utf-8'});
     res.flushHeaders();
     view.then(output => {
-      if (typeof output === "string") {
-        res.write(output);
-        res.end();
-      }
-      else if (output instanceof Buffer) {
+      if (typeof output === "string" || output instanceof Buffer) {
         res.write(output);
         res.end();
       }
