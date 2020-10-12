@@ -20,7 +20,6 @@
     "@google-cloud/debug-agent": "^5.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "arg": "^4.1.3",
-    "firebase": "^7.15.1",
     "hasha": "^5.2.0",
     "mime": "^2.4.6",
     "node-fetch": "^2.6.0",

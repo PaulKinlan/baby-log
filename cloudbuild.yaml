@@ -18,12 +18,5 @@ steps:
   - 'us-central1'
   - '--platform'
   - 'managed'
-- name: gcr.io/baby-logger-279914/firebase
-  args: 
-  - 'deploy'
-  - '--project'
-  - 'baby-logger-279914'
-  - '--only'
-  - 'hosting'
 images:
 - 'gcr.io/$PROJECT_ID/web-server:$COMMIT_SHA'
