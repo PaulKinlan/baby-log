@@ -49,7 +49,7 @@
     {
       "name": "Had a Wee",
       "description": "The baby had a wee.",
-      "url": "/sleeps/new",
+      "url": "/wees/new",
       "icons": [
         {
           "src": "/images/icons/wee/res/mipmap-xxxhdpi/wee.png",

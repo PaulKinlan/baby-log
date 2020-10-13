@@ -235,10 +235,8 @@ footer nav:target {
 
 footer nav:target a {
   display: flex;
-  display: flex;
   text-shadow: hsla(218, 20%, 63%, 1) 0px 0px 0px;
   text-decoration: none;
-  background-color: white;
   color: transparent;
   background-color: white;
   border-radius: 50%;
