@@ -14,7 +14,7 @@ COPY package*.json ./
 RUN npm install --only=production
 
 # Copy local code to the container image.
-COPY . ./
+COPY . .
 
 # Build everything.
 RUN npm run build
